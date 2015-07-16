@@ -28,7 +28,7 @@
 </head>
 
 <!-- <body onload="dibujarCanvas()"> -->
-<body oncontextmenu="return false;">
+<body>
 <!-- for others: use <body oncontextmenu="return false;"> to prevent browser context menus from appearing on right click. -->
 	<div id="container">
 	
@@ -256,7 +256,8 @@
 		if(delta > 0) { //scroll up
 			capaImagen.scale(1.25, e.point);
 		} else if(delta < 0){ //scroll down
-			capaImagen.scale(.8, e.point);
+			//view.center = panAndZoom.changeCenter view.center, event.deltaX, event.deltaY, event.deltaFactor;
+			capaImagen.scale(.8, paper.view.center);
 		}
 	});
 
