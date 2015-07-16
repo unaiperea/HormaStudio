@@ -256,8 +256,7 @@
 		if(delta > 0) { //scroll up
 			capaImagen.scale(1.25, e.point);
 		} else if(delta < 0){ //scroll down
-			//view.center = panAndZoom.changeCenter view.center, event.deltaX, event.deltaY, event.deltaFactor;
-			capaImagen.scale(.8, paper.view.center);
+			capaImagen.scale(.8, eventpoint);
 		}
 	});
 
