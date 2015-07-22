@@ -16,30 +16,11 @@
   
   <script type="text/javascript">
   
-  		//TODO No sé si es paper.project. ....
-  
-<<<<<<< HEAD
-  
+  	//TODO No sé si es paper.project. ....
+
 	//Only executed our code once the DOM is ready.
 	window.onload = function() {
-=======
-</head>
 
-<!-- <body onload="dibujarCanvas()"> -->
-<body>
-<!-- for others: use <body oncontextmenu="return false;"> to prevent browser context menus from appearing on right click. -->
-	<div id="container">
-	
-		<canvas id="canvas_croquis" style="width:1000px; height:1000; border:1px solid #d3d3d3;">Su navegador no soporta Canvas.</canvas>
-			
-		
-	</div>
-	
-	<input type="button" onclick="accionBoton();" name="Acci&oacute;n"/>
-	
-	<script type="text/paperscript" canvas="canvas_croquis">
-
->>>>>>> refs/remotes/origin/master
 	//Atributos de hitTest (eventos provocados por el ratón al clickar sobre un item/Path/Segmento/Stroke
 	var hitOptions = {
 		segments: true,
@@ -268,29 +249,9 @@ imagenRaster.onLoadk = function() {
 			}
 	} 
 
-<<<<<<< HEAD
 	control_imagen.onchange = function( event ){
 		var imagenSelec = $('#abrir_imagen');
 	}
-=======
-	$('#canvas_croquis').bind('mousewheel DOMMouseScroll MozMousePixelScroll', function(e){
-		var delta = 0;
-		e.preventDefault();
-		if (e.type == 'mousewheel') { //this is for chrome/IE
-			delta = e.originalEvent.wheelDelta;
-		} else if (e.type == 'DOMMouseScroll') { //this is for FireFox
-			delta = e.originalEvent.detail*-1; //FireFox reverses the scroll so we force to to re-reverse...
-		}
-
-		if(delta > 0) { //scroll up
-			capaImagen.scale(1.25, e.point);
-		} else if(delta < 0){ //scroll down
-			capaImagen.scale(.8, eventpoint);
-		}
-	});
-
-	</script>
->>>>>>> refs/remotes/origin/master
 	
 	
 }
