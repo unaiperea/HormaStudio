@@ -12,15 +12,36 @@
   <meta name="description" content="Dibujar con canvas">
   <meta name="author" content="Unai Perea Cruz">
   
-  <script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
+  <script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js"></script>
   
-  <script type="text/javascript">
+  <!--[if lt IE 9]>
+  	  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	  <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+  <![endif]-->
   
-  		//TODO No sé si es paper.project. ....
+  <style>
+  	body{
+   		cursor: url(img/dot.png), pointer;
+	}
+  </style>
   
-  
-	//Only executed our code once the DOM is ready.
-	window.onload = function() {
+</head>
+
+<!-- <body onload="dibujarCanvas()"> -->
+<body><!-- oncontextmenu="return false;"> -->
+<!-- for others: use <body oncontextmenu="return false;"> to prevent browser context menus from appearing on right click. -->
+	
+	<div id="container" style="width:75%;">
+	
+		<aside id="herramientas_izda" style="width:25%;">herramientas</aside>
+		<canvas id="canvas_croquis" style="width:100%; border:1px solid #d3d3d3;">Su navegador no soporta Canvas.</canvas>
+			
+	</div>
+	
+	<button type="button" onclick="resizeCanvas()" name="Acci&oacute;n">resize</button>
+	
+	<script type="text/paperscript" canvas="canvas_croquis"  charset="utf-8">
+
 	//Atributos de hitTest (eventos provocados por el ratón al clickar sobre un item/Path/Segmento/Stroke
 	var hitOptions = {
 		segments: true,
@@ -35,23 +56,20 @@
 
 	var capaImagen;
 	var capaVectores;
-	var canvas = $('#canvas_croquis')[0]; //Obtenemos el id de la etiqueta canvas
-	var contexto;
 	var imagenRaster;
 	var circuloReunion;
 	var segment, path; //variables para saber qué item y en qué parte del item se ha clickado
 	var moverPath = false; //Controla el movimiento en bloque del item
 	var dibujar = false; //Controla si se va a dibujar o no
+	var canvas = $('#canvas_croquis')[0]; //Obtenemos el id de la etiqueta canvas
 
-	//Inicializar
-	paper.install(window);
-    paper.setup('canvas_croquis');
-    
 	paper.settings.handleSize=10; //Tamaño de todos los nodos
 
 	crearCapas(); //Creamos las capas (imágen, líneas)
-	rutaImagen = "http://localhost:8080/HormaStudio/img/atxarte.jpg";
+	rutaImagen = "http://localhost:8080/HormaStudio/img/via.jpg";
 	cargarImagen(rutaImagen);
+	//resizeCanvas(); //Aplica el tamaño de la imágen al canvas
+	//adaptarCanvasAcontainer(); //Redimensiona el tamaño del canvas al div
 	capaVectores.activate(); //Activa la capa de los vectores y lista para dibujar
 
 	//crearPaths(); //Creamos Paths manualmente
@@ -62,15 +80,15 @@
 	
 	function crearCapas(){
 		//var capaActual = paper.project.activeLayer; //capa activa actual
-		capaImagen = new paper.Layer();
+		capaImagen = new Layer();
 		capaImagen.name= "capa de imágen";
-		capaVectores = new paper.Layer();
+		capaVectores = new Layer();
 		capaVectores.name= "capa de líneas";
 	}
 
 	function crearReunion(){
 		circuloReunion = new Path.Circle({
-			center: paper.view.center,
+			center: view.center,
 			radius: radioReunion
 			//fillColor: 'red'
 		});
@@ -94,38 +112,51 @@
 
 		//Creamos un contexto contra la etiqueta canvas
 		contexto = canvas.getContext('2d');
-		contexto.fillStyle = "#424242"; //Color de fondo del canvas -- NO FUNCIONA
 
 		//Carga una imágen. No la toma como dentro de la capa capaImagen
 		//var img = new Image();
 		//img.onload = function () {
 	    //	contexto.drawImage(img, 0, 0);
 		//}
-		//img.src = "http://localhost:8080/canvas/img/via.jpg";
+		//img.src = "img/via.jpg";
 
-		//Cargar imágen como raster. Ahora sí que está dentro de la capa capaImagen 
-		//var imagenRaster = new Raster(rutaImagen);
-		var puntoInsercion = new paper.Point(paper.view.center);
-		imagenRaster = new paper.Raster({
+		//Cargar imágen como raster. Ahora sí que está dentro de la capa capaImagen
+		imagenRaster = new Raster({
   			source: rutaImagen,
-  			//position: view.center,
-			selected: false}, puntoInsercion);
-		//imagenRaster.position = view.center;
-		imagenRaster.selected = false;
+  			position: view.center,
+			selected: false});
+				
+		//canvas[0].width = 300;
+		//canvas[0].height = 100;
+		//paper.view.viewSize = new Size(500, 300);
+		//paper.view.draw();
+
 	}
 
+	function adaptarCanvasAcontainer(){
+  		// Make it visually fill the positioned parent
+  		canvas.style.width ='100%'; //cambia la escala del contenido
+  		canvas.style.height='100%'; //cambia la escala del contenido
+  		// ...then set the internal size to match
+  		canvas.width  = canvas.offsetWidth;
+  		canvas.height = canvas.offsetHeight;
+	}
 
-imagenRaster.onLoadk = function() {
+	imagenRaster.onLoad = function() {
+		//paper.setup('canvas_croquis');
+		//canvas.width = imagenRaster.width;
+		//canvas.height = imagenRaster.height;
+		//canvas.style.height='100%'; //cambia la escala del contenido
+    	imagenRaster.size = new Size(canvas.width, canvas.height);
+		imagenRaster.position = view.center;
+		//paper.view.draw();
+	};
 
-		var anchoImagen = imagenRaster.width;
-		var altoImagen = imagenRaster.height;
-		var ratioTamanoCanvas = canvas.width / anchoImagen;
 
-	imagenRaster.scale(ratioTamanoCanvas); //Escala la imágen al canvas
-	canvas.height = (altoImagen * canvas.width) / anchoImagen; //ratio del tamaño de la imágen respecto al tamaño del canvas
-	var puntoCentroImagen = new Point(canvas.width / 2, canvas.height / 2);
-	imagenRaster.position = puntoCentroImagen;
-}
+//function onResize(event) {
+	// Whenever the window is resized, recenter the path:
+//	path.position = view.center;
+//}
 
 	/**
 	*  Cuando pulse el botón del ratón se obtendrá el item que está debajo y ...
@@ -135,7 +166,7 @@ imagenRaster.onLoadk = function() {
 	*  4.- si se ha pulsado en un segmento/nodo del path preparado para mover el segmento
 	*  5.- si se ha pulsado en la línea del path inserta un nodo preparado para mover
 	*/
-	function MouseDown(event){
+	function onMouseDown(event){
 		//switch (event.event.button) {
 			// leftclick
 		//	case 0:
@@ -150,12 +181,12 @@ imagenRaster.onLoadk = function() {
 		segment = path = null;
 
 		//Obtenemos dónde se ha pulsado el ratón 
-		var hitResult = paper.project.hitTest(event.point, hitOptions);
+		var hitResult = project.hitTest(event.point, hitOptions);
 		var claseItem = hitResult.item.className; //Otra forma más fiable de saber qué item hemos clickado
 
 		//si no se ha pulsado ningún item o se ha clickado sobre el raster/imágen que cree un nuevo path y en onMouseDrag se dibuja
 		if (!hitResult || claseItem === "Raster"){ //si hitResult=null o se ha clickado sobre la imágen 
-			path = new paper.Path({
+			path = new Path({
     			strokeColor: colorVector,
 				strokeWidth: grosorVector,
 				strokeJoin: 'round' //NO SÉ SI FUNCIONAAAAAAAAAAA, PARECE QUE SÍ PERO... LA PUNTA ES REKTA
@@ -172,7 +203,7 @@ imagenRaster.onLoadk = function() {
 		if (event.modifiers.control){
 			moverPath=true;
 			path = hitResult.item;
-			//project.activeLayer.addChild(hitResult.item); //no sé si hay que incluirlo luego
+			//project.activeLayer.addChild(hitResult.item); //no sñe si hay que incluirlo luego
 			return;
 		}
 
@@ -208,8 +239,8 @@ imagenRaster.onLoadk = function() {
 	*  Mientras esté encima de un item se selecciona
 	*/
  	//Sólo cuando pasamos por encima de un vector se selecciona (la imágen no)
-	function MouseMove(event) {
-		paper.project.activeLayer.selected = false;
+	function onMouseMove(event) {
+		project.activeLayer.selected = false;
 		if (event.item && event.item.className != "Raster")
 			event.item.selected = true;
 	}
@@ -219,7 +250,7 @@ imagenRaster.onLoadk = function() {
 	*  2.- arrastraremos el segmento/nodo si se haía pulsado sobre él
 	*  3.- arrastraremos el el nuevo segmento/nodo que acabamos de crear si se haía pulsado sobre la línea/Path
 	*/ 
-	function MouseDrag(event){
+	function onMouseDrag(event){
 		
 		if (dibujar){
 			path.add(event.point);
@@ -239,7 +270,7 @@ imagenRaster.onLoadk = function() {
 	/**
 	* Cuando soltemos el ratón se inicializan las variables que controlan el movimiento o dibujo
 	*/
-	function MouseUp (event){
+	function onMouseUp (event){
 		if (dibujar){
 			dibujar = false;
 			path.simplify(5); //El ratio de simplificado por defecto es 2.5
@@ -249,37 +280,71 @@ imagenRaster.onLoadk = function() {
 			}
 	} 
 
-	control_imagen.onchange = function( event ){
-		var imagenSelec = $('#abrir_imagen');
+//First define the zoom tool properties
+
+var toolZoomIn = new paper.Tool();
+
+toolZoomIn.distanceThreshold = 8;
+toolZoomIn.mouseStartPos = new paper.Point();
+toolZoomIn.zoomFactor = 1.3;
+
+	$('#canvas_croquis').bind('mousewheel DOMMouseScroll MozMousePixelScroll', function(e){
+
+        var delta = 0;
+        var children = project.activeLayer.children;
+        var upperZoomLimit = 20;
+        var lowerZoomLimit = 1.25;
+
+        e.preventDefault();
+        e = e || window.event;
+        if (e.type == 'mousewheel') {       //this is for chrome/IE
+                delta = e.originalEvent.wheelDelta;
+            }
+            else if (e.type == 'DOMMouseScroll') {  //this is for FireFox
+                delta = e.originalEvent.detail*-1;  //FireFox reverses the scroll so we force to to re-reverse...
+            }
+
+        if((delta > 0) && (paper.view.zoom<upperZoomLimit)) { 
+            //scroll up
+            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+			var point = $('#canvas_croquis').offset();
+            point = paper.view.viewToProject(point);
+            var zoomCenter = point.subtract(paper.view.center);
+            var moveFactor = toolZoomIn.zoomFactor - 1.0;
+            paper.view.zoom *= toolZoomIn.zoomFactor;
+            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / toolZoomIn.zoomFactor));
+            toolZoomIn.mode = '';
+        }
+
+        else if((delta < 0) && (paper.view.zoom>lowerZoomLimit)){ //scroll down
+            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+			var point = $('#canvas_croquis').offset();
+            point = paper.view.viewToProject(point);
+            var zoomCenter = point.subtract(paper.view.center);   
+            var moveFactor = toolZoomIn.zoomFactor - 1.0;
+            paper.view.zoom /= toolZoomIn.zoomFactor;
+            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor))
+        }
+    });
+
+	function onResize(event) {
+		// Whenever the window is resized, recenter the path:
+		//capaImagen.position = view.center;
 	}
-	
-	
-}
+
 	</script>
-
-	  <style>
-  	body{
-   		cursor: url(img/dot.png), pointer;
+	
+	<script type="text/javascript">
+	function resizeCanvas(){
+		//$('#canvas_croquis')[0].width = window.innerWidth;
+		//$('#canvas_croquis')[0].height = window.innerHeight;
+		$('#canvas_croquis')[0].width = $('#canvas_croquis')[0].width;
+		$('#canvas_croquis')[0].height = $('#canvas_croquis')[0].height;
+		//paper.view.draw();
+		//$('#canvas_croquis')[0].width = 100;
+		//$('#canvas_croquis')[0].height = 100;
 	}
-  </style>
-  
-</head>
-
-<!-- <body onload="dibujarCanvas()"> -->
-<body>
-<!-- for others: use <body oncontextmenu="return false;"> to prevent browser context menus from appearing on right click. -->
-	<div id="container" style="width:75%;">
-	
-		<aside id="herramientas_izda" style="width:25%;">herramientas</aside>
-		<canvas id="canvas_croquis" style="width:100%; border:1px solid #d3d3d3;" resize ng-mousedown="mouseDown($event)" ng-mousemove="mouseMove($event)" ng-mousemove="mouseDrag($event)" ng-mouseup="mouseUp()">Su navegador no soporta Canvas. Instale la última versión de Chrome</canvas>
-			
-	</div>
-	
-	<button type="button" onclick="resizeCanvas()" name="Acci&oacute;n">resize</button>
-	
-	<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg" onchange="abrirImagen();"/> <!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
-	<input type="color" id="control_color" name="control_color"/>
-	<input type="range" id="control_zoom" name="control_zoom"  min="0" max="10"/>
+	</script>
 	
 	<!--  jQuery -->
 	<script src="js/jquery-2.1.4.min.js"></script>

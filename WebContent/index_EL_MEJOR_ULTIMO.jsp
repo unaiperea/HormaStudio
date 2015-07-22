@@ -12,15 +12,39 @@
   <meta name="description" content="Dibujar con canvas">
   <meta name="author" content="Unai Perea Cruz">
   
-  <script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
+  <script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js"></script>
   
-  <script type="text/javascript">
+  <!--[if lt IE 9]>
+  	  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	  <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+  <![endif]-->
   
-  		//TODO No sé si es paper.project. ....
+  <style>
+  	body{
+   		cursor: url(img/dot.png), pointer;
+	}
+  </style>
   
-  
-	//Only executed our code once the DOM is ready.
-	window.onload = function() {
+</head>
+
+<!-- <body onload="dibujarCanvas()"> -->
+<body>
+<!-- for others: use <body oncontextmenu="return false;"> to prevent browser context menus from appearing on right click. -->
+	<div id="container" style="width:75%;">
+	
+		<aside id="herramientas_izda" style="width:25%;">herramientas</aside>
+		<canvas id="canvas_croquis" style="width:100%; border:1px solid #d3d3d3;">Su navegador no soporta Canvas. Instale la última versión de Chrome</canvas>
+			
+	</div>
+	
+	<button type="button" onclick="resizeCanvas()" name="Acci&oacute;n">resize</button>
+	
+	<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg" onchange="abrirImagen();"/> <!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
+	<input type="color" id="control_color" name="control_color"/>
+	<input type="range" id="control_zoom" name="control_zoom"  min="0" max="10"/>
+	
+	<script type="text/paperscript" canvas="canvas_croquis">
+
 	//Atributos de hitTest (eventos provocados por el ratón al clickar sobre un item/Path/Segmento/Stroke
 	var hitOptions = {
 		segments: true,
@@ -43,10 +67,6 @@
 	var moverPath = false; //Controla el movimiento en bloque del item
 	var dibujar = false; //Controla si se va a dibujar o no
 
-	//Inicializar
-	paper.install(window);
-    paper.setup('canvas_croquis');
-    
 	paper.settings.handleSize=10; //Tamaño de todos los nodos
 
 	crearCapas(); //Creamos las capas (imágen, líneas)
@@ -62,15 +82,15 @@
 	
 	function crearCapas(){
 		//var capaActual = paper.project.activeLayer; //capa activa actual
-		capaImagen = new paper.Layer();
+		capaImagen = new Layer();
 		capaImagen.name= "capa de imágen";
-		capaVectores = new paper.Layer();
+		capaVectores = new Layer();
 		capaVectores.name= "capa de líneas";
 	}
 
 	function crearReunion(){
 		circuloReunion = new Path.Circle({
-			center: paper.view.center,
+			center: view.center,
 			radius: radioReunion
 			//fillColor: 'red'
 		});
@@ -105,8 +125,8 @@
 
 		//Cargar imágen como raster. Ahora sí que está dentro de la capa capaImagen 
 		//var imagenRaster = new Raster(rutaImagen);
-		var puntoInsercion = new paper.Point(paper.view.center);
-		imagenRaster = new paper.Raster({
+		var puntoInsercion = new paper.Point(view.center);
+		imagenRaster = new Raster({
   			source: rutaImagen,
   			//position: view.center,
 			selected: false}, puntoInsercion);
@@ -135,7 +155,7 @@ imagenRaster.onLoadk = function() {
 	*  4.- si se ha pulsado en un segmento/nodo del path preparado para mover el segmento
 	*  5.- si se ha pulsado en la línea del path inserta un nodo preparado para mover
 	*/
-	function MouseDown(event){
+	function onMouseDown(event){
 		//switch (event.event.button) {
 			// leftclick
 		//	case 0:
@@ -150,12 +170,12 @@ imagenRaster.onLoadk = function() {
 		segment = path = null;
 
 		//Obtenemos dónde se ha pulsado el ratón 
-		var hitResult = paper.project.hitTest(event.point, hitOptions);
+		var hitResult = project.hitTest(event.point, hitOptions);
 		var claseItem = hitResult.item.className; //Otra forma más fiable de saber qué item hemos clickado
 
 		//si no se ha pulsado ningún item o se ha clickado sobre el raster/imágen que cree un nuevo path y en onMouseDrag se dibuja
 		if (!hitResult || claseItem === "Raster"){ //si hitResult=null o se ha clickado sobre la imágen 
-			path = new paper.Path({
+			path = new Path({
     			strokeColor: colorVector,
 				strokeWidth: grosorVector,
 				strokeJoin: 'round' //NO SÉ SI FUNCIONAAAAAAAAAAA, PARECE QUE SÍ PERO... LA PUNTA ES REKTA
@@ -208,8 +228,8 @@ imagenRaster.onLoadk = function() {
 	*  Mientras esté encima de un item se selecciona
 	*/
  	//Sólo cuando pasamos por encima de un vector se selecciona (la imágen no)
-	function MouseMove(event) {
-		paper.project.activeLayer.selected = false;
+	function onMouseMove(event) {
+		project.activeLayer.selected = false;
 		if (event.item && event.item.className != "Raster")
 			event.item.selected = true;
 	}
@@ -219,7 +239,7 @@ imagenRaster.onLoadk = function() {
 	*  2.- arrastraremos el segmento/nodo si se haía pulsado sobre él
 	*  3.- arrastraremos el el nuevo segmento/nodo que acabamos de crear si se haía pulsado sobre la línea/Path
 	*/ 
-	function MouseDrag(event){
+	function onMouseDrag(event){
 		
 		if (dibujar){
 			path.add(event.point);
@@ -239,7 +259,7 @@ imagenRaster.onLoadk = function() {
 	/**
 	* Cuando soltemos el ratón se inicializan las variables que controlan el movimiento o dibujo
 	*/
-	function MouseUp (event){
+	function onMouseUp (event){
 		if (dibujar){
 			dibujar = false;
 			path.simplify(5); //El ratio de simplificado por defecto es 2.5
@@ -249,37 +269,17 @@ imagenRaster.onLoadk = function() {
 			}
 	} 
 
-	control_imagen.onchange = function( event ){
-		var imagenSelec = $('#abrir_imagen');
-	}
 	
-	
-}
+
 	</script>
-
-	  <style>
-  	body{
-   		cursor: url(img/dot.png), pointer;
+	
+	<script type="text/javascript">
+	
+	control_imagen.onchange = function( event ){
+		imagenSelec = $('abrir_imagen');
 	}
-  </style>
-  
-</head>
-
-<!-- <body onload="dibujarCanvas()"> -->
-<body>
-<!-- for others: use <body oncontextmenu="return false;"> to prevent browser context menus from appearing on right click. -->
-	<div id="container" style="width:75%;">
-	
-		<aside id="herramientas_izda" style="width:25%;">herramientas</aside>
-		<canvas id="canvas_croquis" style="width:100%; border:1px solid #d3d3d3;" resize ng-mousedown="mouseDown($event)" ng-mousemove="mouseMove($event)" ng-mousemove="mouseDrag($event)" ng-mouseup="mouseUp()">Su navegador no soporta Canvas. Instale la última versión de Chrome</canvas>
-			
-	</div>
-	
-	<button type="button" onclick="resizeCanvas()" name="Acci&oacute;n">resize</button>
-	
-	<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg" onchange="abrirImagen();"/> <!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
-	<input type="color" id="control_color" name="control_color"/>
-	<input type="range" id="control_zoom" name="control_zoom"  min="0" max="10"/>
+		
+	</script>
 	
 	<!--  jQuery -->
 	<script src="js/jquery-2.1.4.min.js"></script>
