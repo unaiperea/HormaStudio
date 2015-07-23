@@ -14,10 +14,16 @@
   
   <script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
   
+  
+ 
+  
+  <!-- javascript -->
   <script type="text/javascript">
   
   	//TODO No sé si es paper.project. ....
 
+  	
+  	paper.install(window);
 	//Only executed our code once the DOM is ready.
 	window.onload = function() {
 
@@ -28,14 +34,17 @@
 		//fill: true,
 		tolerance: 5
 		};
+	
 	//Atributos de los vectores
 	var colorVector = 'blue'; //$(#controlColorVector).value; //Inicializa según lo que está predefinido
 	var grosorVector = 8; //$(#controlGrosorVector).value; //Inicializa según lo que está predefinido
 	var radioReunion = 3;
 
+	//Declaramos variables
 	var capaImagen;
-	var capaVectores;
-	var canvas = $('#canvas_croquis')[0]; //Obtenemos el id de la etiqueta canvas
+	var capaVectores;	
+	var canvas;
+	var tool;
 	var contexto;
 	var imagenRaster;
 	var circuloReunion;
@@ -44,9 +53,11 @@
 	var dibujar = false; //Controla si se va a dibujar o no
 
 	//Inicializar
-	paper.install(window);
+	canvas = document.getElementById('canvas_croquis');//$('#canvas_croquis')[0]; //Obtenemos el id de la etiqueta canvas
+	
     paper.setup('canvas_croquis');
-    
+    tool = new Tool(); //Uno por cada objeto a dibujar?? imágen, vías, reuniones
+	
 	paper.settings.handleSize=10; //Tamaño de todos los nodos
 
 	crearCapas(); //Creamos las capas (imágen, líneas)
@@ -69,7 +80,7 @@
 	}
 
 	function crearReunion(){
-		circuloReunion = new Path.Circle({
+		circuloReunion = new paper.Path.Circle({
 			center: paper.view.center,
 			radius: radioReunion
 			//fillColor: 'red'
@@ -135,7 +146,7 @@ imagenRaster.onLoadk = function() {
 	*  4.- si se ha pulsado en un segmento/nodo del path preparado para mover el segmento
 	*  5.- si se ha pulsado en la línea del path inserta un nodo preparado para mover
 	*/
-	function MouseDown(event){
+	tool.onMouseDown = function(event){
 		//switch (event.event.button) {
 			// leftclick
 		//	case 0:
@@ -146,11 +157,12 @@ imagenRaster.onLoadk = function() {
 		//		alert('Right mouse button pressed');
 		//		break;
 		//}
-
+		console.info("Ha entrado en onMouseDown");
+		
 		segment = path = null;
 
 		//Obtenemos dónde se ha pulsado el ratón 
-		var hitResult = paper.project.hitTest(event.point, hitOptions);
+		var hitResult = project.hitTest(event.point, hitOptions);
 		var claseItem = hitResult.item.className; //Otra forma más fiable de saber qué item hemos clickado
 
 		//si no se ha pulsado ningún item o se ha clickado sobre el raster/imágen que cree un nuevo path y en onMouseDrag se dibuja
@@ -197,8 +209,8 @@ imagenRaster.onLoadk = function() {
 			} //Y si se ha pulsado sobre la línea del propio path
 			  else if (hitResult.type == 'stroke') {
 				var location = hitResult.location;
-				segment = path.insert(location.index + 1, event.point); //inserta un nodo y lo guardamos
-				path.smooth();
+				segment = path.insert(paper.location.index + 1, event.point); //inserta un nodo y lo guardamos
+				path.smooth();              //PAPER????
 
 			}
 		}
@@ -208,8 +220,9 @@ imagenRaster.onLoadk = function() {
 	*  Mientras esté encima de un item se selecciona
 	*/
  	//Sólo cuando pasamos por encima de un vector se selecciona (la imágen no)
-	function MouseMove(event) {
-		paper.project.activeLayer.selected = false;
+	tool.onMouseMove = function(event){
+		console.info("Ha entrado en onMouseMove");
+		project.activeLayer.selected = false;
 		if (event.item && event.item.className != "Raster")
 			event.item.selected = true;
 	}
@@ -218,9 +231,9 @@ imagenRaster.onLoadk = function() {
 	*  1.- moveremos el Path completo si se había pulsado CTRL
 	*  2.- arrastraremos el segmento/nodo si se haía pulsado sobre él
 	*  3.- arrastraremos el el nuevo segmento/nodo que acabamos de crear si se haía pulsado sobre la línea/Path
-	*/ 
-	function MouseDrag(event){
-		
+	*/
+	tool.onMouseDrag = function(event){
+		console.info("Ha entrado en onMouseDrag");
 		if (dibujar){
 			path.add(event.point);
 		}else
@@ -239,7 +252,8 @@ imagenRaster.onLoadk = function() {
 	/**
 	* Cuando soltemos el ratón se inicializan las variables que controlan el movimiento o dibujo
 	*/
-	function MouseUp (event){
+	tool.onMouseUp = function(event){
+		console.info("Ha entrado en onMouseUp");
 		if (dibujar){
 			dibujar = false;
 			path.simplify(5); //El ratio de simplificado por defecto es 2.5
@@ -250,6 +264,7 @@ imagenRaster.onLoadk = function() {
 	} 
 
 	control_imagen.onchange = function( event ){
+		console.info("Ha entrado en control_imagen.onchange");
 		var imagenSelec = $('#abrir_imagen');
 	}
 	
@@ -271,7 +286,7 @@ imagenRaster.onLoadk = function() {
 	<div id="container" style="width:75%;">
 	
 		<aside id="herramientas_izda" style="width:25%;">herramientas</aside>
-		<canvas id="canvas_croquis" style="width:100%; border:1px solid #d3d3d3;" resize ng-mousedown="mouseDown($event)" ng-mousemove="mouseMove($event)" ng-mousemove="mouseDrag($event)" ng-mouseup="mouseUp()">Su navegador no soporta Canvas. Instale la última versión de Chrome</canvas>
+		<canvas id="canvas_croquis" style="width:100%; border:1px solid #d3d3d3;" resize>Su navegador no soporta Canvas. Instale la última versión de Chrome</canvas>
 			
 	</div>
 	
