@@ -209,8 +209,8 @@ imagenRaster.onLoadk = function() {
 			} //Y si se ha pulsado sobre la línea del propio path
 			  else if (hitResult.type == 'stroke') {
 				var location = hitResult.location;
-				segment = path.insert(paper.location.index + 1, event.point); //inserta un nodo y lo guardamos
-				path.smooth();              //PAPER????
+				segment = path.insert(location.index + 1, event.point); //inserta un nodo y lo guardamos
+				path.smooth();
 
 			}
 		}
@@ -235,16 +235,20 @@ imagenRaster.onLoadk = function() {
 	tool.onMouseDrag = function(event){
 		console.info("Ha entrado en onMouseDrag");
 		if (dibujar){
+			console.info("Ha entrado en onMouseDrag dibujar");
 			path.add(event.point);
 		}else
 			if (moverPath) { //pulsando CONTROL + CLICK mueve path entero
+				console.info("Ha entrado en onMouseDrag moverPath");
 				path.position += event.delta;
 			}else
 				if (segment) {
+					console.info("Ha entrado en onMouseDrag segment" + path.position + "," + event.delta);
 					segment.point += event.delta;
 					path.smooth();
 		  		}else
 					if (path) {
+						console.info("Ha entrado en onMouseDrag path");
 						path.position += event.delta;
 					}
 	}
