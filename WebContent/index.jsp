@@ -180,37 +180,37 @@ imagenRaster.onLoadk = function() {
 		}
 		
 		//EN MODO DEBUG CON EL CHROME NO ENTRAN LOS MODIFICADORES CONTROL NI SHIFT
-		//Si se ha pulsado CTRL + CLICK que lo prepare para moverse
+		//Si pulsamos CTRL o SHIFT + Click ratón ...
 		if (event.modifiers.control){
+			//Si se ha pulsado CTRL + CLICK que lo prepare para moverse
 			moverPath=true;
 			path = hitResult.item;
 			//project.activeLayer.addChild(hitResult.item); //no sé si hay que incluirlo luego
 			return;
-		}
+		}else if (event.modifiers.shift) {
+				//pulsando SHIFT + CLICK en el segmento/nodo borra el nodo
+				if (hitResult.type == 'segment') {
+					hitResult.segment.remove();
+				};
+				return;
+			}	
 
-		//pulsando SHIFT + CLICK en el segmento/nodo borra el nodo 
-		if (event.modifiers.shift) {
-			if (hitResult.type == 'segment') {
-				hitResult.segment.remove();
-			};
-			return;
-		}	
-	
-		//si pulsa en cualquier lugar del path y que no sea sobre el raster/imágen...
 		if ( hitResult && claseItem != "Raster" ) {
-
+			//si pulsa en cualquier lugar del path y que no sea sobre el raster/imágen...
+			console.info("guardamos el path clickado");
 			path = hitResult.item; //guardamos el path sobre el que se ha pulsado
 
-			//Y si se ha pulsado sobre un segmento/nodo del propio path
 			if (hitResult.type == 'segment') {
-
+				//Y si se ha pulsado sobre un segmento/nodo del propio path
+				console.info("onMouseDown guardamos el path clickado y segment.point");
 				segment = hitResult.segment; //guardamos el segmento/nodo del propio path
 
-			} //Y si se ha pulsado sobre la línea del propio path
-			  else if (hitResult.type == 'stroke') {
+			}else if (hitResult.type == 'stroke') {
+				//Y si se ha pulsado sobre la línea del propio path
+				console.info("onMouseDown guardamos el path clickado");
 				var location = hitResult.location;
 				segment = path.insert(location.index + 1, event.point); //inserta un nodo y lo guardamos
-				path.smooth();
+				path.smooth(); //Suaviza el nuevo vértice
 
 			}
 		}
@@ -235,22 +235,22 @@ imagenRaster.onLoadk = function() {
 	tool.onMouseDrag = function(event){
 		console.info("Ha entrado en onMouseDrag");
 		if (dibujar){
-			console.info("Ha entrado en onMouseDrag dibujar");
 			path.add(event.point);
 		}else
 			if (moverPath) { //pulsando CONTROL + CLICK mueve path entero
-				console.info("Ha entrado en onMouseDrag moverPath");
-				path.position += event.delta;
-			}else
-				if (segment) {
-					console.info("Ha entrado en onMouseDrag segment" + path.position + "," + event.delta);
-					segment.point += event.delta;
-					path.smooth();
-		  		}else
-					if (path) {
-						console.info("Ha entrado en onMouseDrag path");
-						path.position += event.delta;
-					}
+				path.position.x += event.delta.x;
+	  			path.position.y += event.delta.y;
+				//path.position += event.delta; //No funciona así cuando pongo tool. ...
+			}else if (segment) {
+				segment.point.x += event.delta.x;
+				segment.point.y += event.delta.y;
+				//segment.point += event.delta; //No funciona así cuando pongo tool. ...
+				path.smooth(); //Suaviza el nuevo vértice
+		  		}else if (path) {
+		  			path.position.x += event.delta.x;
+		  			path.position.y += event.delta.y;
+					//path.position += event.delta; //No funciona así cuando pongo tool. ...
+				}
 	}
 
 	/**
