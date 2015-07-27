@@ -12,6 +12,12 @@
   <meta name="description" content="Dibujar con canvas">
   <meta name="author" content="Unai Perea Cruz">
   
+  <!-- Latest compiled and minified CSS -->
+<!-- <link rel="stylesheet" href="js/bootstrap-3.3.5-dist/css/bootstrap.min.css"> -->
+
+<!-- Latest compiled and minified JavaScript -->
+<!-- <script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script> -->
+  
   <script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
   
   
@@ -36,37 +42,46 @@
 		};
 	
 	//Atributos de los vectores
-	var colorVector = 'blue'; //$(#controlColorVector).value; //Inicializa según lo que está predefinido
-	var grosorVector = 8; //$(#controlGrosorVector).value; //Inicializa según lo que está predefinido
-	var radioReunion = 3;
+	var vectorColor; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
+	var vectorGrosor; //$(#controlvectorGrosor).value; //Inicializa según lo que está predefinido
+	var reunionRadio;
+	var cursorColor;
+	var cursorTamanoPincel;
 
 	//Declaramos variables
 	var capaImagen;
-	var capaVectores;	
+	var capaVectorial;	
+	var capaCursor;
 	var canvas;
 	var tool;
 	var contexto;
 	var imagenRaster;
-	
-	var circuloReunion; //No sé si es imprescindible
-	var rReunion;
-	var grupoReunion //circuloReunion y  rReunion agrupados
 	
 	var segment, path; //variables para saber qué item y en qué parte del item se ha clickado
 	var moverPath = false; //Controla el movimiento en bloque del item
 	var dibujar = false; //Controla si se va a dibujar o no
 	var rutaImagen = "http://localhost:8080/HormaStudio/img/atxarte.jpg";
 	
+	var circuloReunion; //No sé si es imprescindible
+	var rReunion;
+	var grupoReunion //circuloReunion y  rReunion agrupados
 
+
+	inicializarEntorno();
 	inicializarCanvas();
-	crearCapas(); //Creamos las capas (imágen, líneas)
+	inicializarCapas(); //Creamos las capas (imágen, líneas)
+	inicializarDibujoVectorial();
 	cargarImagen(rutaImagen);
 
 	//crearPaths(); //Creamos Paths manualmente
 
 	//Modificados desde un control exterior
-	//$(#controlColorVector).onChange(function(){...colorVector = $(#controlColorVector).value;...});
-	//$(#controlColorVector).onChange(function(){...grosorVector = $(#controlgrosorVector).value;...});
+	//$(#controlvectorColor).onChange(function(){...vectorColor = $(#controlvectorColor).value;...});
+	//$(#controlvectorColor).onChange(function(){...vectorGrosor = $(#controlvectorGrosor).value;...});
+	
+	function inicializarEntorno(){
+		document.body.style.cursor = 'none'; //el cursor desaparece
+	}
 	
 	function inicializarCanvas(){
 		//Inicializar
@@ -81,18 +96,38 @@
 		paper.settings.handleSize=10; //Tamaño de todos los nodos
 	}
 	
-	function crearCapas(){
+	function inicializarCapas(){
 		//var capaActual = paper.project.activeLayer; //capa activa actual
 		capaImagen = new paper.Layer();
-		capaImagen.name= "capa de imágen";
-		capaVectores = new paper.Layer();
-		capaVectores.name= "capa de líneas";
+		capaImagen.name= "capa de imagen";
+		capaVectorial = new paper.Layer();
+		capaVectorial.name= "capa de lineas";
+		capaCursor = new paper.Layer();
+		capaCursor.name= "capa del cursor";
 	}
 
+	function inicializarDibujoVectorial(){
+		vectorColor = 'blue'; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
+		vectorGrosor = 8; //$(#controlvectorGrosor).value; //Inicializa según lo que está predefinido
+		reunionRadio = 3;
+		cursorColor = 'black';
+		
+		//Creamos el objeto cursor
+		capaCursor.activate();
+		cursorTamanoPincel = new paper.Path.Circle ({
+			center: [0, 0],
+			radius: vectorGrosor/2,
+			strokeColor: cursorColor});
+		cursorTamanoPincel.visible = false;
+		capaVectorial.activate();
+		
+		
+	}
+	
 	function crearReunion(){
 		circuloReunion = new paper.Path.Circle({
 			center: paper.view.center,
-			radius: radioReunion,
+			radius: reunionRadio,
 			name: "circulito"
 			//fillColor: 'red'
 		});
@@ -149,7 +184,7 @@
 		
 		//imagenRaster.position = view.center;
 		imagenRaster.selected = false;
-		capaVectores.activate(); //Activa la capa de los vectores y lista para dibujar
+		capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar
 	}
 
 	
@@ -165,7 +200,7 @@ imagenRaster.onLoadk = function() {
 
 	imagenRaster.scale(ratioTamanoCanvas); //Escala la imágen al canvas
 	canvas.height = (altoImagen * canvas.width) / anchoImagen; //ratio del tamaño de la imágen respecto al tamaño del canvas
-	var puntoCentroImagen = new Point(canvas.width / 2, canvas.height / 2);
+	var puntoCentroImagen = new paper.Point(canvas.width / 2, canvas.height / 2);
 	imagenRaster.position = puntoCentroImagen;
 }
 
@@ -199,8 +234,8 @@ imagenRaster.onLoadk = function() {
 		//si no se ha pulsado ningún item o se ha clickado sobre el raster/imágen que cree un nuevo path y en onMouseDrag se dibuja
 		if (!hitResult || claseItem === "Raster"){ //si hitResult=null o se ha clickado sobre la imágen 
 			path = new paper.Path({
-    			strokeColor: colorVector,
-				strokeWidth: grosorVector,
+    			strokeColor: vectorColor,
+				strokeWidth: vectorGrosor,
 				strokeJoin: 'round' //NO SÉ SI FUNCIONAAAAAAAAAAA, PARECE QUE SÍ PERO... LA PUNTA ES REKTA
 				});
 			//path.strokeWidth = 8;
@@ -253,6 +288,17 @@ imagenRaster.onLoadk = function() {
  	//Sólo cuando pasamos por encima de un vector se selecciona (la imágen no)
 	tool.onMouseMove = function(event){
 		console.info("Ha entrado en onMouseMove");
+		
+		//movemos el el círculo del tamaño del pincel con el cursor.
+		
+		//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
+		capaCursor.activate();
+		//cursorTamanoPincel.position = event.point;
+		cursorTamanoPincel.position.x = event.point.x;
+		cursorTamanoPincel.position.y = event.point.y;
+		cursorTamanoPincel.visible = true;
+		capaVectorial.activate();
+		
 		project.activeLayer.selected = false;
 		
 		//TODO en el caso de que se elija dibujar reunión que le siga al puntero un recuadro con la frase Click en la imágen
@@ -268,6 +314,16 @@ imagenRaster.onLoadk = function() {
 	*/
 	tool.onMouseDrag = function(event){
 		console.info("Ha entrado en onMouseDrag");
+
+		//movemos el el círculo del tamaño del pincel con el cursor.
+		
+		//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
+		capaCursor.activate();
+		cursorTamanoPincel.position.x = event.point.x;
+		cursorTamanoPincel.position.y = event.point.y;
+		cursorTamanoPincel.visible = true;
+		capaVectorial.activate();
+		
 		if (dibujar){
 			path.add(event.point);
 		}else
@@ -302,8 +358,6 @@ imagenRaster.onLoadk = function() {
 	}
 
 	control_imagen.onchange = function( event ){
-		console.info("Ha entrado en control_imagen.onchange");
-		
 		if (this.files && this.files[0]){
 			//imagenRaster.remove();
 			//paper.view.draw();
@@ -311,24 +365,21 @@ imagenRaster.onLoadk = function() {
 			//fichero.onload = function (e) {
 			//	   $('#canvas_croquis').attr('src', e.target.result);
 			//	  }
-			//fichero.readAsDataURL(this.files[0]);
-			cargarImagen("C:\\Users\Atxa\\Desktop\\" + this.files[0].name);
+			//var dataURL = fichero.readAsDataURL(this.files[0]);
+			
+			//cargarImagen("C:\\Users\Atxa\\Desktop\\" + this.files[0].name);
+			rutaImagen = "http://localhost:8080/HormaStudio/img/aspe.jpg"; //le paso una imágen para probar ya que el proceso sería: 1.- Escalara al tamaño del canvas 2.- subirlo a la web
+			cargarImagen(rutaImagen);
 		}
-		
-		//rutaImagen = ruta;
-		//console.info(rutaImagen);
-		//cargarImagen(rutaImagen);
 	}
 
 	
 }
 	</script>
 
-	  <style>
-  	body{
-   		cursor: url(img/dot.png), pointer;
-	}
-  </style>
+	<style>
+  		/*body{ cursor: url(img/dot.png), pointer; }*/
+	</style>
   
 </head>
 
