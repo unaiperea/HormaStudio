@@ -47,29 +47,39 @@
 	var tool;
 	var contexto;
 	var imagenRaster;
-	var circuloReunion;
+	
+	var circuloReunion; //No sé si es imprescindible
+	var rReunion;
+	var grupoReunion //circuloReunion y  rReunion agrupados
+	
 	var segment, path; //variables para saber qué item y en qué parte del item se ha clickado
 	var moverPath = false; //Controla el movimiento en bloque del item
 	var dibujar = false; //Controla si se va a dibujar o no
-
-	//Inicializar
-	canvas = document.getElementById('canvas_croquis');//$('#canvas_croquis')[0]; //Obtenemos el id de la etiqueta canvas
+	var rutaImagen = "http://localhost:8080/HormaStudio/img/atxarte.jpg";
 	
-    paper.setup('canvas_croquis');
-    tool = new Tool(); //Uno por cada objeto a dibujar?? imágen, vías, reuniones
-	
-	paper.settings.handleSize=10; //Tamaño de todos los nodos
 
+	inicializarCanvas();
 	crearCapas(); //Creamos las capas (imágen, líneas)
-	rutaImagen = "http://localhost:8080/HormaStudio/img/atxarte.jpg";
 	cargarImagen(rutaImagen);
-	capaVectores.activate(); //Activa la capa de los vectores y lista para dibujar
 
 	//crearPaths(); //Creamos Paths manualmente
 
 	//Modificados desde un control exterior
 	//$(#controlColorVector).onChange(function(){...colorVector = $(#controlColorVector).value;...});
 	//$(#controlColorVector).onChange(function(){...grosorVector = $(#controlgrosorVector).value;...});
+	
+	function inicializarCanvas(){
+		//Inicializar
+		canvas = document.getElementById('canvas_croquis');//$('#canvas_croquis')[0]; //Obtenemos el id de la etiqueta canvas
+	    paper.setup('canvas_croquis'); //Crea una clase intermedia para poder utilizar el lenguaje javascript en vez de paperscript
+	    tool = new Tool(); //Crea una herramienta para manejar los eventos del teclado y ratón
+	  	
+	    //Creamos un contexto contra la etiqueta canvas
+		contexto = canvas.getContext('2d');
+		contexto.fillStyle = "#424242"; //Color de fondo del canvas -- NO FUNCIONA
+		
+		paper.settings.handleSize=10; //Tamaño de todos los nodos
+	}
 	
 	function crearCapas(){
 		//var capaActual = paper.project.activeLayer; //capa activa actual
@@ -82,9 +92,19 @@
 	function crearReunion(){
 		circuloReunion = new paper.Path.Circle({
 			center: paper.view.center,
-			radius: radioReunion
+			radius: radioReunion,
+			name: "circulito"
 			//fillColor: 'red'
 		});
+		
+		//TODO letra R rReunion y name: erre
+		
+		grupoReunion = new Group();
+		reunion.addChild(circuloReunion);
+		reunion.addChild(rReunion);
+		
+		//acceder a children reunion.children[0].point
+		//acceder a children reunion.children[1].point
 		//circuloReunion.position = path.getPointAt(0,0); //posición inicial. NO creo
 	}
 	
@@ -97,15 +117,11 @@
 	//}
 
 	/**
-	*  Preparamos el lienzo/canvas y cargarmos la imágen/raster en la capa capaImagen
+	*  Cargarmos la imágen/raster en la capa capaImagen
 	*/
 	function cargarImagen(rutaImagen){
 		//Activamos la capa de la imágen y la cargamos
 		capaImagen.activate();
-
-		//Creamos un contexto contra la etiqueta canvas
-		contexto = canvas.getContext('2d');
-		contexto.fillStyle = "#424242"; //Color de fondo del canvas -- NO FUNCIONA
 
 		//Carga una imágen. No la toma como dentro de la capa capaImagen
 		//var img = new Image();
@@ -116,18 +132,33 @@
 
 		//Cargar imágen como raster. Ahora sí que está dentro de la capa capaImagen 
 		//var imagenRaster = new Raster(rutaImagen);
+		if (imagenRaster != null){
+			console.info("va a borrar la imágen")
+			imagenRaster.remove();
+			imagenRaster = null;
+			
+		}
+		
 		var puntoInsercion = new paper.Point(paper.view.center);
 		imagenRaster = new paper.Raster({
-  			source: rutaImagen,
-  			//position: view.center,
+	  		source: rutaImagen,
+	  		//position: view.center,
 			selected: false}, puntoInsercion);
+		
+		paper.view.draw();
+		
 		//imagenRaster.position = view.center;
 		imagenRaster.selected = false;
+		capaVectores.activate(); //Activa la capa de los vectores y lista para dibujar
 	}
 
-
+	
 imagenRaster.onLoadk = function() {
 
+	
+	//Mi forma
+	
+	
 		var anchoImagen = imagenRaster.width;
 		var altoImagen = imagenRaster.height;
 		var ratioTamanoCanvas = canvas.width / anchoImagen;
@@ -223,6 +254,9 @@ imagenRaster.onLoadk = function() {
 	tool.onMouseMove = function(event){
 		console.info("Ha entrado en onMouseMove");
 		project.activeLayer.selected = false;
+		
+		//TODO en el caso de que se elija dibujar reunión que le siga al puntero un recuadro con la frase Click en la imágen
+		
 		if (event.item && event.item.className != "Raster")
 			event.item.selected = true;
 	}
@@ -265,13 +299,27 @@ imagenRaster.onLoadk = function() {
 			if (moverPath){
 				moverPath = false;
 			}
-	} 
+	}
 
 	control_imagen.onchange = function( event ){
 		console.info("Ha entrado en control_imagen.onchange");
-		var imagenSelec = $('#abrir_imagen');
+		
+		if (this.files && this.files[0]){
+			//imagenRaster.remove();
+			//paper.view.draw();
+			//var fichero = new FileReader();
+			//fichero.onload = function (e) {
+			//	   $('#canvas_croquis').attr('src', e.target.result);
+			//	  }
+			//fichero.readAsDataURL(this.files[0]);
+			cargarImagen("C:\\Users\Atxa\\Desktop\\" + this.files[0].name);
+		}
+		
+		//rutaImagen = ruta;
+		//console.info(rutaImagen);
+		//cargarImagen(rutaImagen);
 	}
-	
+
 	
 }
 	</script>
@@ -296,7 +344,7 @@ imagenRaster.onLoadk = function() {
 	
 	<button type="button" onclick="resizeCanvas()" name="Acci&oacute;n">resize</button>
 	
-	<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg" onchange="abrirImagen();"/> <!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
+	<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg" onchange="abrirImagen(this.value);"/> <!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
 	<input type="color" id="control_color" name="control_color"/>
 	<input type="range" id="control_zoom" name="control_zoom"  min="0" max="10"/>
 	
