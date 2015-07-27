@@ -44,13 +44,14 @@
 	//Atributos de los vectores
 	var vectorColor; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
 	var vectorGrosor; //$(#controlvectorGrosor).value; //Inicializa según lo que está predefinido
+	var vectorRedondezPunta;
 	var reunionRadio;
 	var cursorColor;
 	var cursorTamanoPincel;
 
 	//Declaramos variables
 	var capaImagen;
-	var capaVectorial;	
+	var capaVectorial;
 	var capaCursor;
 	var canvas;
 	var tool;
@@ -109,6 +110,7 @@
 	function inicializarDibujoVectorial(){
 		vectorColor = 'blue'; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
 		vectorGrosor = 8; //$(#controlvectorGrosor).value; //Inicializa según lo que está predefinido
+		vectorRedondezPunta: 'round';
 		reunionRadio = 3;
 		cursorColor = 'black';
 		
@@ -117,7 +119,8 @@
 		cursorTamanoPincel = new paper.Path.Circle ({
 			center: [0, 0],
 			radius: vectorGrosor/2,
-			strokeColor: cursorColor});
+			strokeColor: cursorColor,
+			name: 'puntero'});
 		cursorTamanoPincel.visible = false;
 		capaVectorial.activate();
 		
@@ -226,17 +229,19 @@ imagenRaster.onLoadk = function() {
 		console.info("Ha entrado en onMouseDown");
 		
 		segment = path = null;
-
+		
 		//Obtenemos dónde se ha pulsado el ratón 
 		var hitResult = project.hitTest(event.point, hitOptions);
-		var claseItem = hitResult.item.className; //Otra forma más fiable de saber qué item hemos clickado
-
+		var hitClaseItem = hitResult.item.className; //Otra forma más fiable de saber qué item hemos clickado
+		
+		console.info(hitResult.item.name);
+		
 		//si no se ha pulsado ningún item o se ha clickado sobre el raster/imágen que cree un nuevo path y en onMouseDrag se dibuja
-		if (!hitResult || claseItem === "Raster"){ //si hitResult=null o se ha clickado sobre la imágen 
+		if (!hitResult || hitClaseItem === "Raster"){ //si hitResult=null o se ha clickado sobre la imágen 
 			path = new paper.Path({
     			strokeColor: vectorColor,
 				strokeWidth: vectorGrosor,
-				strokeJoin: 'round' //NO SÉ SI FUNCIONAAAAAAAAAAA, PARECE QUE SÍ PERO... LA PUNTA ES REKTA
+				strokeJoin: vectorRedondezPunta //NO SÉ SI FUNCIONAAAAAAAAAAA, PARECE QUE SÍ PERO... LA PUNTA ES REKTA
 				});
 			//path.strokeWidth = 8;
 			//path.strokeJoin = 'round'; //La redondez de la punta
@@ -261,7 +266,7 @@ imagenRaster.onLoadk = function() {
 				return;
 			}	
 
-		if ( hitResult && claseItem != "Raster" ) {
+		if ( hitResult && hitClaseItem != "Raster" ) {
 			//si pulsa en cualquier lugar del path y que no sea sobre el raster/imágen...
 			console.info("guardamos el path clickado");
 			path = hitResult.item; //guardamos el path sobre el que se ha pulsado
@@ -293,7 +298,6 @@ imagenRaster.onLoadk = function() {
 		
 		//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
 		capaCursor.activate();
-		//cursorTamanoPincel.position = event.point;
 		cursorTamanoPincel.position.x = event.point.x;
 		cursorTamanoPincel.position.y = event.point.y;
 		cursorTamanoPincel.visible = true;
