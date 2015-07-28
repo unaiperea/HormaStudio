@@ -34,12 +34,7 @@
 	window.onload = function() {
 
 	//Atributos de hitTest (eventos provocados por el ratón al clickar sobre un item/Path/Segmento/Stroke
-	var hitOptions = {
-		segments: true,
-		stroke: true,
-		//fill: true,
-		tolerance: 5
-		};
+	var hitOptions = null;
 	
 	//Atributos de los vectores
 	var vectorColor; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
@@ -48,6 +43,8 @@
 	var reunionRadio;
 	var cursorColor;
 	var cursorTamanoPincel;
+	var hitTestTolerancia;
+	var nodoTamano;
 
 	//Declaramos variables
 	var capaImagen;
@@ -92,9 +89,15 @@
 	  	
 	    //Creamos un contexto contra la etiqueta canvas
 		contexto = canvas.getContext('2d');
-		contexto.fillStyle = "#424242"; //Color de fondo del canvas -- NO FUNCIONA
+		//contexto.fillStyle = "#424242"; //Color de fondo del canvas -- NO FUNCIONA
 		
-		paper.settings.handleSize=10; //Tamaño de todos los nodos
+		//project.currentStyle = {
+		//		strokeColor: 'black',
+		//		strokeWidth: 4,
+		//		strokeCap: 'round'
+		//	};
+		project.strokeCap = 'round';
+		//project.fillStyle = "#424242";
 	}
 	
 	function inicializarCapas(){
@@ -108,11 +111,16 @@
 	}
 
 	function inicializarDibujoVectorial(){
-		vectorColor = 'blue'; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
-		vectorGrosor = 8; //$(#controlvectorGrosor).value; //Inicializa según lo que está predefinido
-		vectorRedondezPunta: 'round';
-		reunionRadio = 3;
-		cursorColor = 'black';
+		vectorColor         = 'blue'; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
+		vectorGrosor        = 5; //$(#controlvectorGrosor).value; //Inicializa según lo que está predefinido
+		vectorRedondezPunta = 'round';
+		reunionRadio        = 3;
+		cursorColor         = 'black';
+		hitTestTolerancia   = -15;
+		nodoTamano          = vectorGrosor*2;
+		
+		//Tamaño de todos los nodos
+		paper.settings.handleSize = nodoTamano;
 		
 		//Creamos el objeto cursor
 		capaCursor.activate();
@@ -124,7 +132,13 @@
 		cursorTamanoPincel.visible = false;
 		capaVectorial.activate();
 		
-		
+		//Opciones HitTest
+		hitOptions = {
+				segments: true,
+				stroke: true,
+				fill: false,
+				tolerance: hitTestTolerancia
+				};
 	}
 	
 	function crearReunion(){
@@ -170,26 +184,107 @@
 
 		//Cargar imágen como raster. Ahora sí que está dentro de la capa capaImagen 
 		//var imagenRaster = new Raster(rutaImagen);
+		
 		if (imagenRaster != null){
 			console.info("va a borrar la imágen")
 			imagenRaster.remove();
 			imagenRaster = null;
-			
 		}
 		
-		var puntoInsercion = new paper.Point(paper.view.center);
+		/*var puntoInsercion = new paper.Point(paper.view.center);
 		imagenRaster = new paper.Raster({
 	  		source: rutaImagen,
 	  		//position: view.center,
-			selected: false}, puntoInsercion);
+			selected: false}, puntoInsercion);*/
+		imagenRaster = new paper.Raster({
+	  		source: rutaImagen,
+			selected: false});
 		
-		paper.view.draw();
+		paper.view.draw(); //Nos aseguramos que la redibuja en el caso de cambiar la imágen (entra en imagenRaster.onload)
 		
 		//imagenRaster.position = view.center;
 		imagenRaster.selected = false;
 		capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar
 	}
 
+	
+	//Redimensiona el entorno
+	imagenRaster.onLoad = function() {
+		
+		// finally query the various pixel ratios
+        devicePixelRatio = window.devicePixelRatio || 1,
+        backingStoreRatio = contexto.webkitBackingStorePixelRatio ||
+                            contexto.mozBackingStorePixelRatio ||
+                            contexto.msBackingStorePixelRatio ||
+                            contexto.oBackingStorePixelRatio ||
+                            contexto.backingStorePixelRatio || 1,
+
+        ratio = devicePixelRatio / backingStoreRatio;
+		
+		
+		
+		var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
+		var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
+		var tempW = imagenRaster.width;
+		var tempH = imagenRaster.height;
+		
+		if (tempW > tempH){ //Si la anchura de la imágen es mayor que la altura de la imágen se coge la anchura de la imágen
+			if (tempW > MAX_WIDTH){ //Si la imágen es mayor (en cuanto a anchura) que la del canvas, que permanezca la anchura del canvas
+				//Reducir imágen
+				tempH = Math.floor((tempH * MAX_WIDTH) / tempW); //Redondeo hacia abajo el redimensionamiento
+				imagenRaster.width = tempW = MAX_WIDTH; //OJO CON EL MARCO DEL CANVAS
+				canvas.height = imagenRaster.height = tempH;
+				canvas.style.height = tempH + 'px';
+			}else{ //Reducir canvas
+				canvas.width = tempW;
+				canvas.style.width = tempW + 'px'; //Le da más calidad
+				canvas.height = tempH;
+				canvas.style.height = tempH + 'px'; //Le da más calidad
+			}
+		}else{ //Si la altura de la imágen es mayor que la anchura de la imágen se coge la anchura de la imágen
+			if (tempH > MAX_HEIGHT){ //Si la imágen es mayor (en cuanto a altura) que la del canvas, que permanezca la altura del canvas
+				//Reducir imágen
+				tempW = Math.floor((tempW * MAX_HEIGHT) / tempH);
+				imagenRaster.height = tempH = MAX_HEIGHT;
+				canvas.width = imagenRaster.width = tempW;
+				canvas.style.width = tempW + 'px'; //Le da más calidad
+			}else{ //Reducir canvas
+				canvas.width = tempW;
+				canvas.style.width = tempW + 'px'; //Le da más calidad
+				canvas.height = tempH;
+				canvas.style.height = tempH + 'px'; //Le da más calidad
+			}
+			
+		}
+		
+		// La dimensión mayor de la imágen entre los atributos MAX_WIDTH o MAX_HEIGHT es la que definimos como máxima
+		/*var MAX_WIDTH = $(document).width; //coge la anchura total del div en el que se encuentra
+		var MAX_HEIGHT = $(document).height; //coge la altura total del div en el que se encuentra
+		var tempW = imagenRaster.width;
+		var tempH = imagenRaster.height;
+		if (tempW > tempH) {
+			if (tempW > MAX_WIDTH) {
+				tempH *= MAX_WIDTH / tempW;
+				tempW = MAX_WIDTH;
+			}
+		} else {
+			if (tempH > MAX_HEIGHT) {
+				tempW *= MAX_HEIGHT / tempH;
+				tempH = MAX_HEIGHT;
+			}
+		}
+		canvas.width = tempW;
+		canvas.height = tempH;*/
+		
+		// now scale the context to counter
+        // the fact that we've manually scaled
+        // our canvas element
+        contexto.scale(ratio, ratio);
+		
+		var puntoCentroImagen = new paper.Point(tempW / 2, tempH / 2);
+		imagenRaster.position = puntoCentroImagen;
+		paper.view.draw;
+	}
 	
 imagenRaster.onLoadk = function() {
 
@@ -227,7 +322,7 @@ imagenRaster.onLoadk = function() {
 		//		break;
 		//}
 		console.info("Ha entrado en onMouseDown");
-		
+
 		segment = path = null;
 		
 		//Obtenemos dónde se ha pulsado el ratón 
@@ -266,7 +361,7 @@ imagenRaster.onLoadk = function() {
 				return;
 			}	
 
-		if ( hitResult && hitClaseItem != "Raster" ) {
+		if ( hitResult && hitClaseItem != "Raster") {
 			//si pulsa en cualquier lugar del path y que no sea sobre el raster/imágen...
 			console.info("guardamos el path clickado");
 			path = hitResult.item; //guardamos el path sobre el que se ha pulsado
@@ -297,11 +392,11 @@ imagenRaster.onLoadk = function() {
 		//movemos el el círculo del tamaño del pincel con el cursor.
 		
 		//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
-		capaCursor.activate();
+		if (project.activeLayer != capaCursor){capaCursor.activate();}
 		cursorTamanoPincel.position.x = event.point.x;
 		cursorTamanoPincel.position.y = event.point.y;
-		cursorTamanoPincel.visible = true;
-		capaVectorial.activate();
+		if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
+		if (project.activeLayer != capaVectorial){capaVectorial.activate();}
 		
 		project.activeLayer.selected = false;
 		
@@ -321,11 +416,14 @@ imagenRaster.onLoadk = function() {
 		//movemos el el círculo del tamaño del pincel con el cursor.
 		
 		//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
-		capaCursor.activate();
+		if (project.activeLayer != capaCursor){capaCursor.activate();}
 		cursorTamanoPincel.position.x = event.point.x;
 		cursorTamanoPincel.position.y = event.point.y;
-		cursorTamanoPincel.visible = true;
-		capaVectorial.activate();
+		if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
+		//console.info("capaCursor: " + (project.activeLayer == capaCursor));
+		//console.info("capaVectorial: " + (project.activeLayer == capaVectorial));
+		//console.info("capaImagen: " + (project.activeLayer == capaImagen));
+		if (project.activeLayer != capaVectorial){capaVectorial.activate();}
 		
 		if (dibujar){
 			path.add(event.point);
@@ -390,10 +488,10 @@ imagenRaster.onLoadk = function() {
 <body>
 <!-- for others: use <body oncontextmenu="return false;"> to prevent browser context menus from appearing on right click. -->
 	<div id="container" style="width:75%;">
-	
-		<aside id="herramientas_izda" style="width:25%;">herramientas</aside>
-		<canvas id="canvas_croquis" style="width:100%; border:1px solid #d3d3d3;" resize>Su navegador no soporta Canvas. Instale la última versión de Chrome</canvas>
-			
+		<div id="entorno">
+			<aside id="herramientas_izda" style="width:25%;">herramientas</aside>
+			<canvas id="canvas_croquis" style="width:100%; border:1px solid #d3d3d3;">Su navegador no soporta Canvas. Instale la última versión de Chrome</canvas>
+		</div>
 	</div>
 	
 	<button type="button" onclick="resizeCanvas()" name="Acci&oacute;n">resize</button>
