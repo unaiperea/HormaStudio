@@ -306,7 +306,6 @@ imagenRaster.onLoadk = function() {
 		project.activeLayer.selected = false;
 		
 		//TODO en el caso de que se elija dibujar reunión que le siga al puntero un recuadro con la frase Click en la imágen
-		
 		if (event.item && event.item.className != "Raster")
 			event.item.selected = true;
 	}
