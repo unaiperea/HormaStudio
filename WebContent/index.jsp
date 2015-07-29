@@ -12,16 +12,17 @@
   <meta name="description" content="Dibujar con canvas">
   <meta name="author" content="Unai Perea Cruz">
   
-  <!-- Latest compiled and minified CSS -->
-<!-- <link rel="stylesheet" href="js/bootstrap-3.3.5-dist/css/bootstrap.min.css"> -->
+  <!-- Responsive Design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  
+  <!-- Bootstrap minified CSS -->
+  <link rel="stylesheet" href="js/bootstrap-3.3.5-dist/css/bootstrap.min.css">
 
-<!-- Latest compiled and minified JavaScript -->
-<!-- <script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script> -->
-  
+  <!-- Custom IconMoon  -->
+  <link rel="stylesheet" type="text/css" href="fonts/iconmoon/style.css">
+
+  <!-- Paper.js dibujo en Canvas -->
   <script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
-  
-  
- <!-- sadfs -->
   
   <!-- javascript -->
   <script type="text/javascript">
@@ -41,7 +42,8 @@
 	var vectorGrosor; //$(#controlvectorGrosor).value; //Inicializa según lo que está predefinido
 	var vectorRedondezPunta;
 	var reunionRadio;
-	var cursorColor;
+	var reunionColor;
+	//var cursorColor;					*** CURSOR ***
 	var cursorTamanoPincel;
 	var hitTestTolerancia;
 	var nodoTamano;
@@ -78,7 +80,7 @@
 	//$(#controlvectorColor).onChange(function(){...vectorGrosor = $(#controlvectorGrosor).value;...});
 	
 	function inicializarEntorno(){
-		document.body.style.cursor = 'none'; //el cursor desaparece
+		//document.body.style.cursor = 'none'; //el cursor desaparece
 	}
 	
 	function inicializarCanvas(){
@@ -96,7 +98,7 @@
 		//		strokeWidth: 4,
 		//		strokeCap: 'round'
 		//	};
-		project.strokeCap = 'round';
+		project.strokeCap = 'round'; //COMPROBAAAAR *****
 		//project.fillStyle = "#424242";
 	}
 	
@@ -114,23 +116,27 @@
 		vectorColor         = 'blue'; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
 		vectorGrosor        = 5; //$(#controlvectorGrosor).value; //Inicializa según lo que está predefinido
 		vectorRedondezPunta = 'round';
-		reunionRadio        = 3;
-		cursorColor         = 'black';
-		hitTestTolerancia   = -15;
 		nodoTamano          = vectorGrosor*2;
+		
+		reunionRadio        = 3;
+		reunionColor        = 'red';
+		
+		//cursorColor         = 'black';					*** CURSOR ***
+		hitTestTolerancia   = -15;
+
 		
 		//Tamaño de todos los nodos
 		paper.settings.handleSize = nodoTamano;
 		
 		//Creamos el objeto cursor
-		capaCursor.activate();
+		/*capaCursor.activate();
 		cursorTamanoPincel = new paper.Path.Circle ({
 			center: [0, 0],
 			radius: vectorGrosor/2,
-			strokeColor: cursorColor,
+			strokeColor: cursorColor,						*** CURSOR ***
 			name: 'puntero'});
 		cursorTamanoPincel.visible = false;
-		capaVectorial.activate();
+		capaVectorial.activate();*/
 		
 		//Opciones HitTest
 		hitOptions = {
@@ -145,12 +151,12 @@
 		circuloReunion = new paper.Path.Circle({
 			center: paper.view.center,
 			radius: reunionRadio,
-			name: "circulito"
-			//fillColor: 'red'
+			name: "circulito",
+			fillColor: reunionColor
 		});
 		
+		/*
 		//TODO letra R rReunion y name: erre
-		
 		grupoReunion = new Group();
 		reunion.addChild(circuloReunion);
 		reunion.addChild(rReunion);
@@ -158,6 +164,7 @@
 		//acceder a children reunion.children[0].point
 		//acceder a children reunion.children[1].point
 		//circuloReunion.position = path.getPointAt(0,0); //posición inicial. NO creo
+		*/
 	}
 	
 	//Creamos Paths manualmente
@@ -220,8 +227,6 @@
                             contexto.backingStorePixelRatio || 1,
 
         ratio = devicePixelRatio / backingStoreRatio;
-		
-		
 		
 		var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
 		var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
@@ -389,14 +394,16 @@ imagenRaster.onLoadk = function() {
 	tool.onMouseMove = function(event){
 		console.info("Ha entrado en onMouseMove");
 		
+		/*
 		//movemos el el círculo del tamaño del pincel con el cursor.
-		
 		//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
 		if (project.activeLayer != capaCursor){capaCursor.activate();}
-		cursorTamanoPincel.position.x = event.point.x;
+		cursorTamanoPincel.position.x = event.point.x;													*** CURSOR ***
 		cursorTamanoPincel.position.y = event.point.y;
 		if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
 		if (project.activeLayer != capaVectorial){capaVectorial.activate();}
+		//PROBAR QUE NO ENTRE A event.item.selected = true; O QUITAR project.activeLayer.selected = false O = TRUE;
+		*/
 		
 		project.activeLayer.selected = false;
 		
@@ -413,17 +420,15 @@ imagenRaster.onLoadk = function() {
 	tool.onMouseDrag = function(event){
 		console.info("Ha entrado en onMouseDrag");
 
+		/*
 		//movemos el el círculo del tamaño del pincel con el cursor.
-		
 		//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
 		if (project.activeLayer != capaCursor){capaCursor.activate();}
-		cursorTamanoPincel.position.x = event.point.x;
+		cursorTamanoPincel.position.x = event.point.x;												*** CURSOR ***
 		cursorTamanoPincel.position.y = event.point.y;
 		if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
-		//console.info("capaCursor: " + (project.activeLayer == capaCursor));
-		//console.info("capaVectorial: " + (project.activeLayer == capaVectorial));
-		//console.info("capaImagen: " + (project.activeLayer == capaImagen));
 		if (project.activeLayer != capaVectorial){capaVectorial.activate();}
+		*/
 		
 		if (dibujar){
 			path.add(event.point);
@@ -479,28 +484,106 @@ imagenRaster.onLoadk = function() {
 	</script>
 
 	<style>
-  		/*body{ cursor: url(img/dot.png), pointer; }*/
+		body{background-color: purple;}
+  		#canvas{background-color: #414141; cursor: crosshair;} /* cursor: url(img/dot.png), pointer; }*/
+  		header{background-color: lime;}
+  		#cabecera{background-color: yellow;}
+  		.container{background-color: grey;}
+  		.menu{background-color: brown;}
+  		#barra-menus{background-color: olive;}
+  		#controles{background-color: orange;}
+  		#herramientas-izda{background-color: cyan;}
+  		#herramientas-dcha{background-color: blue;}
+  		footer{background-color: silver;}
+  		
 	</style>
   
 </head>
 
-<!-- <body onload="dibujarCanvas()"> -->
 <body>
 <!-- for others: use <body oncontextmenu="return false;"> to prevent browser context menus from appearing on right click. -->
-	<div id="container" style="width:75%;">
-		<div id="entorno">
-			<aside id="herramientas_izda" style="width:25%;">herramientas</aside>
-			<canvas id="canvas_croquis" style="width:100%; border:1px solid #d3d3d3;">Su navegador no soporta Canvas. Instale la última versión de Chrome</canvas>
+
+	<header id="cabecera">
+		<div class="container">
+			<h1>T&iacute;tulo</h1>
 		</div>
+	</header>
+	
+	<nav class="menu-wrapper">
+		<div class="menu">
+			<h2>menu</h2>
+		</div>
+	</nav>
+	
+	<div class="container-fluid">
+		
+		<section id="entorno" class="main row">
+		
+			<aside id="herramientas-izda" class="col-xs-12 col-sm-1 col-md-1 col-lg-2">
+			
+				<div class="pull-left">
+					<button type="button" class="btn btn-default free free-uniE905">sdkjfsldf lksj dhfkhs akhf</button>
+				</div>
+				
+				<div class="pull-left">
+					<button type="button" class="btn btn-default">Default</button>
+				</div>
+				
+				<div class="pull-left">
+					<button type="button" class="btn btn-default">Default</button>
+				</div>
+
+			</aside>
+			
+			<article class="col-xs-12 col-sm-11 col-md-9 col-lg-8">
+			
+				<div id="barra-menus">
+					<p>
+						Frankfurter bresaola spare ribs, ham drumstick venison swine pork belly chuck tenderloin pork loin tri-tip tail turducken kevin. Turducken tongue ham hock fatback jowl picanha tenderloin sirloin meatloaf. Corned beef sirloin ball tip turducken capicola ribeye. Bacon leberkas bresaola landjaeger filet mignon pork loin. Capicola landjaeger cupim shank. Ribeye hamburger pancetta filet mignon beef ribs corned beef capicola.
+					</p>
+				</div>
+
+				<div id="canvas">
+					<canvas id="canvas_croquis" style="width:100%; border:0px solid #d3d3d3;">Su navegador no soporta Canvas. Instale la última versión de Chrome</canvas>
+				</div>
+				
+				<div id="controles" class="clearfix">
+					<span class="col-xs-5">
+						<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg" onchange="abrirImagen(this.value);"/> <!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
+					</span>
+					
+					<span class="col-xs-2">
+						<input type="color" id="control_color" name="control_color"/>
+					</span>
+					
+					<span class="col-xs-3 col-md-offset-2">
+						<input type="range" id="control_zoom" name="control_zoom"  min="0" max="10"/>
+					</span>
+				</div>
+				
+			</article>
+			
+			<aside id="herramientas-dcha" class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+				<p>
+					Incluir un video explicativo
+					Pig salami kielbasa, turducken hamburger turkey strip steak shankle ham hock tenderloin cupim. Pork loin tenderloin doner strip steak beef turkey. Tail shank swine tri-tip alcatra pig cupim filet mignon meatball capicola jerky chuck ham venison. Chuck salami shank, tenderloin alcatra ball tip brisket corned beef flank pig short ribs pork loin t-bone meatloaf cupim.
+				</p>
+			</aside>
+			
+		</section>
+		
+		<footer>
+			<div class="container">
+				<h3>pie de pagina</h3>
+			</div>
+		</footer>
+	
 	</div>
-	
-	<button type="button" onclick="resizeCanvas()" name="Acci&oacute;n">resize</button>
-	
-	<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg" onchange="abrirImagen(this.value);"/> <!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
-	<input type="color" id="control_color" name="control_color"/>
-	<input type="range" id="control_zoom" name="control_zoom"  min="0" max="10"/>
 	
 	<!--  jQuery -->
 	<script src="js/jquery-2.1.4.min.js"></script>
+	
+	<!-- Bootstrap minified JavaScript -->
+  	<script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
 </body>
 </html>
