@@ -9,17 +9,23 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   
   <title>Canvas</title>
-  <meta name="description" content="Dibujar con canvas">
+  <meta name="description" content="Horma Studio, crea tus propias vías de escalada">
   <meta name="author" content="Unai Perea Cruz">
+  
+  <!-- Estilos CSS -->
+  <link rel="stylesheet" type="text/css" href="css/styles.css?v=1.0">
   
   <!-- Responsive Design -->
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   
   <!-- Bootstrap minified CSS -->
   <link rel="stylesheet" href="js/bootstrap-3.3.5-dist/css/bootstrap.min.css">
-
+  
+  <!-- Font Awesome  -->		
+  <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.4.0/css/font-awesome.min.css">
+  
   <!-- Custom IconMoon  -->
-  <link rel="stylesheet" type="text/css" href="fonts/iconmoon/style.css">
+  <link rel="stylesheet" type="text/css" href="fonts/icomoon/style.css">
 
   <!-- Paper.js dibujo en Canvas -->
   <script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
@@ -523,6 +529,25 @@ imagenRaster.onLoadk = function() {
 			
 				<div class="pull-left">
 					<button type="button" class="btn btn-default free free-uniE905">sdkjfsldf lksj dhfkhs akhf</button>
+					<span class="btn btn-default free free-uniE905">Hola</span>
+					<div class="unit glyph tip-trigger" data-tip="pencil"><span class="free free-uniE905">fsadf</span></div>
+					<span class="icon icon-pencil">aaaaa</span>
+					  <ul>
+					  	<li><span class="fa fa-paint-brush" style="font-size: 40px"></span></li>
+					  	<li><span class="icon-radio-checked" style="font-size: 40px"></span></li>
+					  	<li><span class="fa fa-eraser" style="font-size: 40px"></span></li>
+					  	<li><span class="icon-image" style="font-size: 40px"></span></li>
+					 	
+					
+					    
+					
+					 	<!-- <li><span class="icon-photo" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+					    <li><span class="icon-minus" style="font-size: 40px"></span> <a href="#">Archive</a></li>
+					    <li><span class="icon-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+					    <li><span class="icon-location" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+					    <li><span class="fa fa-search-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+					    <li><span class="fa fa-search-minus" style="font-size: 40px"></span> <a href="#">Contact></a></li> -->
+					  </ul>
 				</div>
 				
 				<div class="pull-left">
@@ -534,7 +559,7 @@ imagenRaster.onLoadk = function() {
 				</div>
 
 			</aside>
-			
+			<!-- <div class="clearfix visible-sm-block"></div> -->
 			<article class="col-xs-12 col-sm-11 col-md-9 col-lg-8">
 			
 				<div id="barra-menus">
@@ -556,9 +581,12 @@ imagenRaster.onLoadk = function() {
 						<input type="color" id="control_color" name="control_color"/>
 					</span>
 					
-					<span class="col-xs-3 col-md-offset-2">
+					<span id="zoom" class="col-xs-5">
+						<i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px">
 						<input type="range" id="control_zoom" name="control_zoom"  min="0" max="10"/>
+						<i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px">
 					</span>
+					
 				</div>
 				
 			</article>

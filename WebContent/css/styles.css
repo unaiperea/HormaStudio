@@ -1,0 +1,33 @@
+/*   
+	version:  1.0
+	author:   Unai Perea Cruz
+		
+*/
+
+/* 
+   RESET    
+   Resetear todos los estilos para cualquier navegador
+*/
+@import url("reset.css");
+
+/* 
+
+   dar un estilo general o base a toda la Web	
+
+*/
+
+
+
+
+
+
+
+/*
+
+	Estilos personalizados
+	
+*/
+
+#zoom ul li{
+	list-style: none;
+}
