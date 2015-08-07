@@ -29,6 +29,9 @@
 
   <!-- Paper.js dibujo en Canvas -->
   <script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
+  	
+  <!--  jQuery -->
+  <script src="js/jquery-2.1.4.min.js"></script>
   
   <!-- javascript -->
   <script type="text/javascript">
@@ -72,12 +75,16 @@
 	var rReunion;
 	var grupoReunion //circuloReunion y  rReunion agrupados
 
+	var controlPincel;
+	var controlReunion;
+	var controlBorrar;
 
 	inicializarEntorno();
 	inicializarCanvas();
 	inicializarCapas(); //Creamos las capas (imágen, líneas)
 	inicializarDibujoVectorial();
 	cargarImagen(rutaImagen);
+	inicializarControles();
 
 	//crearPaths(); //Creamos Paths manualmente
 
@@ -218,6 +225,7 @@
 		//imagenRaster.position = view.center;
 		imagenRaster.selected = false;
 		capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar
+		controlPincel = true;
 	}
 
 	
@@ -312,6 +320,13 @@ imagenRaster.onLoadk = function() {
 	var puntoCentroImagen = new paper.Point(canvas.width / 2, canvas.height / 2);
 	imagenRaster.position = puntoCentroImagen;
 }
+	
+	function inicializarControles(){
+		controlPincel = false;
+		controlReunion = false;
+		controlBorrar = false;
+	}
+
 
 	/**
 	*  Cuando pulse el botón del ratón se obtendrá el item que está debajo y ...
@@ -469,22 +484,7 @@ imagenRaster.onLoadk = function() {
 			}
 	}
 
-	control_imagen.onchange = function( event ){
-		if (this.files && this.files[0]){
-			//imagenRaster.remove();
-			//paper.view.draw();
-			//var fichero = new FileReader();
-			//fichero.onload = function (e) {
-			//	   $('#canvas_croquis').attr('src', e.target.result);
-			//	  }
-			//var dataURL = fichero.readAsDataURL(this.files[0]);
-			
-			//cargarImagen("C:\\Users\Atxa\\Desktop\\" + this.files[0].name);
-			rutaImagen = "http://localhost:8080/HormaStudio/img/aspe.jpg"; //le paso una imágen para probar ya que el proceso sería: 1.- Escalara al tamaño del canvas 2.- subirlo a la web
-			cargarImagen(rutaImagen);
-		}
-	}
-
+	
 	
 }
 	</script>
@@ -492,6 +492,7 @@ imagenRaster.onLoadk = function() {
 	<style>
 		body{background-color: purple;}
   		#canvas{background-color: #414141; cursor: crosshair;} /* cursor: url(img/dot.png), pointer; }*/
+  		#control_pincel, #control_reunion, #control_borrar{ cursor: pointer;}
   		header{background-color: lime;}
   		#cabecera{background-color: yellow;}
   		.container{background-color: grey;}
@@ -527,27 +528,25 @@ imagenRaster.onLoadk = function() {
 		
 			<aside id="herramientas-izda" class="col-xs-12 col-sm-1 col-md-1 col-lg-2">
 			
-				<div class="pull-left">
+				<div><!-- class="pull-left">  -->
 					<button type="button" class="btn btn-default free free-uniE905">sdkjfsldf lksj dhfkhs akhf</button>
 					<span class="btn btn-default free free-uniE905">Hola</span>
 					<div class="unit glyph tip-trigger" data-tip="pencil"><span class="free free-uniE905">fsadf</span></div>
 					<span class="icon icon-pencil">aaaaa</span>
-					  <ul>
-					  	<li><span class="fa fa-paint-brush" style="font-size: 40px"></span></li>
-					  	<li><span class="icon-radio-checked" style="font-size: 40px"></span></li>
-					  	<li><span class="fa fa-eraser" style="font-size: 40px"></span></li>
-					  	<li><span class="icon-image" style="font-size: 40px"></span></li>
-					 	
 					
-					    
+					<ul>
+						<li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado" style="font-size: 30px"></span></li>
+						<li><span id="control_reunion" class="icon-radio-checked boton_hover boton_no_pulsado" style="font-size: 30px"></span></li>
+						<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado" style="font-size: 30px"></span></li>
+						<li><span class="icon-image" style="font-size: 30px"></span></li>
 					
-					 	<!-- <li><span class="icon-photo" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-					    <li><span class="icon-minus" style="font-size: 40px"></span> <a href="#">Archive</a></li>
-					    <li><span class="icon-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-					    <li><span class="icon-location" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-					    <li><span class="fa fa-search-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-					    <li><span class="fa fa-search-minus" style="font-size: 40px"></span> <a href="#">Contact></a></li> -->
-					  </ul>
+						<!-- <li><span class="icon-photo" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+						<li><span class="icon-minus" style="font-size: 40px"></span> <a href="#">Archive</a></li>
+						<li><span class="icon-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+						<li><span class="icon-location" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+						<li><span class="fa fa-search-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+						<li><span class="fa fa-search-minus" style="font-size: 40px"></span> <a href="#">Contact></a></li> -->
+					</ul>
 				</div>
 				
 				<div class="pull-left">
@@ -574,7 +573,7 @@ imagenRaster.onLoadk = function() {
 				
 				<div id="controles" class="clearfix">
 					<span class="col-xs-5">
-						<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg" onchange="abrirImagen(this.value);"/> <!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
+						<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg"/> <!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
 					</span>
 					
 					<span class="col-xs-2">
@@ -608,8 +607,42 @@ imagenRaster.onLoadk = function() {
 	
 	</div>
 	
-	<!--  jQuery -->
-	<script src="js/jquery-2.1.4.min.js"></script>
+	
+	<script type="text/javascript">
+	
+	/*************************
+	* FUNCIONES DE CONTROLES *
+	**************************/
+	
+	control_imagen.onchange = function( event ){
+		if (this.files && this.files[0]){
+			//imagenRaster.remove();
+			//paper.view.draw();
+			//var fichero = new FileReader();
+			//fichero.onload = function (e) {
+			//	   $('#canvas_croquis').attr('src', e.target.result);
+			//	  }
+			//var dataURL = fichero.readAsDataURL(this.files[0]);
+			
+			//cargarImagen("C:\\Users\Atxa\\Desktop\\" + this.files[0].name);
+			rutaImagen = "http://localhost:8080/HormaStudio/img/aspe.jpg"; //le paso una imágen para probar ya que el proceso sería: 1.- Escalara al tamaño del canvas 2.- subirlo a la web
+			cargarImagen(rutaImagen);
+		}
+	}
+	
+	control_pincel.onclick = function( event ){
+		//$('#control_pincel').classlist.toggle("boton_pulsado");
+		var botonAux = document.getElementById("control_pincel");
+		if ( botonAux.classList.contains("boton_no_pulsado") ){
+			botonAux.classList.remove("boton_hover");
+		}else{
+			botonAux.classList.add("boton_hover");
+		}
+		
+		botonAux.classList.toggle("boton_no_pulsado");
+	}
+	
+	</script>
 	
 	<!-- Bootstrap minified JavaScript -->
   	<script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
