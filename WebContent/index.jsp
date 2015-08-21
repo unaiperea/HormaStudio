@@ -82,9 +82,9 @@
 					<a id="descargar" href="#" target="_blank">Descargar</a>
 					
 					<ul>
-						<li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado" style="font-size: 30px"></span></li>
+						<li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li>
 						<li><span id="control_reunion" class="icon-radio-checked boton_hover boton_no_pulsado" style="font-size: 30px"></span></li>
-						<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado" style="font-size: 30px"></span></li>
+						<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado fa-2x"></span></li>
 						<li><span class="icon-image" style="font-size: 30px"></span></li>
 					
 						<!-- <li><span class="icon-photo" style="font-size: 40px"></span> <a href="#">Contact></a></li>
@@ -119,26 +119,42 @@
 				</div>
 				
 				<div id="controles" class="clearfix">
-					<span class="col-xs-5">
-						<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg"/> <!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
-					</span>
+					<div class="col-xs-3">
+						<p>Abrir im&aacute;gen:</p>
+						<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg">	</input><!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
+					</div>
 					
-					<span class="col-xs-2">
-						<input type="color" id="control_color" name="control_color"/>
-					</span>
-					
-					<span id="zoom" class="col-xs-5">
-						<i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px">
-						<input type="range" id="control_zoom" name="control_zoom"  min="0" max="10"/>
-						<i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px">
-					</span>
-					
+					<div class="col-xs-2">
+						<p>Color de pincel:</p>
+						<input type="color" id="control_color" name="control_color" onchange="getColor();"/>
+					</div>
+					<div id="grosor" class="col-xs-3">
+						<p>Grosor de pincel:</p>
+						<div class="flotar_izda">
+							<span id="grosor_menos" class="fa fa-minus-square-o" style="font-size: 25px" onclick="moverGrosor('abajo');"></span>
+						</div>
+						<div class="flotar_izda">
+							<input type="range" id="control_grosor" name="control_grosor"  min="0" max="100" onchange="setGrosor();"  style="margin-top: 1px"/>
+						</div>
+						<div class="flotar_izda">
+							<span id="grosor_mas" class="fa fa-plus-square-o" style="font-size: 25px" onclick="moverGrosor('arriba');"></span>
+						</div>
+						<span>
+							<input type="text" id="grosor_texto">
+						</span>
+					</div>
+					<div id="control_zoom" class="col-xs-1">
+						<!-- <i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px"> -->
+						<!-- <input type="range" id="control_zoom" name="control_zoom"  min="0" max="10" onchange="setZoom();"/> -->
+						<!-- <i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px"> -->
+					</div>
 				</div>
 				
 			</article>
 			
 			<aside id="herramientas-dcha" class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
 				<p>
+					//TODO
 					Incluir un video explicativo
 					Pig salami kielbasa, turducken hamburger turkey strip steak shankle ham hock tenderloin cupim. Pork loin tenderloin doner strip steak beef turkey. Tail shank swine tri-tip alcatra pig cupim filet mignon meatball capicola jerky chuck ham venison. Chuck salami shank, tenderloin alcatra ball tip brisket corned beef flank pig short ribs pork loin t-bone meatloaf cupim.
 				</p>
@@ -161,6 +177,10 @@
 	var controlPincel;
 	var controlReunion;
 	var controlBorrar;
+	var reunionColor;
+	var vectorColor;
+	var vectorGrosor;
+	var controlZoom;
 	
 	//TODO No sé si es paper.project. ....
 	
@@ -172,11 +192,8 @@
 	var hitOptions = null;
 	
 	//Atributos de los vectores
-	var vectorColor; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
-	var vectorGrosor; //$(#controlvectorGrosor).value; //Inicializa según lo que está predefinido
 	var vectorRedondezPunta;
 	var reunionRadio;
-	var reunionColor;
 	//var cursorColor;					*** CURSOR ***
 	var cursorTamanoPincel;
 	var hitTestTolerancia;
@@ -260,17 +277,18 @@
 	}
 
 	function inicializarDibujoVectorial(){
-		vectorColor         = 'blue'; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
+		vectorColor         = '#0000FF'; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
 		vectorGrosor        = 5; //$(#controlvectorGrosor).value; //Inicializa según lo que está predefinido
 		vectorRedondezPunta = 'round';
 		nodoTamano          = vectorGrosor*2;
 		
 		reunionRadio        = 8;
-		reunionColor        = 'red';
+		reunionColor        = '#ff0000';
 		
 		//cursorColor         = 'black';					*** CURSOR ***
 		hitTestTolerancia   = 2;
 
+		controlZoom = 0;
 		
 		//Tamaño de todos los nodos
 		paper.settings.handleSize = nodoTamano;
@@ -450,6 +468,9 @@
 		controlPincel = true;
 		controlReunion = false;
 		controlBorrar = false;
+		document.getElementById("control_color").value = "#0000FF";
+		document.getElementById("control_grosor").value = vectorGrosor;
+		document.getElementById("control_zoom").value = controlZoom;
 	}
 
 	function inicializarToolTip(){
@@ -816,6 +837,8 @@
 		if ( botonAuxPincel.classList.contains("boton_no_pulsado") ){ //Si NO está pulsado boton_pincel lo clickamos
 			botonAuxPincel.classList.remove("boton_hover");
 			botonAuxPincel.classList.toggle("boton_no_pulsado");
+			document.getElementById("control_color").disabled = false;
+			document.getElementById("control_color").value = vectorColor;
 			controlPincel = true;
 			controlReunion = false;
 			controlBorrar = false;
@@ -844,6 +867,8 @@
 			botonAuxReunion.classList.remove("boton_hover");
 			botonAuxReunion.classList.toggle("boton_no_pulsado");
 			botonAuxReunion.classList.add("boton_pulsado");
+			document.getElementById("control_color").disabled = false;
+			document.getElementById("control_color").value = reunionColor;
 			controlPincel = false;
 			controlReunion = true;
 			controlBorrar = false;
@@ -871,6 +896,7 @@
 			botonAuxBorrar.classList.remove("boton_hover");
 			botonAuxBorrar.classList.toggle("boton_no_pulsado");
 			botonAuxBorrar.classList.add("boton_pulsado");
+			document.getElementById("control_color").disabled = true;
 			controlPincel = false;
 			controlReunion = false;
 			controlBorrar = true;
@@ -949,6 +975,32 @@
 		      .text('Download')
 		  );*/
 		}
+	
+	function getColor(){
+		if (controlPincel){
+			vectorColor = document.getElementById("control_color").value;
+		}else if (controlReunion){
+			reunionColor = document.getElementById("control_color").value;
+		}
+	}
+	
+	function setGrosor(){
+		vectorGrosor = document.getElementById("control_grosor").value;
+		document.getElementById("grosor_texto").value = vectorGrosor;
+	}
+	
+	function setZoom(){
+		var z = document.getElementById("control_zoom").value;
+		
+	}
+	function moverGrosor(direccion){
+		if (direccion == "arriba"){
+			document.getElementById("control_grosor").stepUp(1);
+		}else if (direccion == "abajo"){
+			document.getElementById("control_grosor").stepDown(1);
+		}
+		setGrosor();
+	}
 	
 	</script>
 	

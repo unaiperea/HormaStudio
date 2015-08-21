@@ -27,6 +27,9 @@
 	Estilos personalizados
 	
 */
+.flotar_izda {
+	float: left;
+}
 
 #zoom ul li{
 	list-style: none;
