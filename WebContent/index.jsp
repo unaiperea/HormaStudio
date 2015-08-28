@@ -21,23 +21,22 @@
   <!-- Bootstrap minified CSS -->
   <link rel="stylesheet" href="js/bootstrap-3.3.5-dist/css/bootstrap.min.css">
   
-  <!-- Font Awesome  -->		
+  <!-- Font Awesome -->		
   <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.4.0/css/font-awesome.min.css">
-  
-  <!-- Custom IconMoon  -->
-  <link rel="stylesheet" type="text/css" href="fonts/icomoon/style.css">
 
   <!-- Paper.js dibujo en Canvas -->
   <script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
-  	
+  
   <!--  jQuery -->
   <script src="js/jquery-2.1.4.min.js"></script>
-  
+
+  <!-- JQuery MouseWheel -->
+  <script type='text/javascript' src='js/jquery.mousewheel.min.js'></script>  
 
 
 	<style>
 		body{background-color: purple;}
-  		#canvas{background-color: #414141; cursor: crosshair;} /* cursor: url(img/dot.png), pointer; }*/
+  		#canvas{background-color: #414141; cursor: crosshair;} /* none ----- cursor: url(img/dot.png), pointer; }*/
   		#control_pincel, #control_reunion, #control_borrar{ cursor: pointer;}
   		header{background-color: lime;}
   		#cabecera{background-color: yellow;}
@@ -73,37 +72,24 @@
 		<section id="entorno" class="main row">
 		
 			<aside id="herramientas-izda" class="col-xs-12 col-sm-1 col-md-1 col-lg-2">
-			
-				<div><!-- class="pull-left">  -->
-					<button type="button" class="btn btn-default free free-uniE905" onclick="img_and_link();">descargar imagen</button>
-					
-					<span id="control_guardar" class="btn btn-default">Guardar im&aacute;gen</span>
-					
-					<a id="descargar" href="#" target="_blank">Descargar</a>
-					
-					<ul>
-						<li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li>
-						<li><span id="control_reunion" class="icon-radio-checked boton_hover boton_no_pulsado" style="font-size: 30px"></span></li>
-						<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado fa-2x"></span></li>
-						<li><span class="icon-image" style="font-size: 30px"></span></li>
-					
-						<!-- <li><span class="icon-photo" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-						<li><span class="icon-minus" style="font-size: 40px"></span> <a href="#">Archive</a></li>
-						<li><span class="icon-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-						<li><span class="icon-location" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-						<li><span class="fa fa-search-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-						<li><span class="fa fa-search-minus" style="font-size: 40px"></span> <a href="#">Contact></a></li> -->
-					</ul>
-				</div>
+				<span id="control_guardar" class="btn btn-default">Guardar im&aacute;gen</span>
+				<a id="descargar" href="#" target="_blank">Descargar</a>
 				
-				<div class="pull-left">
-					<button type="button" class="btn btn-default">Default</button>
-				</div>
+				<ul class="pull-right">
+					<li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li>
+					<!-- <li><span id="control_reunion" class="icon-radio-checked boton_hover boton_no_pulsado" style="font-size: 30px"></span></li> -->
+					<li><span id="control_reunion" class="fa fa-dot-circle-o boton_hover boton_no_pulsado fa-2x"></span></li>
+					<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado fa-2x"></span></li>
+					<li><span id="control_mover" class="fa fa-hand-paper-o boton_hover boton_no_pulsado fa-2x"></span></li>
+					<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
 				
-				<div class="pull-left">
-					<button type="button" class="btn btn-default">Default</button>
-				</div>
-
+					<!-- <li><span class="icon-photo" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+					<li><span class="icon-minus" style="font-size: 40px"></span> <a href="#">Archive</a></li>
+					<li><span class="icon-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+					<li><span class="icon-location" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+					<li><span class="fa fa-search-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
+					<li><span class="fa fa-search-minus" style="font-size: 40px"></span> <a href="#">Contact></a></li> -->
+				</ul>
 			</aside>
 			<!-- <div class="clearfix visible-sm-block"></div> -->
 			<article class="col-xs-12 col-sm-11 col-md-9 col-lg-8">
@@ -121,7 +107,7 @@
 				<div id="controles" class="clearfix">
 					<div class="col-xs-3">
 						<p>Abrir im&aacute;gen:</p>
-						<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg">	</input><!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
+						<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg"/><!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
 					</div>
 					
 					<div class="col-xs-2">
@@ -129,21 +115,33 @@
 						<input type="color" id="control_color" name="control_color" onchange="getColor();"/>
 					</div>
 					<div id="grosor" class="col-xs-3">
-						<p>Grosor de pincel:</p>
+						<p>Tama&ntilde;o de pincel:<input type="text" id="grosor_texto" size="2" readonly/></p>
 						<div class="flotar_izda">
 							<span id="grosor_menos" class="fa fa-minus-square-o" style="font-size: 25px" onclick="moverGrosor('abajo');"></span>
 						</div>
 						<div class="flotar_izda">
-							<input type="range" id="control_grosor" name="control_grosor"  min="0" max="100" onchange="setGrosor();"  style="margin-top: 1px"/>
+							<input type="range" id="control_grosor" name="control_grosor" class="zoom-range" min="3" max="50" onchange="setGrosor();"  style="margin-top: 1px"/>
 						</div>
 						<div class="flotar_izda">
 							<span id="grosor_mas" class="fa fa-plus-square-o" style="font-size: 25px" onclick="moverGrosor('arriba');"></span>
 						</div>
-						<span>
-							<input type="text" id="grosor_texto">
-						</span>
 					</div>
-					<div id="control_zoom" class="col-xs-1">
+					<div id="zoom" class="col-xs-3">
+						<p>Zoom:
+							<input type="text" id="zoom_texto" size="2" readonly/>
+							<input type="button" id="zoom_restaurar" name="zoom_restaurar" onclick="resetZoom();" value="Reset"/>
+						</p>
+						
+						<div class="flotar_izda">
+							<span id="zoom_menos" class="fa fa-minus-square-o" style="font-size: 25px" onclick="moverZoom('abajo');"></span>
+						</div>
+						<div class="flotar_izda">
+							<input type="range" id="control_zoom" name="control_zoom" class="zoom-range" onchange="setZoom();"  style="margin-top: 1px"/>
+						</div>
+						<div class="flotar_izda">
+							<span id="zoom_mas" class="fa fa-plus-square-o" style="font-size: 25px" onclick="moverZoom('arriba');"></span>
+						</div>
+					
 						<!-- <i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px"> -->
 						<!-- <input type="range" id="control_zoom" name="control_zoom"  min="0" max="10" onchange="setZoom();"/> -->
 						<!-- <i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px"> -->
@@ -154,8 +152,7 @@
 			
 			<aside id="herramientas-dcha" class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
 				<p>
-					//TODO
-					Incluir un video explicativo
+					<!-- TODO Incluir un video explicativo -->
 					Pig salami kielbasa, turducken hamburger turkey strip steak shankle ham hock tenderloin cupim. Pork loin tenderloin doner strip steak beef turkey. Tail shank swine tri-tip alcatra pig cupim filet mignon meatball capicola jerky chuck ham venison. Chuck salami shank, tenderloin alcatra ball tip brisket corned beef flank pig short ribs pork loin t-bone meatloaf cupim.
 				</p>
 			</aside>
@@ -174,13 +171,18 @@
 	<script type="text/javascript">
 
   	//Variables para que se pueda interactuar entre los botones y el canvas
+  	var canvas; //Para getMousePos(); sino meterlo dentro de onload
+	var imagenRaster;
 	var controlPincel;
 	var controlReunion;
 	var controlBorrar;
 	var reunionColor;
 	var vectorColor;
 	var vectorGrosor;
-	var controlZoom;
+	var cursorTamanoPincel;
+	var posicionRaton;
+	var upperZoomLimit;
+    var lowerZoomLimit;
 	
 	//TODO No sé si es paper.project. ....
 	
@@ -194,8 +196,7 @@
 	//Atributos de los vectores
 	var vectorRedondezPunta;
 	var reunionRadio;
-	//var cursorColor;					*** CURSOR ***
-	var cursorTamanoPincel;
+	//var cursorColor;					/*** CURSOR ***/
 	var hitTestTolerancia;
 	var nodoTamano;
 
@@ -203,12 +204,9 @@
 	var capaImagen;
 	var capaVectorial;
 	var capaGenerica; //Para cualquier otro objeto que afecte al dibujo
-	//var capaCursor;
+	//var capaCursor;					/*** CURSOR ***/
 	
-	var canvas;
-	var tool;
 	var contexto;
-	var imagenRaster;
 	
 	var segment, path; //variables para saber qué item y en qué parte del item se ha clickado
 	var moverPath = false; //Controla el movimiento en bloque del item
@@ -247,8 +245,15 @@
 		//Inicializar
 		canvas = document.getElementById('canvas_croquis');//$('#canvas_croquis')[0]; //Obtenemos el id de la etiqueta canvas
 	    paper.setup('canvas_croquis'); //Crea una clase intermedia para poder utilizar el lenguaje javascript en vez de paperscript
-	    tool = new Tool(); //Crea una herramienta para manejar los eventos del teclado y ratón
-	  	
+	    tool = new paper.Tool(); //Crea una herramienta para manejar los eventos del teclado y ratón. Machaco la var tool ya existente
+	    
+	    //Zoom
+	    paper.tool.distanceThreshold = 8;
+	    paper.tool.mouseStartPos = new paper.Point();
+	    paper.tool.zoomFactor = 1.3;
+	    lowerZoomLimit = 1;
+	    upperZoomLimit = 10;
+	    
 	    //Creamos un contexto contra la etiqueta canvas
 		contexto = canvas.getContext('2d');
 		//contexto.fillStyle = "#424242"; //Color de fondo del canvas -- NO FUNCIONA
@@ -265,43 +270,40 @@
 	}
 	
 	function inicializarCapas(){
-		//var capaActual = paper.project.activeLayer; //capa activa actual
 		capaImagen = new paper.Layer();
 		capaImagen.name = "capa de imagen";
 		capaGenerica = new paper.Layer();
 		capaGenerica.name = "capa generica";
+		//capaCursor = new paper.Layer();					/*** CURSOR ***/
+		//capaCursor.name= "capa del cursor";
 		capaVectorial = new paper.Layer();
 		capaVectorial.name = "capa de lineas";
-		//capaCursor = new paper.Layer();
-		//capaCursor.name= "capa del cursor";
 	}
 
 	function inicializarDibujoVectorial(){
-		vectorColor         = '#0000FF'; //$(#controlvectorColor).value; //Inicializa según lo que está predefinido
-		vectorGrosor        = 5; //$(#controlvectorGrosor).value; //Inicializa según lo que está predefinido
+		vectorColor         = '#0000FF';
+		vectorGrosor        = 5;
 		vectorRedondezPunta = 'round';
 		nodoTamano          = vectorGrosor*2;
 		
 		reunionRadio        = 8;
 		reunionColor        = '#ff0000';
 		
-		//cursorColor         = 'black';					*** CURSOR ***
+		//cursorColor         = 'black';					/*** CURSOR ***/
 		hitTestTolerancia   = 2;
-
-		controlZoom = 0;
 		
 		//Tamaño de todos los nodos
 		paper.settings.handleSize = nodoTamano;
 		
 		//Creamos el objeto cursor
-		/*capaCursor.activate();
-		cursorTamanoPincel = new paper.Path.Circle ({
-			center: [0, 0],
-			radius: vectorGrosor/2,
-			strokeColor: cursorColor,						*** CURSOR ***
-			name: 'puntero'});
-		cursorTamanoPincel.visible = false;
-		capaVectorial.activate();*/
+		//capaCursor.activate();
+		//cursorTamanoPincel = new paper.Path.Circle ({
+		//	center: [0, 0],
+		//	radius: vectorGrosor/2,
+		//	strokeColor: cursorColor,					/*** CURSOR ***/
+		//	name: 'cursor'});
+		//cursorTamanoPincel.visible = false;
+		//capaVectorial.activate();
 		
 		//Opciones HitTest
 		hitOptions = {
@@ -341,6 +343,7 @@
 			console.info("va a borrar la imágen")
 			imagenRaster.remove();
 			imagenRaster = null;
+			//contexto.clearRect(0, 0, canvas.width, canvas.height); //PROBAAAAAAAAR
 		}
 		
 		/*var puntoInsercion = new paper.Point(paper.view.center);
@@ -468,9 +471,19 @@
 		controlPincel = true;
 		controlReunion = false;
 		controlBorrar = false;
+		
+		//ColorPicker
 		document.getElementById("control_color").value = "#0000FF";
+		
+		//Tamaño pincel
 		document.getElementById("control_grosor").value = vectorGrosor;
-		document.getElementById("control_zoom").value = controlZoom;
+		document.getElementById("grosor_texto").value = vectorGrosor;
+		
+		//Zoom
+		document.getElementById("control_zoom").value = lowerZoomLimit;
+		document.getElementById("zoom_texto").value = lowerZoomLimit;
+		$("#control_zoom")[0].min = lowerZoomLimit;
+        $("#control_zoom")[0].max = upperZoomLimit;
 	}
 
 	function inicializarToolTip(){
@@ -596,7 +609,7 @@
 		
 		//EN MODO DEBUG CON EL CHROME NO ENTRAN LOS MODIFICADORES CONTROL NI SHIFT
 		//Si pulsamos CTRL o SHIFT + Click ratón ...
-		if (event.modifiers.control && controlPincel){
+		if (event.modifiers.control && controlPincel){ // && hitNombreItem != "cursor"					/*** CURSOR ***/
 			//Si se ha pulsado CTRL + CLICK que lo prepare para moverse. Controla si clicka sobre alguno de los elementos del tooltiptext que no lo modifique  
 			//if ( hitResult && hitClaseItem != "Raster" && hitNombreItem != "tooltiptext" && hitNombreItem != "textotooltip" && hitNombreItem != "contornotooltip" && (controlReunion || controlPincel)) {
 			if (hitResult && hitNombreItem == "vector"){
@@ -604,7 +617,7 @@
 				path = hitResult.item;
 				//project.activeLayer.addChild(hitResult.item); //no sé si hay que incluirlo luego
 			}
-		}else if (event.modifiers.control && controlReunion){
+		}else if (event.modifiers.control && controlReunion ){ // && hitNombreItem != "cursor"					/*** CURSOR ***/
 			//Si se ha pulsado CTRL + CLICK que lo prepare para moverse. Controla si clicka sobre alguno de los elementos del tooltiptext que no lo modifique  
 			//if ( hitResult && hitClaseItem != "Raster" && hitNombreItem != "tooltiptext" && hitNombreItem != "textotooltip" && hitNombreItem != "contornotooltip" && (controlReunion || controlPincel)) {
 			if (hitResult && hitNombreItem == "reunion"){
@@ -613,7 +626,7 @@
 				//project.activeLayer.addChild(hitResult.item); //no sé si hay que incluirlo luego
 			}
 		}else if (event.modifiers.shift && controlPincel) {
-			//pulsando SHIFT + CLICK en el segmento/nodo borra el nodo
+			//pulsando SHIFT + CLICK en el segmento/nodo borra el nodo     			// && hitNombreItem != "cursor"					/*** CURSOR ***/
 			if ( hitResult && hitClaseItem != "Raster" && !hitResult.item.hasFill() && !controlReunion && !controlBorrar) { //Si hemos hecho click sobre algo y que no sea la imágen y si ha sido en una reunion que no la modifique
 				if (hitResult.type == 'segment') {
 					hitResult.segment.remove();
@@ -628,17 +641,21 @@
 				name: "reunion"
 				});
 		}else if (controlPincel){ //si no se ha pulsado ningún item o se ha clickado sobre el raster/imágen que cree un nuevo path y en onMouseDrag se dibuja
+			 //|| hitNombreItem == "cursor"					/*** CURSOR ***/
 			if (!hitResult || hitClaseItem === "Raster" || hitResult.type == "fill"){ //si hitResult=null o se ha clickado sobre la imágen o sobre un objeto con relleno/Reunión
 				path = new paper.Path({ //Crea un nuevo Path
-	    			strokeColor: vectorColor,
+					strokeColor: vectorColor,
 					strokeWidth: vectorGrosor,
-					strokeJoin: vectorRedondezPunta, //NO SÉ SI FUNCIONAAAAAAAAAAA, PARECE QUE SÍ PERO... LA PUNTA ES REKTA
+					strokeCap: vectorRedondezPunta,
 					name: "vector"
 					});
+				//center: [0, 0],
+				//path.add(event.point);
+				console.info("controlPincel = true");
 				//path.strokeWidth = 8;
 				//path.strokeJoin = 'round'; //La redondez de la punta
 				dibujar = true;
-			} else if ( hitResult && hitClaseItem != "Raster" ) {
+			} else if ( hitResult && hitClaseItem != "Raster") {
 				//si pulsa en cualquier lugar del path y que no sea sobre el raster/imágen...
 				console.info("guardamos el path clickado");
 				path = hitResult.item; //guardamos el path sobre el que se ha pulsado
@@ -662,6 +679,7 @@
 				hitResult.item.remove(); //Elimina el path completo con sus hijos pero en realidad no lo destruye por completo, luego se puede recuperar. Devuelve un booleano
 			}
 		}
+	console.info("a punto de salir del onMouseDown");
 	}
 
 	/**
@@ -670,17 +688,21 @@
  	//Sólo cuando pasamos por encima de un vector se selecciona (la imágen no)
 	tool.onMouseMove = function(event){
 		console.info("Ha entrado en onMouseMove");
-		
-		/*
-		//movemos el el círculo del tamaño del pincel con el cursor.
+		//paper.tool.mouseStartPos = new Point(event.point); //Para el zoom
+		//Obtengo la posición del cursor para hacer Zoom
+		//posicionRaton = getPosicionRaton(canvas, event);
+		posicionRaton = canvas.getBoundingClientRect(); //Recojo la posición del ratón en la ¿¿pantalla??
+
+	    //posx = posicionRaton.x;
+	    //posy = posicionRaton.y;
+
+		//movemos el el círculo del tamaño del pincel con el cursor.					/*** CURSOR ***/
 		//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
-		if (project.activeLayer != capaCursor){capaCursor.activate();}
-		cursorTamanoPincel.position.x = event.point.x;													*** CURSOR ***
-		cursorTamanoPincel.position.y = event.point.y;
+		/*if (project.activeLayer != capaCursor){capaCursor.activate();}
 		if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
-		if (project.activeLayer != capaVectorial){capaVectorial.activate();}
-		//PROBAR QUE NO ENTRE A event.item.selected = true; O QUITAR project.activeLayer.selected = false O = TRUE;
-		*/
+		cursorTamanoPincel.position.x = event.point.x;
+		cursorTamanoPincel.position.y = event.point.y;
+		if (project.activeLayer != capaVectorial){capaVectorial.activate();}*/
 		
 		project.activeLayer.selected = false;
 		
@@ -708,20 +730,23 @@
 	*/
 	tool.onMouseDrag = function(event){
 		console.info("Ha entrado en onMouseDrag");
-
-		/*
-		//movemos el el círculo del tamaño del pincel con el cursor.
-		//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
-		if (project.activeLayer != capaCursor){capaCursor.activate();}
-		cursorTamanoPincel.position.x = event.point.x;												*** CURSOR ***
-		cursorTamanoPincel.position.y = event.point.y;
-		if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
-		if (project.activeLayer != capaVectorial){capaVectorial.activate();}
-		*/
 		
 		if (dibujar){
+			console.info("dibujar");
+			//movemos el círculo del tamaño del pincel con el cursor.					/*** CURSOR ***/
+			//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
+			/*if (project.activeLayer != capaCursor){capaCursor.activate();}
+			if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
+			cursorTamanoPincel.position.x = event.point.x;
+			cursorTamanoPincel.position.y = event.point.y;
+			// TODO Poner siempre delante el cursor*****************************+
+			if (project.activeLayer != capaVectorial){capaVectorial.activate();}
+			console.info("Pos. cursor: " + cursorTamanoPincel.position);*/
+			
 			path.add(event.point);
+			console.info("Pos. nuevo punto: " + event.point);
 		}else
+			console.info("dibujar ELSE");
 			if (moverPath) { //pulsando CONTROL + CLICK mueve path entero
 				path.position.x += event.delta.x;
 	  			path.position.y += event.delta.y;
@@ -987,12 +1012,10 @@
 	function setGrosor(){
 		vectorGrosor = document.getElementById("control_grosor").value;
 		document.getElementById("grosor_texto").value = vectorGrosor;
+		var radioNuevo = (cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth) / 2; //seteamos el radio sumando (el ancho total del círculo + el grosor de la línea exterior) / 2
+		cursorTamanoPincel.scale((vectorGrosor/2)/radioNuevo);
 	}
 	
-	function setZoom(){
-		var z = document.getElementById("control_zoom").value;
-		
-	}
 	function moverGrosor(direccion){
 		if (direccion == "arriba"){
 			document.getElementById("control_grosor").stepUp(1);
@@ -1002,9 +1025,137 @@
 		setGrosor();
 	}
 	
+	function setZoom(){ //Al mover el slider del Zoom
+		var z = document.getElementById("control_zoom").value - document.getElementById("zoom_texto").value;
+		if (z>0){ //Si es positivo hago zoom
+			for (i=0 ; i < z ; i++){
+				setMasZoom();
+			}
+		}else{ //Si es negativo quito zoom
+			z*=-1; //Lo convierto a positivo
+			for (i=0 ; i < z ; i++){
+				setMenosZoom();
+			}
+		}
+		document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+	}
+
+	function moverZoom(direccion){ //Al pulsar - o + del Zoom
+		var controlZoom = document.getElementById("control_zoom");
+		if (direccion == "arriba"){
+			if (controlZoom.value < upperZoomLimit){
+				controlZoom.stepUp(1);
+				setMasZoom();
+			}
+		}else if (direccion == "abajo"){
+			if (controlZoom.value > lowerZoomLimit){
+				controlZoom.stepDown(1);
+				setMenosZoom();
+			}
+		}
+		document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+	}
+
+	function setMasZoom(){
+       	//var children = project.activeLayer.children;
+       	if (paper.view.zoom < upperZoomLimit) { 
+               //scroll up
+               //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+               
+   			//var point = $('#canvas_croquis').offset(); //var
+   		    //var x = event.clientX - posicionRaton.left; //De la posición del ratón dentro de la pantalla calculamos la posición X dentro del canvas
+   			//var y =  event.clientY - posicionRaton.top; //De la posición del ratón dentro de la pantalla calculamos la posición Y dentro del canvas
+   			point = paper.view.viewToProject(imagenRaster.view.center); //point //Convertimos a coordenadas dentro del proyecto
+            var zoomCenter = point.subtract(paper.view.center);
+            var moveFactor = tool.zoomFactor - 1.0;
+            paper.view.zoom *= tool.zoomFactor;
+            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
+            tool.mode = '';
+        }
+	}
+	
+	function setMenosZoom(){
+		if (paper.view.zoom > lowerZoomLimit){ //scroll down
+            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+
+			//var point = $('#canvas_croquis').offset();
+			
+			//var x = event.clientX - posicionRaton.left; //De la posición del ratón dentro de la pantalla calculamos la posición X dentro del canvas
+			//var y =  event.clientY - posicionRaton.top; //De la posición del ratón dentro de la pantalla calculamos la posición Y dentro del canvas
+			var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
+            var zoomCenter = point.subtract(paper.view.center);   
+            var moveFactor = tool.zoomFactor - 1.0;
+            paper.view.zoom /= tool.zoomFactor;
+            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor))
+        }
+	}
+
+	function resetZoom(){
+		//TODO
+	}
+	
+	$("#canvas_croquis").mousewheel(function(event, delta) {
+    	var delta = 0;
+        //var children = project.activeLayer.children;
+		var zTexto = document.getElementById("zoom_texto");
+        var zControl = document.getElementById("control_zoom");
+            
+        event.preventDefault();
+        event = event || window.event;
+        if (event.type == 'mousewheel') {       //this is for chrome/IE
+                delta = event.originalEvent.wheelDelta;
+            }
+            else if (event.type == 'DOMMouseScroll') {  //this is for FireFox
+                delta = event.originalEvent.detail*-1;  //FireFox reverses the scroll so we force to to re-reverse...
+            }
+
+        if((delta > 0) && (paper.view.zoom < upperZoomLimit)) { //scroll up
+            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+			//point = $('#canvas_croquis').offset(); //var
+		    var x = event.clientX - posicionRaton.left; //De la posición del ratón dentro de la pantalla calculamos la posición X dentro del canvas
+			var y =  event.clientY - posicionRaton.top; //De la posición del ratón dentro de la pantalla calculamos la posición Y dentro del canvas
+			var point = paper.view.viewToProject(x,y); //point //Convertimos a coordenadas dentro del proyecto
+            var zoomCenter = point.subtract(paper.view.center);
+            var moveFactor = tool.zoomFactor - 1.0;
+            paper.view.zoom *= tool.zoomFactor;
+            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
+            tool.mode = '';
+            zTexto.value = parseInt(zTexto.value) + 1;
+            zControl.value = parseInt(zControl.value) + 1;
+        }
+        else if((delta < 0) && (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de más por lo que lo evito poniéndolo en las condición
+			//TODO cuando llegue al nivel máximo de zoom se quede en el medio del canvas 
+			
+        	//var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+			//var point = $('#canvas_croquis').offset();
+			
+			var x = event.clientX - posicionRaton.left; //De la posición del ratón dentro de la pantalla calculamos la posición X dentro del canvas
+			var y =  event.clientY - posicionRaton.top; //De la posición del ratón dentro de la pantalla calculamos la posición Y dentro del canvas
+			var point = paper.view.viewToProject(x,y); //point //Convertimos a coordenadas dentro del proyecto
+            var zoomCenter = point.subtract(paper.view.center);   
+            var moveFactor = tool.zoomFactor - 1.0;
+            paper.view.zoom /= tool.zoomFactor;
+            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
+            zTexto.value = parseInt(zTexto.value) - 1; //Cambiamos el texto del zoom
+            zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
+        }
+    });
+		
+		        
+    
+
+	//El original - Llamada desde onMouseMove QUITARRRRRRRR
+	function getPosicionRaton(canvas, event) {
+	    var rect = canvas.getBoundingClientRect();
+	    return {
+	      x: event.clientX - rect.left,
+	      y: event.clientY - rect.top
+	    };
+	}
 	</script>
 	
 	<!-- Bootstrap minified JavaScript -->
   	<script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
 </body>
 </html>
+

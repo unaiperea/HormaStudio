@@ -31,6 +31,10 @@
 	float: left;
 }
 
+#herramientas-izda ul li{
+	margin-top: 10px;
+}
+
 #zoom ul li{
 	list-style: none;
 }
@@ -41,7 +45,9 @@
 .boton_pulsado/* Al presionarse el botón */ {
 	width: 40px;  /* Ancho del botón */
 	height: 40px;  /* Alto del botón */
-	padding: 5px;
+	padding-top: 7px;
+	padding-left: 2px;
+	//padding: 5px;
 	text-align: center;  /* Alineación del texto */
 	text-shadow: 1px 1px rgba(0,0,0,.3);  /* Sombra del texto */
 	background:#343434;  /* Fondo más oscuro que el original */
@@ -56,7 +62,8 @@
 	width: 40px;  /* Ancho del botón */
 	height: 40px;  /* Alto del botón */
 	border: 0; /* Borde */
-	padding: 5px;
+	padding-top: 7px;
+	padding-left: 2px;
 	background: #535353;  /* Fondo */
 	text-align: center;  /* Alineación del texto */
 	text-shadow: -1px -1px rgba(0,0,0,.2);  /* Sombra del texto */
@@ -64,8 +71,14 @@
 	color: white;  /* Color del texto */
 }
 
-.boton_hover:hover {
+/*.boton_reunion_hover:hover {
+	border: 1px solid #000000;
+	background: #6a6a6a;
+	padding: 4px !important;
+	padding: 4px !important;
+}*/
+
+.boton_hover:hover { /*El botón_reunion no funciona al ser de icomoon por lo que se ha creado una clase especial para él .boton_reunion_hover*/
 	border: 1px solid #000000; /* Borde */
 	background: #6a6a6a;  /* Fondo */
 }
-
