@@ -36,7 +36,7 @@
 
 	<style>
 		body{background-color: purple;}
-  		#canvas{background-color: #414141; cursor: crosshair;} /* none ----- cursor: url(img/dot.png), pointer; }*/
+  		#canvas{background-color: #414141; cursor: none;} /* crosshair ----- cursor: url(img/dot.png), pointer; }*/
   		#control_pincel, #control_reunion, #control_borrar{ cursor: pointer;}
   		header{background-color: lime;}
   		#cabecera{background-color: yellow;}
@@ -111,16 +111,16 @@
 					</div>
 					
 					<div class="col-xs-2">
-						<p>Color de pincel:</p>
+						<p>Color:</p>
 						<input type="color" id="control_color" name="control_color" onchange="getColor();"/>
 					</div>
 					<div id="grosor" class="col-xs-3">
-						<p>Tama&ntilde;o de pincel:<input type="text" id="grosor_texto" size="2" readonly/></p>
+						<p>Tama&ntilde;o:<input type="text" id="grosor_texto" size="2" readonly/></p>
 						<div class="flotar_izda">
 							<span id="grosor_menos" class="fa fa-minus-square-o" style="font-size: 25px" onclick="moverGrosor('abajo');"></span>
 						</div>
 						<div class="flotar_izda">
-							<input type="range" id="control_grosor" name="control_grosor" class="zoom-range" min="3" max="50" onchange="setGrosor();"  style="margin-top: 1px"/>
+							<input type="range" id="control_grosor" name="control_grosor" class="zoom-range" min="2" max="50" onchange="setGrosor();"  style="margin-top: 1px"/>
 						</div>
 						<div class="flotar_izda">
 							<span id="grosor_mas" class="fa fa-plus-square-o" style="font-size: 25px" onclick="moverGrosor('arriba');"></span>
@@ -131,7 +131,6 @@
 							<input type="text" id="zoom_texto" size="2" readonly/>
 							<input type="button" id="zoom_restaurar" name="zoom_restaurar" onclick="resetZoom();" value="Reset"/>
 						</p>
-						
 						<div class="flotar_izda">
 							<span id="zoom_menos" class="fa fa-minus-square-o" style="font-size: 25px" onclick="moverZoom('abajo');"></span>
 						</div>
@@ -176,7 +175,9 @@
 	var controlPincel;
 	var controlReunion;
 	var controlBorrar;
+	var controlMover;
 	var reunionColor;
+	var reunionRadio;
 	var vectorColor;
 	var vectorGrosor;
 	var cursorTamanoPincel;
@@ -195,8 +196,7 @@
 	
 	//Atributos de los vectores
 	var vectorRedondezPunta;
-	var reunionRadio;
-	//var cursorColor;					/*** CURSOR ***/
+	var cursorColor;					/*** CURSOR ***/
 	var hitTestTolerancia;
 	var nodoTamano;
 
@@ -204,14 +204,14 @@
 	var capaImagen;
 	var capaVectorial;
 	var capaGenerica; //Para cualquier otro objeto que afecte al dibujo
-	//var capaCursor;					/*** CURSOR ***/
+	var capaCursor;					/*** CURSOR ***/
 	
 	var contexto;
 	
 	var segment, path; //variables para saber qué item y en qué parte del item se ha clickado
 	var moverPath = false; //Controla el movimiento en bloque del item
 	var dibujar = false; //Controla si se va a dibujar o no
-	var rutaImagen = "http://localhost:8080/HormaStudio/img/atxarte.jpg";
+	var rutaImagen = "http://localhost:8080/HormaStudio/img/Ametzorbe300x401.jpg";
 	
 	var circuloReunion; //No sé si es imprescindible
 	//var rReunion; //Para si agrupamos el círculo con la letra R en el centro 
@@ -274,8 +274,8 @@
 		capaImagen.name = "capa de imagen";
 		capaGenerica = new paper.Layer();
 		capaGenerica.name = "capa generica";
-		//capaCursor = new paper.Layer();					/*** CURSOR ***/
-		//capaCursor.name= "capa del cursor";
+		capaCursor = new paper.Layer();					/*** CURSOR ***/
+		capaCursor.name= "capa del cursor";
 		capaVectorial = new paper.Layer();
 		capaVectorial.name = "capa de lineas";
 	}
@@ -289,21 +289,21 @@
 		reunionRadio        = 8;
 		reunionColor        = '#ff0000';
 		
-		//cursorColor         = 'black';					/*** CURSOR ***/
+		cursorColor         = 'black';					/*** CURSOR ***/
 		hitTestTolerancia   = 2;
 		
 		//Tamaño de todos los nodos
 		paper.settings.handleSize = nodoTamano;
 		
 		//Creamos el objeto cursor
-		//capaCursor.activate();
-		//cursorTamanoPincel = new paper.Path.Circle ({
-		//	center: [0, 0],
-		//	radius: vectorGrosor/2,
-		//	strokeColor: cursorColor,					/*** CURSOR ***/
-		//	name: 'cursor'});
-		//cursorTamanoPincel.visible = false;
-		//capaVectorial.activate();
+		capaCursor.activate();
+		cursorTamanoPincel = new paper.Path.Circle ({
+			center: [0, 0],
+			radius: vectorGrosor/2,
+			strokeColor: cursorColor,					/*** CURSOR ***/
+			name: 'cursor'});
+		cursorTamanoPincel.visible = false;
+		capaVectorial.activate();
 		
 		//Opciones HitTest
 		hitOptions = {
@@ -366,7 +366,6 @@
 	
 	//Redimensiona el entorno
 	imagenRaster.onLoad = function() {
-		
 		// finally query the various pixel ratios
         devicePixelRatio = window.devicePixelRatio || 1,
         backingStoreRatio = contexto.webkitBackingStorePixelRatio ||
@@ -393,26 +392,46 @@
 		var tempW = imagenRaster.width;
 		var tempH = imagenRaster.height;
 		
+		//TODO En vez de escalar la imágen al cargarla que le haga Zoom ******************
+		
 		if (tempW > tempH){ //Si la anchura de la imágen es mayor que la altura de la imágen se coge la anchura de la imágen
 			if (tempW > MAX_WIDTH){ //Si la imágen es mayor (en cuanto a anchura) que la del canvas, que permanezca la anchura del canvas
-				//Reducir imágen
-				tempH = Math.floor((tempH * MAX_WIDTH) / tempW); //Redondeo hacia abajo el redimensionamiento
-				imagenRaster.width = tempW = MAX_WIDTH; //OJO CON EL MARCO DEL CANVAS
-				canvas.height = imagenRaster.height = tempH;
-				canvas.style.height = tempH + 'px';
+				//Pero si la altura sigue siendo más grande que el canvas se reduce con respecto a lo alto del canvas
+				if (Math.floor((tempH * MAX_WIDTH) / tempW) > MAX_HEIGHT){
+					//Reducir imágen según altura del canvas
+					tempW = Math.floor((tempW * MAX_HEIGHT) / tempH);
+					imagenRaster.height = tempH = MAX_HEIGHT;
+					canvas.width = imagenRaster.width = tempW;
+					canvas.style.width = tempW + 'px'; //Le da más calidad
+				}else{
+					//Reducir imágen según anchura del canvas
+					tempH = Math.floor((tempH * MAX_WIDTH) / tempW); //Redondeo hacia abajo el redimensionamiento
+					imagenRaster.width = tempW = MAX_WIDTH; //OJO CON EL MARCO DEL CANVAS
+					canvas.height = imagenRaster.height = tempH;
+					canvas.style.height = tempH + 'px';
+				}
 			}else{ //Reducir canvas
 				canvas.width = tempW;
 				canvas.style.width = tempW + 'px'; //Le da más calidad
 				canvas.height = tempH;
 				canvas.style.height = tempH + 'px'; //Le da más calidad
 			}
-		}else{ //Si la altura de la imágen es mayor que la anchura de la imágen se coge la anchura de la imágen
+		}else{ //Si la altura de la imágen es mayor que la anchura de la imágen se coge la altura de la imágen
 			if (tempH > MAX_HEIGHT){ //Si la imágen es mayor (en cuanto a altura) que la del canvas, que permanezca la altura del canvas
-				//Reducir imágen
-				tempW = Math.floor((tempW * MAX_HEIGHT) / tempH);
-				imagenRaster.height = tempH = MAX_HEIGHT;
-				canvas.width = imagenRaster.width = tempW;
-				canvas.style.width = tempW + 'px'; //Le da más calidad
+				//Pero si la anchura sigue siendo más grande que el canvas se reduce con respecto a lo ancho del canvas
+				if (Math.floor((tempW * MAX_HEIGHT) / tempH) > MAX_HEIGHT){
+					//Reducir imágen
+					tempW = Math.floor((tempW * MAX_HEIGHT) / tempH);
+					imagenRaster.height = tempH = MAX_HEIGHT;
+					canvas.width = imagenRaster.width = tempW;
+					canvas.style.width = tempW + 'px'; //Le da más calidad
+				}else{
+					//Reducir imágen según anchura del canvas
+					tempH = Math.floor((tempH * MAX_WIDTH) / tempW); //Redondeo hacia abajo el redimensionamiento
+					imagenRaster.width = tempW = MAX_WIDTH; //OJO CON EL MARCO DEL CANVAS
+					canvas.height = imagenRaster.height = tempH;
+					canvas.style.height = tempH + 'px';
+				}
 			}else{ //Reducir canvas
 				canvas.width = tempW;
 				canvas.style.width = tempW + 'px'; //Le da más calidad
@@ -609,7 +628,7 @@
 		
 		//EN MODO DEBUG CON EL CHROME NO ENTRAN LOS MODIFICADORES CONTROL NI SHIFT
 		//Si pulsamos CTRL o SHIFT + Click ratón ...
-		if (event.modifiers.control && controlPincel){ // && hitNombreItem != "cursor"					/*** CURSOR ***/
+		if (event.modifiers.control && controlPincel && hitNombreItem != "cursor"){ // && hitNombreItem != "cursor"					/*** CURSOR ***/
 			//Si se ha pulsado CTRL + CLICK que lo prepare para moverse. Controla si clicka sobre alguno de los elementos del tooltiptext que no lo modifique  
 			//if ( hitResult && hitClaseItem != "Raster" && hitNombreItem != "tooltiptext" && hitNombreItem != "textotooltip" && hitNombreItem != "contornotooltip" && (controlReunion || controlPincel)) {
 			if (hitResult && hitNombreItem == "vector"){
@@ -617,7 +636,7 @@
 				path = hitResult.item;
 				//project.activeLayer.addChild(hitResult.item); //no sé si hay que incluirlo luego
 			}
-		}else if (event.modifiers.control && controlReunion ){ // && hitNombreItem != "cursor"					/*** CURSOR ***/
+		}else if (event.modifiers.control && controlReunion && hitNombreItem != "cursor"){ // && hitNombreItem != "cursor"					/*** CURSOR ***/
 			//Si se ha pulsado CTRL + CLICK que lo prepare para moverse. Controla si clicka sobre alguno de los elementos del tooltiptext que no lo modifique  
 			//if ( hitResult && hitClaseItem != "Raster" && hitNombreItem != "tooltiptext" && hitNombreItem != "textotooltip" && hitNombreItem != "contornotooltip" && (controlReunion || controlPincel)) {
 			if (hitResult && hitNombreItem == "reunion"){
@@ -627,7 +646,7 @@
 			}
 		}else if (event.modifiers.shift && controlPincel) {
 			//pulsando SHIFT + CLICK en el segmento/nodo borra el nodo     			// && hitNombreItem != "cursor"					/*** CURSOR ***/
-			if ( hitResult && hitClaseItem != "Raster" && !hitResult.item.hasFill() && !controlReunion && !controlBorrar) { //Si hemos hecho click sobre algo y que no sea la imágen y si ha sido en una reunion que no la modifique
+			if ( hitResult && hitClaseItem != "Raster" && !hitResult.item.hasFill() && hitNombreItem != "cursor" && !controlReunion && !controlBorrar) { //Si hemos hecho click sobre algo y que no sea la imágen y si ha sido en una reunion que no la modifique
 				if (hitResult.type == 'segment') {
 					hitResult.segment.remove();
 				}
@@ -642,13 +661,14 @@
 				});
 		}else if (controlPincel){ //si no se ha pulsado ningún item o se ha clickado sobre el raster/imágen que cree un nuevo path y en onMouseDrag se dibuja
 			 //|| hitNombreItem == "cursor"					/*** CURSOR ***/
-			if (!hitResult || hitClaseItem === "Raster" || hitResult.type == "fill"){ //si hitResult=null o se ha clickado sobre la imágen o sobre un objeto con relleno/Reunión
+			if (!hitResult || hitClaseItem === "Raster" || hitResult.type == "fill" || hitNombreItem == "cursor"){ //si hitResult=null o se ha clickado sobre la imágen o sobre un objeto con relleno/Reunión
 				path = new paper.Path({ //Crea un nuevo Path
 					strokeColor: vectorColor,
 					strokeWidth: vectorGrosor,
 					strokeCap: vectorRedondezPunta,
 					name: "vector"
 					});
+				//path.add(event.point);
 				//center: [0, 0],
 				//path.add(event.point);
 				console.info("controlPincel = true");
@@ -665,7 +685,7 @@
 					console.info("onMouseDown guardamos el path clickado y segment.point");
 					segment = hitResult.segment; //guardamos el segmento/nodo del propio path
 	
-				}else if (hitResult.type == 'stroke') {
+				} else if (hitResult.type == 'stroke') {
 					//Y si se ha pulsado sobre la línea del propio path
 					console.info("onMouseDown guardamos el path clickado");
 					var location = hitResult.location;
@@ -691,13 +711,14 @@
 		//paper.tool.mouseStartPos = new Point(event.point); //Para el zoom
 		//Obtengo la posición del cursor para hacer Zoom
 		//posicionRaton = getPosicionRaton(canvas, event);
-		posicionRaton = canvas.getBoundingClientRect(); //Recojo la posición del ratón en la ¿¿pantalla??
+		posicionRaton = canvas.getBoundingClientRect(); //Recojo la posición del ratón en la ¿¿pantalla??. Para el Zoom
 
 	    //posx = posicionRaton.x;
 	    //posy = posicionRaton.y;
 
 		//movemos el el círculo del tamaño del pincel con el cursor.					/*** CURSOR ***/
 		//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
+		moverCursor(event.point); // NO VA BIEEEEEEEEEN!!!!!!!!!
 		/*if (project.activeLayer != capaCursor){capaCursor.activate();}
 		if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
 		cursorTamanoPincel.position.x = event.point.x;
@@ -733,19 +754,9 @@
 		
 		if (dibujar){
 			console.info("dibujar");
-			//movemos el círculo del tamaño del pincel con el cursor.					/*** CURSOR ***/
-			//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
-			/*if (project.activeLayer != capaCursor){capaCursor.activate();}
-			if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
-			cursorTamanoPincel.position.x = event.point.x;
-			cursorTamanoPincel.position.y = event.point.y;
-			// TODO Poner siempre delante el cursor*****************************+
-			if (project.activeLayer != capaVectorial){capaVectorial.activate();}
-			console.info("Pos. cursor: " + cursorTamanoPincel.position);*/
-			
 			path.add(event.point);
 			console.info("Pos. nuevo punto: " + event.point);
-		}else
+		}else{
 			console.info("dibujar ELSE");
 			if (moverPath) { //pulsando CONTROL + CLICK mueve path entero
 				path.position.x += event.delta.x;
@@ -756,11 +767,21 @@
 				segment.point.y += event.delta.y;
 				//segment.point += event.delta; //No funciona así cuando pongo tool. ...
 				path.smooth(); //Suaviza el nuevo vértice
-		  		}else if (path) {
-		  			path.position.x += event.delta.x;
-		  			path.position.y += event.delta.y;
-					//path.position += event.delta; //No funciona así cuando pongo tool. ...
-				}
+	  		}else if (path) {
+	  			path.position.x += event.delta.x;
+	  			path.position.y += event.delta.y;
+				//path.position += event.delta; //No funciona así cuando pongo tool. ...
+			}
+		}
+		//movemos el círculo del tamaño del pincel con el cursor.					/*** CURSOR ***/
+		//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
+		moverCursor(event.point);
+		/*if (project.activeLayer != capaCursor){capaCursor.activate();}
+		if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
+		cursorTamanoPincel.position.x = event.point.x;
+		cursorTamanoPincel.position.y = event.point.y;
+		if (project.activeLayer != capaVectorial){capaVectorial.activate();}
+		console.info("Pos. cursor: " + cursorTamanoPincel.position);*/
 	}
 
 	/**
@@ -775,6 +796,15 @@
 			if (moverPath){
 				moverPath = false;
 			}
+	}
+	
+	function moverCursor(punto){
+		if (project.activeLayer != capaCursor){capaCursor.activate();}
+		if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
+		cursorTamanoPincel.position.x = punto.x;//event.point.x;
+		cursorTamanoPincel.position.y = punto.y;//event.point.y;
+		if (project.activeLayer != capaVectorial){capaVectorial.activate();}
+		console.info("cursor: " & cursorTamanoPincel.position.x & ", " & cursorTamanoPincel.position.y);
 	}
 	
 	/*tool.onKeyDown = function(event){
@@ -849,7 +879,7 @@
 			//var dataURL = fichero.readAsDataURL(this.files[0]);
 			
 			//cargarImagen("C:\\Users\Atxa\\Desktop\\" + this.files[0].name);
-			rutaImagen = "http://localhost:8080/HormaStudio/img/aspe.jpg"; //le paso una imágen para probar ya que el proceso sería: 1.- Escalara al tamaño del canvas 2.- subirlo a la web
+			rutaImagen = "http://localhost:8080/HormaStudio/img/Ametzorbe300x401.jpg"; //le paso una imágen para probar ya que el proceso sería: 1.- Escalara al tamaño del canvas 2.- subirlo a la web
 			cargarImagen(rutaImagen);
 		}
 	}
@@ -858,15 +888,20 @@
 		var botonAuxPincel = document.getElementById("control_pincel");
 		var botonAuxReunion = document.getElementById("control_reunion");
 		var botonAuxBorrar = document.getElementById("control_borrar");
+		var botonAuxMover = document.getElementById("control_mover");
 		
 		if ( botonAuxPincel.classList.contains("boton_no_pulsado") ){ //Si NO está pulsado boton_pincel lo clickamos
 			botonAuxPincel.classList.remove("boton_hover");
 			botonAuxPincel.classList.toggle("boton_no_pulsado");
-			document.getElementById("control_color").disabled = false;
-			document.getElementById("control_color").value = vectorColor;
+			botonAuxPincel.classList.add("boton_pulsado");
+			//document.getElementById("control_color").disabled = false;
+			//document.getElementById("control_color").value = vectorColor;
+			canvas.classList.remove("cursor_mover");
+			habilitarControles();
 			controlPincel = true;
 			controlReunion = false;
 			controlBorrar = false;
+			controlMover = false;
 			if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si está pulsado boton_reunion lo desclickamos
 				botonAuxReunion.classList.remove("boton_pulsado");
 				botonAuxReunion.classList.add("boton_hover");
@@ -875,71 +910,139 @@
 				botonAuxBorrar.classList.remove("boton_pulsado");
 				botonAuxBorrar.classList.add("boton_hover");
 				botonAuxBorrar.classList.toggle("boton_no_pulsado");
+			}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				botonAuxMover.classList.remove("boton_pulsado");
+				botonAuxMover.classList.add("boton_hover");
+				botonAuxMover.classList.toggle("boton_no_pulsado");
 			}
 		}
-
 		botonAuxPincel = null;
 		botonAuxReunion = null;
 		botonAuxBorrar = null;
+		botonAuxMover = null;
 	}
 	
 	control_reunion.onclick = function( event ){
 		var botonAuxPincel = document.getElementById("control_pincel");
 		var botonAuxReunion = document.getElementById("control_reunion");
 		var botonAuxBorrar = document.getElementById("control_borrar");
+		var botonAuxMover = document.getElementById("control_mover");
 		
 		if ( botonAuxReunion.classList.contains("boton_no_pulsado") ){ //Si NO está pulsado boton_pincel lo clickamos
 			botonAuxReunion.classList.remove("boton_hover");
 			botonAuxReunion.classList.toggle("boton_no_pulsado");
 			botonAuxReunion.classList.add("boton_pulsado");
-			document.getElementById("control_color").disabled = false;
-			document.getElementById("control_color").value = reunionColor;
+			//document.getElementById("control_color").disabled = false;
+			//document.getElementById("control_color").value = reunionColor;
+			canvas.classList.remove("cursor_mover");
+			habilitarControles();
 			controlPincel = false;
 			controlReunion = true;
 			controlBorrar = false;
+			controlMover = false;
 			if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
 				botonAuxBorrar.classList.remove("boton_pulsado");
 				botonAuxBorrar.classList.add("boton_hover");
 				botonAuxBorrar.classList.toggle("boton_no_pulsado");
 			}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si está pulsado boton_reunion lo desclickamos
+				botonAuxPincel.classList.remove("boton_pulsado");
 				botonAuxPincel.classList.add("boton_hover");
 				botonAuxPincel.classList.toggle("boton_no_pulsado");
+			}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				botonAuxMover.classList.remove("boton_pulsado");
+				botonAuxMover.classList.add("boton_hover");
+				botonAuxMover.classList.toggle("boton_no_pulsado");
 			}
 		}
-
 		botonAuxPincel = null;
 		botonAuxReunion = null;
 		botonAuxBorrar = null;
+		botonAuxMover = null;
 	}
 	
 	control_borrar.onclick = function( event ){
 		var botonAuxPincel = document.getElementById("control_pincel");
 		var botonAuxReunion = document.getElementById("control_reunion");
 		var botonAuxBorrar = document.getElementById("control_borrar");
+		var botonAuxMover = document.getElementById("control_mover");
 		
 		if ( botonAuxBorrar.classList.contains("boton_no_pulsado") ){ //Si NO está pulsado boton_pincel lo clickamos
 			botonAuxBorrar.classList.remove("boton_hover");
 			botonAuxBorrar.classList.toggle("boton_no_pulsado");
 			botonAuxBorrar.classList.add("boton_pulsado");
-			document.getElementById("control_color").disabled = true;
+			//document.getElementById("control_color").disabled = true;
+			canvas.classList.remove("cursor_mover");
+			deshabilitarControles();
 			controlPincel = false;
 			controlReunion = false;
 			controlBorrar = true;
+			controlMover = false;
 			if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
 				botonAuxReunion.classList.remove("boton_pulsado");
 				botonAuxReunion.classList.add("boton_hover");
 				botonAuxReunion.classList.toggle("boton_no_pulsado");
 			}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si está pulsado boton_reunion lo desclickamos
+				botonAuxPincel.classList.remove("boton_pulsado");
 				botonAuxPincel.classList.add("boton_hover");
 				botonAuxPincel.classList.toggle("boton_no_pulsado"); 
+			}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				botonAuxMover.classList.remove("boton_pulsado");
+				botonAuxMover.classList.add("boton_hover");
+				botonAuxMover.classList.toggle("boton_no_pulsado");
 			}
 		}
-
 		botonAuxPincel = null;
 		botonAuxReunion = null;
 		botonAuxBorrar = null;
+		botonAuxMover = null;
 	}
 	
+	control_mover.onclick = function ( event ){
+		var botonAuxPincel = document.getElementById("control_pincel");
+		var botonAuxReunion = document.getElementById("control_reunion");
+		var botonAuxBorrar = document.getElementById("control_borrar");
+		var botonAuxMover = document.getElementById("control_mover");
+		
+		if ( botonAuxMover.classList.contains("boton_no_pulsado") ){ //Si NO está pulsado boton_pincel lo clickamos
+			botonAuxMover.classList.remove("boton_hover");
+			botonAuxMover.classList.toggle("boton_no_pulsado");
+			botonAuxMover.classList.add("boton_pulsado");
+			//document.getElementById("control_color").disabled = true;
+			canvas.classList.add("cursor_mover");
+			deshabilitarControles();
+			controlPincel = false;
+			controlReunion = false;
+			controlBorrar = false;
+			controlMover = true;
+			if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				botonAuxReunion.classList.remove("boton_pulsado");
+				botonAuxReunion.classList.add("boton_hover");
+				botonAuxReunion.classList.toggle("boton_no_pulsado");
+			}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si está pulsado boton_reunion lo desclickamos
+				botonAuxPincel.classList.remove("boton_pulsado");
+				botonAuxPincel.classList.add("boton_hover");
+				botonAuxPincel.classList.toggle("boton_no_pulsado"); 
+			}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				botonAuxBorrar.classList.remove("boton_pulsado");
+				botonAuxBorrar.classList.add("boton_hover");
+				botonAuxBorrar.classList.toggle("boton_no_pulsado");
+			}
+		}
+		botonAuxPincel = null;
+		botonAuxReunion = null;
+		botonAuxBorrar = null;
+		botonAuxMover = null;
+	}
+	
+	function deshabilitarControles(){
+		document.getElementById("control_grosor").disabled = true;
+		document.getElementById("control_color").disabled = true;
+	}
+	
+	function habilitarControles(){
+		document.getElementById("control_grosor").disabled = false;
+		document.getElementById("control_color").disabled = false;
+	}	
 	control_guardar.onclick = function( event ){
 		
 		/*
@@ -968,7 +1071,6 @@
 		
 		
 	}
-	
 	
 	function descargarImagen() {
 	    // feel free to choose your event ;) 
@@ -1010,19 +1112,26 @@
 	}
 	
 	function setGrosor(){
-		vectorGrosor = document.getElementById("control_grosor").value;
-		document.getElementById("grosor_texto").value = vectorGrosor;
+		document.getElementById("grosor_texto").value = document.getElementById("control_grosor").value;
+		if (controlPincel) {
+			vectorGrosor = document.getElementById("control_grosor").value;
+		}else if (controlReunion){
+			reunionRadio = document.getElementById("control_grosor").value;
+		}
+		//Tamaño de cursor
 		var radioNuevo = (cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth) / 2; //seteamos el radio sumando (el ancho total del círculo + el grosor de la línea exterior) / 2
 		cursorTamanoPincel.scale((vectorGrosor/2)/radioNuevo);
 	}
 	
 	function moverGrosor(direccion){
-		if (direccion == "arriba"){
-			document.getElementById("control_grosor").stepUp(1);
-		}else if (direccion == "abajo"){
-			document.getElementById("control_grosor").stepDown(1);
+		if (controlPincel || controlReunion){
+			if (direccion == "arriba"){
+				document.getElementById("control_grosor").stepUp(1);
+			}else if (direccion == "abajo"){
+				document.getElementById("control_grosor").stepDown(1);
+			}
+			setGrosor();
 		}
-		setGrosor();
 	}
 	
 	function setZoom(){ //Al mover el slider del Zoom
@@ -1145,13 +1254,13 @@
     
 
 	//El original - Llamada desde onMouseMove QUITARRRRRRRR
-	function getPosicionRaton(canvas, event) {
+	/*function getPosicionRaton(canvas, event) {
 	    var rect = canvas.getBoundingClientRect();
 	    return {
 	      x: event.clientX - rect.left,
 	      y: event.clientY - rect.top
 	    };
-	}
+	}*/
 	</script>
 	
 	<!-- Bootstrap minified JavaScript -->

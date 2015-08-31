@@ -16,7 +16,10 @@
 
 */
 
-
+#canvas_croquis{
+	margin: 0 auto;
+	display: block; 
+}
 
 
 
@@ -81,4 +84,8 @@
 .boton_hover:hover { /*El botón_reunion no funciona al ser de icomoon por lo que se ha creado una clase especial para él .boton_reunion_hover*/
 	border: 1px solid #000000; /* Borde */
 	background: #6a6a6a;  /* Fondo */
+}
+
+.cursor_mover{
+	cursor: move;
 }
