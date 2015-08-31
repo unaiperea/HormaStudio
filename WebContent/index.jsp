@@ -1009,6 +1009,8 @@
 			botonAuxMover.classList.add("boton_pulsado");
 			//document.getElementById("control_color").disabled = true;
 			canvas.classList.add("cursor_mover");
+			//TODO deshabilitar cursor
+			cursorTamanoPincel.visible = false; //TODO En onMouseMove lo hace visible = true siempre asique no puede funcionar
 			deshabilitarControles();
 			controlPincel = false;
 			controlReunion = false;
