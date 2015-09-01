@@ -89,3 +89,7 @@
 .cursor_mover{
 	cursor: move;
 }
+
+.cursor_borrar{
+	cursor: pointer;
+}

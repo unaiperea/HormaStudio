@@ -70,7 +70,7 @@
 						<!-- <li><span id="control_reunion" class="icon-radio-checked boton_hover boton_no_pulsado" style="font-size: 30px"></span></li> -->
 						<li><span id="control_reunion" class="fa fa-dot-circle-o boton_hover boton_no_pulsado fa-2x"></span></li>
 						<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado fa-2x"></span></li>
-						<li><span id="control_mover" class="fa fa-hand-paper-o boton_hover boton_no_pulsado fa-2x"></span></li>
+						<li><span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x"></span></li>
 						<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
 					
 						<!-- <li><span class="icon-photo" style="font-size: 40px"></span> <a href="#">Contact></a></li>
@@ -209,7 +209,7 @@
 		var segment, path; //variables para saber qué item y en qué parte del item se ha clickado
 		var moverPath = false; //Controla el movimiento en bloque del item
 		var dibujar = false; //Controla si se va a dibujar o no
-		var rutaImagen = "http://localhost:8080/HormaStudio/img/Ametzorbe300x401.jpg";
+		var rutaImagen = "http://localhost:8080/HormaStudio/img/Ametzorbe766x1024.jpg";
 		
 		var circuloReunion; //No sé si es imprescindible
 		//var rReunion; //Para si agrupamos el círculo con la letra R en el centro 
@@ -392,7 +392,17 @@
 			
 			//TODO En vez de escalar la imágen al cargarla que le haga Zoom y que el tamaño del canvas no se modifique nunca******************
 			
-			if (tempW > tempH){ //Si la anchura de la imágen es mayor que la altura de la imágen se coge la anchura de la imágen
+			//while (tempW > MAX_WIDTH || tempH > MAX_HEIGHT){
+				$('#canvas_croquis').width();
+					for (i=0 ; i < 10 ; i++){
+						setMenosZoom();
+						$('#canvas_croquis').width();
+					}
+
+				//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+			//}
+			
+			/*if (tempW > tempH){ //Si la anchura de la imágen es mayor que la altura de la imágen se coge la anchura de la imágen
 				if (tempW > MAX_WIDTH){ //Si la imágen es mayor (en cuanto a anchura) que la del canvas, que permanezca la anchura del canvas
 					//Pero si la altura sigue siendo más grande que el canvas se reduce con respecto a lo alto del canvas
 					if (Math.floor((tempH * MAX_WIDTH) / tempW) > MAX_HEIGHT){
@@ -437,26 +447,7 @@
 					canvas.style.height = tempH + 'px'; //Le da más calidad
 				}
 				
-			}
-			
-			// La dimensión mayor de la imágen entre los atributos MAX_WIDTH o MAX_HEIGHT es la que definimos como máxima
-			/*var MAX_WIDTH = $(document).width; //coge la anchura total del div en el que se encuentra
-			var MAX_HEIGHT = $(document).height; //coge la altura total del div en el que se encuentra
-			var tempW = imagenRaster.width;
-			var tempH = imagenRaster.height;
-			if (tempW > tempH) {
-				if (tempW > MAX_WIDTH) {
-					tempH *= MAX_WIDTH / tempW;
-					tempW = MAX_WIDTH;
-				}
-			} else {
-				if (tempH > MAX_HEIGHT) {
-					tempW *= MAX_HEIGHT / tempH;
-					tempH = MAX_HEIGHT;
-				}
-			}
-			canvas.width = tempW;
-			canvas.height = tempH;*/
+			}*/
 			
 			// now scale the context to counter
 	        // the fact that we've manually scaled
@@ -715,7 +706,9 @@
 		    //posy = posicionRaton.y;
 	
 			//movemos el el círculo del tamaño del pincel con el cursor.					/*** CURSOR ***/
-			moverCursor(event.point);
+			if (!controlMover && !controlBorrar){
+				moverCursor(event.point);
+			}
 			
 			project.activeLayer.selected = false;
 			
@@ -765,7 +758,9 @@
 				}
 			}
 			//movemos el círculo del tamaño del pincel con el cursor.					/*** CURSOR ***/
-			moverCursor(event.point);
+			if (!controlMover && !controlBorrar){
+				moverCursor(event.point);
+			}
 		}
 	
 		/**
@@ -827,6 +822,7 @@
 				//document.getElementById("control_color").disabled = false;
 				//document.getElementById("control_color").value = vectorColor;
 				canvas.classList.remove("cursor_mover");
+				canvas.classList.remove("cursor_borrar");
 				habilitarControles();
 				controlPincel = true;
 				controlReunion = false;
@@ -865,6 +861,7 @@
 				//document.getElementById("control_color").disabled = false;
 				//document.getElementById("control_color").value = reunionColor;
 				canvas.classList.remove("cursor_mover");
+				canvas.classList.remove("cursor_borrar");
 				habilitarControles();
 				controlPincel = false;
 				controlReunion = true;
@@ -902,6 +899,7 @@
 				botonAuxBorrar.classList.add("boton_pulsado");
 				//document.getElementById("control_color").disabled = true;
 				canvas.classList.remove("cursor_mover");
+				canvas.classList.add("cursor_borrar");
 				deshabilitarControles();
 				controlPincel = false;
 				controlReunion = false;
@@ -938,6 +936,7 @@
 				botonAuxMover.classList.toggle("boton_no_pulsado");
 				botonAuxMover.classList.add("boton_pulsado");
 				//document.getElementById("control_color").disabled = true;
+				canvas.classList.remove("cursor_borrar");
 				canvas.classList.add("cursor_mover");
 				//TODO deshabilitar cursor
 				cursorTamanoPincel.visible = false; //TODO En onMouseMove lo hace visible = true siempre asique no puede funcionar
