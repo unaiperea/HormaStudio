@@ -42,6 +42,9 @@
 	list-style: none;
 }
 
+.invisible{
+	display: none;
+}
 
 /* Estilos de controles */
 

@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		
 		<title>Canvas</title>
-		<meta name="description" content="Horma Studio, crea tus propias vías de escalada">
+		<meta name="description" content="Horma Studio, crea tus propias vï¿½as de escalada">
 		<meta name="author" content="Unai Perea Cruz">
 		
 		<!-- Estilos CSS -->
@@ -62,36 +62,24 @@
 			<section id="entorno" class="main row">
 			
 				<aside id="herramientas-izda" class="col-xs-12 col-sm-1 col-md-1 col-lg-2">
-					<span id="control_guardar" class="btn btn-default">Guardar im&aacute;gen</span>
-					<a id="descargar" href="#" target="_blank">Descargar</a>
-					
 					<ul class="pull-right">
 						<li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li>
-						<!-- <li><span id="control_reunion" class="icon-radio-checked boton_hover boton_no_pulsado" style="font-size: 30px"></span></li> -->
 						<li><span id="control_reunion" class="fa fa-dot-circle-o boton_hover boton_no_pulsado fa-2x"></span></li>
 						<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado fa-2x"></span></li>
 						<li><span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x"></span></li>
 						<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
-					
-						<!-- <li><span class="icon-photo" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-						<li><span class="icon-minus" style="font-size: 40px"></span> <a href="#">Archive</a></li>
-						<li><span class="icon-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-						<li><span class="icon-location" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-						<li><span class="fa fa-search-plus" style="font-size: 40px"></span> <a href="#">Contact></a></li>
-						<li><span class="fa fa-search-minus" style="font-size: 40px"></span> <a href="#">Contact></a></li> -->
 					</ul>
 				</aside>
 				<!-- <div class="clearfix visible-sm-block"></div> -->
 				<article class="col-xs-12 col-sm-11 col-md-9 col-lg-8">
 				
 					<div id="barra-menus">
-						<p>
-							Frankfurter bresaola spare ribs, ham drumstick venison swine pork belly chuck tenderloin pork loin tri-tip tail turducken kevin. Turducken tongue ham hock fatback jowl picanha tenderloin sirloin meatloaf. Corned beef sirloin ball tip turducken capicola ribeye. Bacon leberkas bresaola landjaeger filet mignon pork loin. Capicola landjaeger cupim shank. Ribeye hamburger pancetta filet mignon beef ribs corned beef capicola.
-						</p>
+						<span id="control_guardar" class="btn btn-default">Guardar im&aacute;gen</span>
+						<a id="descargar" href="#" target="_blank" class="invisible">Descargar</a>
 					</div>
 	
 					<div id="canvas">
-						<canvas id="canvas_croquis" style="width:100%; border:0px solid #d3d3d3;">Su navegador no soporta Canvas. Instale la última versión de Chrome</canvas>
+						<canvas id="canvas_croquis" style="width:100%; border:0px solid #d3d3d3;">Su navegador no soporta Canvas. Instale la ï¿½ltima versiï¿½n de Chrome</canvas>
 					</div>
 					
 					<div id="controles" class="clearfix">
@@ -183,13 +171,13 @@
 		var upperZoomLimit;
 	    var lowerZoomLimit;
 		
-		//TODO No sé si es paper.project. ....
+		//TODO No sï¿½ si es paper.project. ....
 		
 	  	paper.install(window);
 		//Only executed our code once the DOM is ready.
 		window.onload = function() {
 	
-		//Atributos de hitTest (eventos provocados por el ratón al clickar sobre un item/Path/Segmento/Stroke
+		//Atributos de hitTest (eventos provocados por el ratï¿½n al clickar sobre un item/Path/Segmento/Stroke
 		var hitOptions = null;
 		
 		//Atributos de los vectores
@@ -206,13 +194,13 @@
 		
 		var contexto;
 		
-		var segment, path; //variables para saber qué item y en qué parte del item se ha clickado
+		var segment, path; //variables para saber quï¿½ item y en quï¿½ parte del item se ha clickado
 		var moverPath = false; //Controla el movimiento en bloque del item
 		var dibujar = false; //Controla si se va a dibujar o no
-		var rutaImagen = "http://localhost:8080/HormaStudio/img/Ametzorbe766x1024.jpg";
+		var rutaImagen = "http://localhost:8080/HormaStudio/img/atxarte.jpg";
 		
-		var circuloReunion; //No sé si es imprescindible
-		//var rReunion; //Para si agrupamos el círculo con la letra R en el centro 
+		var circuloReunion; //No sï¿½ si es imprescindible
+		//var rReunion; //Para si agrupamos el cï¿½rculo con la letra R en el centro 
 		//var grupoReunion //circuloReunion y  rReunion agrupados
 		
 		var rectangulo;
@@ -223,7 +211,7 @@
 		
 		inicializarEntorno();
 		inicializarCanvas();
-		inicializarCapas(); //Creamos las capas (imágen, líneas)
+		inicializarCapas(); //Creamos las capas (imï¿½gen, lï¿½neas)
 		inicializarDibujoVectorial();
 		cargarImagen(rutaImagen);
 		inicializarControles();
@@ -243,7 +231,7 @@
 			//Inicializar
 			canvas = document.getElementById('canvas_croquis');//$('#canvas_croquis')[0]; //Obtenemos el id de la etiqueta canvas
 		    paper.setup('canvas_croquis'); //Crea una clase intermedia para poder utilizar el lenguaje javascript en vez de paperscript
-		    tool = new paper.Tool(); //Crea una herramienta para manejar los eventos del teclado y ratón. Machaco la var tool ya existente
+		    tool = new paper.Tool(); //Crea una herramienta para manejar los eventos del teclado y ratï¿½n. Machaco la var tool ya existente
 		    
 		    //Zoom
 		    paper.tool.distanceThreshold = 8;
@@ -290,7 +278,7 @@
 			cursorColor         = 'black';					/*** CURSOR ***/
 			hitTestTolerancia   = 2;
 			
-			//Tamaño de todos los nodos
+			//Tamaï¿½o de todos los nodos
 			paper.settings.handleSize = nodoTamano;
 			
 			//Creamos el objeto cursor
@@ -306,7 +294,7 @@
 			//Opciones HitTest
 			hitOptions = {
 					segments: true, //para clickar en los nodos
-					stroke: true, //para clickar en las líneas
+					stroke: true, //para clickar en las lï¿½neas
 					fill: true, //para clickar en las reuniones
 					tolerance: hitTestTolerancia
 					};
@@ -321,24 +309,24 @@
 		//}
 	
 		/**
-		*  Cargarmos la imágen/raster en la capa capaImagen
+		*  Cargarmos la imï¿½gen/raster en la capa capaImagen
 		*/
 		function cargarImagen(rutaImagen){
-			//Activamos la capa de la imágen y la cargamos
+			//Activamos la capa de la imï¿½gen y la cargamos
 			capaImagen.activate();
 	
-			//Carga una imágen. No la toma como dentro de la capa capaImagen
+			//Carga una imï¿½gen. No la toma como dentro de la capa capaImagen
 			//var img = new Image();
 			//img.onload = function () {
 		    //	contexto.drawImage(img, 0, 0);
 			//}
 			//img.src = "http://localhost:8080/canvas/img/via.jpg";
 	
-			//Cargar imágen como raster. Ahora sí que está dentro de la capa capaImagen 
+			//Cargar imï¿½gen como raster. Ahora sï¿½ que estï¿½ dentro de la capa capaImagen 
 			//var imagenRaster = new Raster(rutaImagen);
 			
 			if (imagenRaster != null){
-				console.info("va a borrar la imágen")
+				console.info("va a borrar la imï¿½gen")
 				imagenRaster.remove();
 				imagenRaster = null;
 				//contexto.clearRect(0, 0, canvas.width, canvas.height); //PROBAAAAAAAAR
@@ -353,7 +341,7 @@
 		  		source: rutaImagen,
 				selected: false});
 			
-			paper.view.draw(); //Nos aseguramos que la redibuja en el caso de cambiar la imágen (entra en imagenRaster.onload)
+			paper.view.draw(); //Nos aseguramos que la redibuja en el caso de cambiar la imï¿½gen (entra en imagenRaster.onload)
 			
 			//imagenRaster.position = view.center;
 			imagenRaster.selected = false;
@@ -390,29 +378,29 @@
 			var tempW = imagenRaster.width;
 			var tempH = imagenRaster.height;
 			
-			//TODO En vez de escalar la imágen al cargarla que le haga Zoom y que el tamaño del canvas no se modifique nunca******************
+			//TODO En vez de escalar la imï¿½gen al cargarla que le haga Zoom y que el tamaï¿½o del canvas no se modifique nunca******************
 			
 			//while (tempW > MAX_WIDTH || tempH > MAX_HEIGHT){
-				$('#canvas_croquis').width();
+				/*$('#canvas_croquis').width();
 					for (i=0 ; i < 10 ; i++){
 						setMenosZoom();
 						$('#canvas_croquis').width();
-					}
+					}*/
 
 				//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
 			//}
 			
-			/*if (tempW > tempH){ //Si la anchura de la imágen es mayor que la altura de la imágen se coge la anchura de la imágen
-				if (tempW > MAX_WIDTH){ //Si la imágen es mayor (en cuanto a anchura) que la del canvas, que permanezca la anchura del canvas
-					//Pero si la altura sigue siendo más grande que el canvas se reduce con respecto a lo alto del canvas
+			if (tempW > tempH){ //Si la anchura de la imï¿½gen es mayor que la altura de la imï¿½gen se coge la anchura de la imï¿½gen
+				if (tempW > MAX_WIDTH){ //Si la imï¿½gen es mayor (en cuanto a anchura) que la del canvas, que permanezca la anchura del canvas
+					//Pero si la altura sigue siendo mï¿½s grande que el canvas se reduce con respecto a lo alto del canvas
 					if (Math.floor((tempH * MAX_WIDTH) / tempW) > MAX_HEIGHT){
-						//Reducir imágen según altura del canvas
+						//Reducir imï¿½gen segï¿½n altura del canvas
 						tempW = Math.floor((tempW * MAX_HEIGHT) / tempH);
 						imagenRaster.height = tempH = MAX_HEIGHT;
 						canvas.width = imagenRaster.width = tempW;
-						canvas.style.width = tempW + 'px'; //Le da más calidad
+						canvas.style.width = tempW + 'px'; //Le da mï¿½s calidad
 					}else{
-						//Reducir imágen según anchura del canvas
+						//Reducir imï¿½gen segï¿½n anchura del canvas
 						tempH = Math.floor((tempH * MAX_WIDTH) / tempW); //Redondeo hacia abajo el redimensionamiento
 						imagenRaster.width = tempW = MAX_WIDTH; //OJO CON EL MARCO DEL CANVAS
 						canvas.height = imagenRaster.height = tempH;
@@ -420,21 +408,21 @@
 					}
 				}else{ //Reducir canvas
 					canvas.width = tempW;
-					canvas.style.width = tempW + 'px'; //Le da más calidad
+					canvas.style.width = tempW + 'px'; //Le da mï¿½s calidad
 					canvas.height = tempH;
-					canvas.style.height = tempH + 'px'; //Le da más calidad
+					canvas.style.height = tempH + 'px'; //Le da mï¿½s calidad
 				}
-			}else{ //Si la altura de la imágen es mayor que la anchura de la imágen se coge la altura de la imágen
-				if (tempH > MAX_HEIGHT){ //Si la imágen es mayor (en cuanto a altura) que la del canvas, que permanezca la altura del canvas
-					//Pero si la anchura sigue siendo más grande que el canvas se reduce con respecto a lo ancho del canvas
+			}else{ //Si la altura de la imï¿½gen es mayor que la anchura de la imï¿½gen se coge la altura de la imï¿½gen
+				if (tempH > MAX_HEIGHT){ //Si la imï¿½gen es mayor (en cuanto a altura) que la del canvas, que permanezca la altura del canvas
+					//Pero si la anchura sigue siendo mï¿½s grande que el canvas se reduce con respecto a lo ancho del canvas
 					if (Math.floor((tempW * MAX_HEIGHT) / tempH) > MAX_HEIGHT){
-						//Reducir imágen
+						//Reducir imï¿½gen
 						tempW = Math.floor((tempW * MAX_HEIGHT) / tempH);
 						imagenRaster.height = tempH = MAX_HEIGHT;
 						canvas.width = imagenRaster.width = tempW;
-						canvas.style.width = tempW + 'px'; //Le da más calidad
+						canvas.style.width = tempW + 'px'; //Le da mï¿½s calidad
 					}else{
-						//Reducir imágen según anchura del canvas
+						//Reducir imï¿½gen segï¿½n anchura del canvas
 						tempH = Math.floor((tempH * MAX_WIDTH) / tempW); //Redondeo hacia abajo el redimensionamiento
 						imagenRaster.width = tempW = MAX_WIDTH; //OJO CON EL MARCO DEL CANVAS
 						canvas.height = imagenRaster.height = tempH;
@@ -442,12 +430,12 @@
 					}
 				}else{ //Reducir canvas
 					canvas.width = tempW;
-					canvas.style.width = tempW + 'px'; //Le da más calidad
+					canvas.style.width = tempW + 'px'; //Le da mï¿½s calidad
 					canvas.height = tempH;
-					canvas.style.height = tempH + 'px'; //Le da más calidad
+					canvas.style.height = tempH + 'px'; //Le da mï¿½s calidad
 				}
 				
-			}*/
+			}
 			
 			// now scale the context to counter
 	        // the fact that we've manually scaled
@@ -469,8 +457,8 @@
 				var altoImagen = imagenRaster.height;
 				var ratioTamanoCanvas = canvas.width / anchoImagen;
 		
-			imagenRaster.scale(ratioTamanoCanvas); //Escala la imágen al canvas
-			canvas.height = (altoImagen * canvas.width) / anchoImagen; //ratio del tamaño de la imágen respecto al tamaño del canvas
+			imagenRaster.scale(ratioTamanoCanvas); //Escala la imï¿½gen al canvas
+			canvas.height = (altoImagen * canvas.width) / anchoImagen; //ratio del tamaï¿½o de la imï¿½gen respecto al tamaï¿½o del canvas
 			var puntoCentroImagen = new paper.Point(canvas.width / 2, canvas.height / 2);
 			imagenRaster.position = puntoCentroImagen;
 		}
@@ -483,7 +471,7 @@
 			//ColorPicker
 			document.getElementById("control_color").value = "#0000FF";
 			
-			//Tamaño pincel
+			//Tamaï¿½o pincel
 			document.getElementById("control_grosor").value = vectorGrosor;
 			document.getElementById("grosor_texto").value = vectorGrosor;
 			
@@ -526,16 +514,16 @@
 			
 			//acceder a children reunion.children[0].point
 			//acceder a children reunion.children[1].point
-			//circuloReunion.position = path.getPointAt(0,0); //posición inicial. NO creo
+			//circuloReunion.position = path.getPointAt(0,0); //posiciï¿½n inicial. NO creo
 		}
 		
 		/**
-		*  Cuando pulse el botón del ratón se obtendrá el item que está debajo y ...
-		*  1.- si no ha pulsado ningún item que no haga nada
+		*  Cuando pulse el botï¿½n del ratï¿½n se obtendrï¿½ el item que estï¿½ debajo y ...
+		*  1.- si no ha pulsado ningï¿½n item que no haga nada
 		*  2.- si se ha pulsado en cualquier lado del Path con la tecla CTRL pulsada lo mueve en bloque
 		*  3.- si se ha pulsado en un nodo con la tecla SHIFT pulsada borra dicho nodo
 		*  4.- si se ha pulsado en un segmento/nodo del path preparado para mover el segmento
-		*  5.- si se ha pulsado en la línea del path inserta un nodo preparado para mover
+		*  5.- si se ha pulsado en la lï¿½nea del path inserta un nodo preparado para mover
 		*/
 		tool.onMouseDown = function(event){
 			//switch (event.event.button) {
@@ -604,26 +592,26 @@
 				
 				//acceder a children reunion.children[0].point
 				//acceder a children reunion.children[1].point
-				//circuloReunion.position = path.getPointAt(0,0); //posición inicial. NO creo
+				//circuloReunion.position = path.getPointAt(0,0); //posiciï¿½n inicial. NO creo
 				*/
 				
 			/*} else{*/
-				//Obtenemos dónde se ha pulsado el ratón 
+				//Obtenemos dï¿½nde se ha pulsado el ratï¿½n 
 			var hitResult = project.hitTest(event.point, hitOptions);
-			var hitClaseItem = hitResult.item.className; //Otra forma más fiable de saber qué item hemos clickado
+			var hitClaseItem = hitResult.item.className; //Otra forma mï¿½s fiable de saber quï¿½ item hemos clickado
 			var hitNombreItem = hitResult.item.name; //Otra forma para evitar que clicke el tooltiptext
 			
 			console.info(hitResult.item.name);
 			
 			//EN MODO DEBUG CON EL CHROME NO ENTRAN LOS MODIFICADORES CONTROL NI SHIFT
-			//Si pulsamos CTRL o SHIFT + Click ratón ...
+			//Si pulsamos CTRL o SHIFT + Click ratï¿½n ...
 			if (event.modifiers.control && controlPincel && hitNombreItem != "cursor"){ // && hitNombreItem != "cursor"					/*** CURSOR ***/
 				//Si se ha pulsado CTRL + CLICK que lo prepare para moverse. Controla si clicka sobre alguno de los elementos del tooltiptext que no lo modifique  
 				//if ( hitResult && hitClaseItem != "Raster" && hitNombreItem != "tooltiptext" && hitNombreItem != "textotooltip" && hitNombreItem != "contornotooltip" && (controlReunion || controlPincel)) {
 				if (hitResult && hitNombreItem == "vector"){
 					moverPath = true;
 					path = hitResult.item;
-					//project.activeLayer.addChild(hitResult.item); //no sé si hay que incluirlo luego
+					//project.activeLayer.addChild(hitResult.item); //no sï¿½ si hay que incluirlo luego
 				}
 			}else if (event.modifiers.control && controlReunion && hitNombreItem != "cursor"){ // && hitNombreItem != "cursor"					/*** CURSOR ***/
 				//Si se ha pulsado CTRL + CLICK que lo prepare para moverse. Controla si clicka sobre alguno de los elementos del tooltiptext que no lo modifique  
@@ -631,16 +619,16 @@
 				if (hitResult && hitNombreItem == "reunion"){
 					moverPath = true;
 					path = hitResult.item;
-					//project.activeLayer.addChild(hitResult.item); //no sé si hay que incluirlo luego
+					//project.activeLayer.addChild(hitResult.item); //no sï¿½ si hay que incluirlo luego
 				}
 			}else if (event.modifiers.shift && controlPincel) {
 				//pulsando SHIFT + CLICK en el segmento/nodo borra el nodo     			// && hitNombreItem != "cursor"					/*** CURSOR ***/
-				if ( hitResult && hitClaseItem != "Raster" && !hitResult.item.hasFill() && hitNombreItem != "cursor" && !controlReunion && !controlBorrar) { //Si hemos hecho click sobre algo y que no sea la imágen y si ha sido en una reunion que no la modifique
+				if ( hitResult && hitClaseItem != "Raster" && !hitResult.item.hasFill() && hitNombreItem != "cursor" && !controlReunion && !controlBorrar) { //Si hemos hecho click sobre algo y que no sea la imï¿½gen y si ha sido en una reunion que no la modifique
 					if (hitResult.type == 'segment') {
 						hitResult.segment.remove();
 					}
 				}
-			}else if (controlReunion){ //Si se ha pulsado el botón de Reunión que cree una nueva reunión al clickar sobre el canvas
+			}else if (controlReunion){ //Si se ha pulsado el botï¿½n de Reuniï¿½n que cree una nueva reuniï¿½n al clickar sobre el canvas
 				console.info("controlReunion = true");
 				circuloReunion = new paper.Path.Circle({
 					center: event.point,
@@ -648,9 +636,9 @@
 					fillColor: reunionColor,
 					name: "reunion"
 					});
-			}else if (controlPincel){ //si no se ha pulsado ningún item o se ha clickado sobre el raster/imágen que cree un nuevo path y en onMouseDrag se dibuja
+			}else if (controlPincel){ //si no se ha pulsado ningï¿½n item o se ha clickado sobre el raster/imï¿½gen que cree un nuevo path y en onMouseDrag se dibuja
 				 //|| hitNombreItem == "cursor"					/*** CURSOR ***/
-				if (!hitResult || hitClaseItem === "Raster" || hitResult.type == "fill" || hitNombreItem == "cursor"){ //si hitResult=null o se ha clickado sobre la imágen o sobre un objeto con relleno/Reunión
+				if (!hitResult || hitClaseItem === "Raster" || hitResult.type == "fill" || hitNombreItem == "cursor"){ //si hitResult=null o se ha clickado sobre la imï¿½gen o sobre un objeto con relleno/Reuniï¿½n
 					path = new paper.Path({ //Crea un nuevo Path
 						strokeColor: vectorColor,
 						strokeWidth: vectorGrosor,
@@ -665,7 +653,7 @@
 					//path.strokeJoin = 'round'; //La redondez de la punta
 					dibujar = true;
 				} else if ( hitResult && hitClaseItem != "Raster") {
-					//si pulsa en cualquier lugar del path y que no sea sobre el raster/imágen...
+					//si pulsa en cualquier lugar del path y que no sea sobre el raster/imï¿½gen...
 					console.info("guardamos el path clickado");
 					path = hitResult.item; //guardamos el path sobre el que se ha pulsado
 					
@@ -675,11 +663,11 @@
 						segment = hitResult.segment; //guardamos el segmento/nodo del propio path
 		
 					} else if (hitResult.type == 'stroke') {
-						//Y si se ha pulsado sobre la línea del propio path
+						//Y si se ha pulsado sobre la lï¿½nea del propio path
 						console.info("onMouseDown guardamos el path clickado");
 						var location = hitResult.location;
 						segment = path.insert(location.index + 1, event.point); //inserta un nodo y lo guardamos
-						path.smooth(); //Suaviza el nuevo vértice
+						path.smooth(); //Suaviza el nuevo vï¿½rtice
 					}
 				}
 			} else if (controlBorrar){
@@ -692,27 +680,27 @@
 		}
 	
 		/**
-		*  Mientras esté encima de un item se selecciona
+		*  Mientras estï¿½ encima de un item se selecciona
 		*/
-	 	//Sólo cuando pasamos por encima de un vector se selecciona (la imágen no)
+	 	//Sï¿½lo cuando pasamos por encima de un vector se selecciona (la imï¿½gen no)
 		tool.onMouseMove = function(event){
 			console.info("Ha entrado en onMouseMove");
 			//paper.tool.mouseStartPos = new Point(event.point); //Para el zoom
-			//Obtengo la posición del cursor para hacer Zoom
+			//Obtengo la posiciï¿½n del cursor para hacer Zoom
 			//posicionRaton = getPosicionRaton(canvas, event);
-			posicionRaton = canvas.getBoundingClientRect(); //Recojo la posición del ratón en la ¿¿pantalla??. Para el Zoom
+			posicionRaton = canvas.getBoundingClientRect(); //Recojo la posiciï¿½n del ratï¿½n en la ï¿½ï¿½pantalla??. Para el Zoom
 	
 		    //posx = posicionRaton.x;
 		    //posy = posicionRaton.y;
 	
-			//movemos el el círculo del tamaño del pincel con el cursor.					/*** CURSOR ***/
+			//movemos el el cï¿½rculo del tamaï¿½o del pincel con el cursor.					/*** CURSOR ***/
 			if (!controlMover && !controlBorrar){
 				moverCursor(event.point);
 			}
 			
 			project.activeLayer.selected = false;
 			
-			//Que sólo seleccione los vectores y las reuniones. Ni la imágen ni ninguno de los elementos del tooltiptext 
+			//Que sï¿½lo seleccione los vectores y las reuniones. Ni la imï¿½gen ni ninguno de los elementos del tooltiptext 
 			if (controlReunion && event.item && event.item.name == "reunion"){
 				event.item.selected = true;
 			}
@@ -727,16 +715,16 @@
 			}*/
 		}
 		
-		/**Cuando arrastremos el ratón con el botón pulsado ...
-		*  1.- moveremos el Path completo si se había pulsado CTRL
-		*  2.- arrastraremos el segmento/nodo si se haía pulsado sobre él
-		*  3.- arrastraremos el el nuevo segmento/nodo que acabamos de crear si se haía pulsado sobre la línea/Path
+		/**Cuando arrastremos el ratï¿½n con el botï¿½n pulsado ...
+		*  1.- moveremos el Path completo si se habï¿½a pulsado CTRL
+		*  2.- arrastraremos el segmento/nodo si se haï¿½a pulsado sobre ï¿½l
+		*  3.- arrastraremos el el nuevo segmento/nodo que acabamos de crear si se haï¿½a pulsado sobre la lï¿½nea/Path
 		*/
 		tool.onMouseDrag = function(event){
 			console.info("Ha entrado en onMouseDrag");
 			
 			if (dibujar){
-				//TODO controlar que no salga del límite de la imágen y/o del canvas. Controlar cuando tiene zoom
+				//TODO controlar que no salga del lï¿½mite de la imï¿½gen y/o del canvas. Controlar cuando tiene zoom
 				console.info("dibujar");
 				path.add(event.point);
 				console.info("Pos. nuevo punto: " + event.point);
@@ -745,26 +733,26 @@
 				if (moverPath) { //pulsando CONTROL + CLICK mueve path entero
 					path.position.x += event.delta.x;
 		  			path.position.y += event.delta.y;
-					//path.position += event.delta; //No funciona así cuando pongo tool. ...
+					//path.position += event.delta; //No funciona asï¿½ cuando pongo tool. ...
 				}else if (segment) {
 					segment.point.x += event.delta.x;
 					segment.point.y += event.delta.y;
-					//segment.point += event.delta; //No funciona así cuando pongo tool. ...
-					path.smooth(); //Suaviza el nuevo vértice
+					//segment.point += event.delta; //No funciona asï¿½ cuando pongo tool. ...
+					path.smooth(); //Suaviza el nuevo vï¿½rtice
 		  		}else if (path) {
 		  			path.position.x += event.delta.x;
 		  			path.position.y += event.delta.y;
-					//path.position += event.delta; //No funciona así cuando pongo tool. ...
+					//path.position += event.delta; //No funciona asï¿½ cuando pongo tool. ...
 				}
 			}
-			//movemos el círculo del tamaño del pincel con el cursor.					/*** CURSOR ***/
+			//movemos el cï¿½rculo del tamaï¿½o del pincel con el cursor.					/*** CURSOR ***/
 			if (!controlMover && !controlBorrar){
 				moverCursor(event.point);
 			}
 		}
 	
 		/**
-		* Cuando soltemos el ratón se inicializan las variables que controlan el movimiento o dibujo
+		* Cuando soltemos el ratï¿½n se inicializan las variables que controlan el movimiento o dibujo
 		*/
 		tool.onMouseUp = function(event){
 			console.info("Ha entrado en onMouseUp");
@@ -778,7 +766,7 @@
 		}
 		
 		function moverCursor(punto){
-			//TODO controlar que cuando se salga de los límites desaparezca el círculo del cursor
+			//TODO controlar que cuando se salga de los lï¿½mites desaparezca el cï¿½rculo del cursor
 			if (project.activeLayer != capaCursor){capaCursor.activate();}
 			if (cursorTamanoPincel.visible == false){cursorTamanoPincel.visible = true;}
 			cursorTamanoPincel.position.x = punto.x;//event.point.x;
@@ -804,7 +792,7 @@
 				//var dataURL = fichero.readAsDataURL(this.files[0]);
 				
 				//cargarImagen("C:\\Users\Atxa\\Desktop\\" + this.files[0].name);
-				rutaImagen = "http://localhost:8080/HormaStudio/img/Ametzorbe300x401.jpg"; //le paso una imágen para probar ya que el proceso sería: 1.- Escalara al tamaño del canvas 2.- subirlo a la web
+				rutaImagen = "http://localhost:8080/HormaStudio/img/Ametzorbe300x401.jpg"; //le paso una imï¿½gen para probar ya que el proceso serï¿½a: 1.- Escalara al tamaï¿½o del canvas 2.- subirlo a la web
 				cargarImagen(rutaImagen);
 			}
 		}
@@ -815,7 +803,7 @@
 			var botonAuxBorrar = document.getElementById("control_borrar");
 			var botonAuxMover = document.getElementById("control_mover");
 			
-			if ( botonAuxPincel.classList.contains("boton_no_pulsado") ){ //Si NO está pulsado boton_pincel lo clickamos
+			if ( botonAuxPincel.classList.contains("boton_no_pulsado") ){ //Si NO estï¿½ pulsado boton_pincel lo clickamos
 				botonAuxPincel.classList.remove("boton_hover");
 				botonAuxPincel.classList.toggle("boton_no_pulsado");
 				botonAuxPincel.classList.add("boton_pulsado");
@@ -828,15 +816,15 @@
 				controlReunion = false;
 				controlBorrar = false;
 				controlMover = false;
-				if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si está pulsado boton_reunion lo desclickamos
+				if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_reunion lo desclickamos
 					botonAuxReunion.classList.remove("boton_pulsado");
 					botonAuxReunion.classList.add("boton_hover");
 					botonAuxReunion.classList.toggle("boton_no_pulsado");
-				}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_borrar lo desclickamos
 					botonAuxBorrar.classList.remove("boton_pulsado");
 					botonAuxBorrar.classList.add("boton_hover");
 					botonAuxBorrar.classList.toggle("boton_no_pulsado");
-				}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_borrar lo desclickamos
 					botonAuxMover.classList.remove("boton_pulsado");
 					botonAuxMover.classList.add("boton_hover");
 					botonAuxMover.classList.toggle("boton_no_pulsado");
@@ -854,7 +842,7 @@
 			var botonAuxBorrar = document.getElementById("control_borrar");
 			var botonAuxMover = document.getElementById("control_mover");
 			
-			if ( botonAuxReunion.classList.contains("boton_no_pulsado") ){ //Si NO está pulsado boton_pincel lo clickamos
+			if ( botonAuxReunion.classList.contains("boton_no_pulsado") ){ //Si NO estï¿½ pulsado boton_pincel lo clickamos
 				botonAuxReunion.classList.remove("boton_hover");
 				botonAuxReunion.classList.toggle("boton_no_pulsado");
 				botonAuxReunion.classList.add("boton_pulsado");
@@ -867,15 +855,15 @@
 				controlReunion = true;
 				controlBorrar = false;
 				controlMover = false;
-				if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_borrar lo desclickamos
 					botonAuxBorrar.classList.remove("boton_pulsado");
 					botonAuxBorrar.classList.add("boton_hover");
 					botonAuxBorrar.classList.toggle("boton_no_pulsado");
-				}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si está pulsado boton_reunion lo desclickamos
+				}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_reunion lo desclickamos
 					botonAuxPincel.classList.remove("boton_pulsado");
 					botonAuxPincel.classList.add("boton_hover");
 					botonAuxPincel.classList.toggle("boton_no_pulsado");
-				}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_borrar lo desclickamos
 					botonAuxMover.classList.remove("boton_pulsado");
 					botonAuxMover.classList.add("boton_hover");
 					botonAuxMover.classList.toggle("boton_no_pulsado");
@@ -893,7 +881,7 @@
 			var botonAuxBorrar = document.getElementById("control_borrar");
 			var botonAuxMover = document.getElementById("control_mover");
 			
-			if ( botonAuxBorrar.classList.contains("boton_no_pulsado") ){ //Si NO está pulsado boton_pincel lo clickamos
+			if ( botonAuxBorrar.classList.contains("boton_no_pulsado") ){ //Si NO estï¿½ pulsado boton_pincel lo clickamos
 				botonAuxBorrar.classList.remove("boton_hover");
 				botonAuxBorrar.classList.toggle("boton_no_pulsado");
 				botonAuxBorrar.classList.add("boton_pulsado");
@@ -905,15 +893,16 @@
 				controlReunion = false;
 				controlBorrar = true;
 				controlMover = false;
-				if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				cursorTamanoPincel.visible = false; //TODO En onMouseMove lo hace visible = true siempre asique no puede funcionar
+				if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_borrar lo desclickamos
 					botonAuxReunion.classList.remove("boton_pulsado");
 					botonAuxReunion.classList.add("boton_hover");
 					botonAuxReunion.classList.toggle("boton_no_pulsado");
-				}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si está pulsado boton_reunion lo desclickamos
+				}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_reunion lo desclickamos
 					botonAuxPincel.classList.remove("boton_pulsado");
 					botonAuxPincel.classList.add("boton_hover");
 					botonAuxPincel.classList.toggle("boton_no_pulsado"); 
-				}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_borrar lo desclickamos
 					botonAuxMover.classList.remove("boton_pulsado");
 					botonAuxMover.classList.add("boton_hover");
 					botonAuxMover.classList.toggle("boton_no_pulsado");
@@ -931,7 +920,7 @@
 			var botonAuxBorrar = document.getElementById("control_borrar");
 			var botonAuxMover = document.getElementById("control_mover");
 			
-			if ( botonAuxMover.classList.contains("boton_no_pulsado") ){ //Si NO está pulsado boton_pincel lo clickamos
+			if ( botonAuxMover.classList.contains("boton_no_pulsado") ){ //Si NO estï¿½ pulsado boton_pincel lo clickamos
 				botonAuxMover.classList.remove("boton_hover");
 				botonAuxMover.classList.toggle("boton_no_pulsado");
 				botonAuxMover.classList.add("boton_pulsado");
@@ -945,15 +934,15 @@
 				controlReunion = false;
 				controlBorrar = false;
 				controlMover = true;
-				if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_borrar lo desclickamos
 					botonAuxReunion.classList.remove("boton_pulsado");
 					botonAuxReunion.classList.add("boton_hover");
 					botonAuxReunion.classList.toggle("boton_no_pulsado");
-				}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si está pulsado boton_reunion lo desclickamos
+				}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_reunion lo desclickamos
 					botonAuxPincel.classList.remove("boton_pulsado");
 					botonAuxPincel.classList.add("boton_hover");
 					botonAuxPincel.classList.toggle("boton_no_pulsado"); 
-				}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si está pulsado boton_borrar lo desclickamos
+				}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si estï¿½ pulsado boton_borrar lo desclickamos
 					botonAuxBorrar.classList.remove("boton_pulsado");
 					botonAuxBorrar.classList.add("boton_hover");
 					botonAuxBorrar.classList.toggle("boton_no_pulsado");
@@ -973,9 +962,9 @@
 		function habilitarControles(){
 			document.getElementById("control_grosor").disabled = false;
 			document.getElementById("control_color").disabled = false;
-		}	
+		}
+		
 		control_guardar.onclick = function( event ){
-			
 			/*
 			//var capaActual = paper.project.activeLayer; //capa activa actual
 			var capaGuardar = new paper.Layer();
@@ -990,15 +979,17 @@
 			*/
 	
 			//for ( i=0 ; i<project.layers.length ; i++ ){}
-			//var tempImg = project.activelayer.rasterize(300); //rasterize tiene el parámetro "resolución" o paper.proj...
+			//var tempImg = project.activelayer.rasterize(300); //rasterize tiene el parï¿½metro "resoluciï¿½n" o paper.proj...
 			var mimeType = "image/jpeg";
-			var calidad = 1.0; //La calidad más alta
+			var calidad = 1.0; //La calidad mï¿½s alta
 			//var dataString = tempImg.toDataURL(mimeType);
 			var dataString = document.getElementById("canvas_croquis").toDataURL(mimeType, calidad);
 			//tempImg.remove();
-			document.getElementById("descargar").href = dataString;
+			var bajar = document.getElementById("descargar")
+			bajar.classList.remove("invisible");
+			bajar.href = dataString;
 			//downloadme.href = canvasImg.src;
-			//window.open(dataString, "toDataURL() image", "width=800, height=200");//Abre en una nueva ventana la imágen
+			//window.open(dataString, "toDataURL() image", "width=800, height=200");//Abre en una nueva ventana la imï¿½gen
 			
 			
 		}
@@ -1049,8 +1040,8 @@
 			}else if (controlReunion){
 				reunionRadio = document.getElementById("control_grosor").value;
 			}
-			//Tamaño de cursor
-			var radioNuevo = (cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth) / 2; //seteamos el radio sumando (el ancho total del círculo + el grosor de la línea exterior) / 2
+			//Tamaï¿½o de cursor
+			var radioNuevo = (cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth) / 2; //seteamos el radio sumando (el ancho total del cï¿½rculo + el grosor de la lï¿½nea exterior) / 2
 			cursorTamanoPincel.scale((vectorGrosor/2)/radioNuevo);
 		}
 		
@@ -1103,8 +1094,8 @@
 	               //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 	               
 	   			//var point = $('#canvas_croquis').offset(); //var
-	   		    //var x = event.clientX - posicionRaton.left; //De la posición del ratón dentro de la pantalla calculamos la posición X dentro del canvas
-	   			//var y =  event.clientY - posicionRaton.top; //De la posición del ratón dentro de la pantalla calculamos la posición Y dentro del canvas
+	   		    //var x = event.clientX - posicionRaton.left; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n X dentro del canvas
+	   			//var y =  event.clientY - posicionRaton.top; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n Y dentro del canvas
 	   			point = paper.view.viewToProject(imagenRaster.view.center); //point //Convertimos a coordenadas dentro del proyecto
 	            var zoomCenter = point.subtract(paper.view.center);
 	            var moveFactor = tool.zoomFactor - 1.0;
@@ -1120,8 +1111,8 @@
 	
 				//var point = $('#canvas_croquis').offset();
 				
-				//var x = event.clientX - posicionRaton.left; //De la posición del ratón dentro de la pantalla calculamos la posición X dentro del canvas
-				//var y =  event.clientY - posicionRaton.top; //De la posición del ratón dentro de la pantalla calculamos la posición Y dentro del canvas
+				//var x = event.clientX - posicionRaton.left; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n X dentro del canvas
+				//var y =  event.clientY - posicionRaton.top; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n Y dentro del canvas
 				var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
 	            var zoomCenter = point.subtract(paper.view.center);   
 	            var moveFactor = tool.zoomFactor - 1.0;
@@ -1152,8 +1143,8 @@
 	        if((delta > 0) && (paper.view.zoom < upperZoomLimit)) { //scroll up
 	            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 				//point = $('#canvas_croquis').offset(); //var
-			    var x = event.clientX - posicionRaton.left; //De la posición del ratón dentro de la pantalla calculamos la posición X dentro del canvas
-				var y =  event.clientY - posicionRaton.top; //De la posición del ratón dentro de la pantalla calculamos la posición Y dentro del canvas
+			    var x = event.clientX - posicionRaton.left; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n X dentro del canvas
+				var y =  event.clientY - posicionRaton.top; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n Y dentro del canvas
 				var point = paper.view.viewToProject(x,y); //point //Convertimos a coordenadas dentro del proyecto
 	            var zoomCenter = point.subtract(paper.view.center);
 	            var moveFactor = tool.zoomFactor - 1.0;
@@ -1163,14 +1154,14 @@
 	            zTexto.value = parseInt(zTexto.value) + 1;
 	            zControl.value = parseInt(zControl.value) + 1;
 	        }
-	        else if((delta < 0) && (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de más por lo que lo evito poniéndolo en las condición
-				//TODO cuando llegue al nivel máximo de zoom se quede en el medio del canvas 
+	        else if((delta < 0) && (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de mï¿½s por lo que lo evito poniï¿½ndolo en las condiciï¿½n
+				//TODO cuando llegue al nivel mï¿½ximo de zoom se quede en el medio del canvas 
 				
 	        	//var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 				//var point = $('#canvas_croquis').offset();
 				
-				var x = event.clientX - posicionRaton.left; //De la posición del ratón dentro de la pantalla calculamos la posición X dentro del canvas
-				var y =  event.clientY - posicionRaton.top; //De la posición del ratón dentro de la pantalla calculamos la posición Y dentro del canvas
+				var x = event.clientX - posicionRaton.left; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n X dentro del canvas
+				var y =  event.clientY - posicionRaton.top; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n Y dentro del canvas
 				var point = paper.view.viewToProject(x,y); //point //Convertimos a coordenadas dentro del proyecto
 	            var zoomCenter = point.subtract(paper.view.center);   
 	            var moveFactor = tool.zoomFactor - 1.0;
