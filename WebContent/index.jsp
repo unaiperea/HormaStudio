@@ -26,15 +26,14 @@
 		
 		<style>
 			body{background-color: purple;}
-	  		#canvas{background-color: #414141; cursor: none;} /* crosshair ----- cursor: url(img/dot.png), pointer; }*/
-	  		#control_pincel, #control_reunion, #control_borrar{ cursor: pointer;}
+	  		#control_pincel, #control_reunion, #control_borrar{ cursor: pointer;} /*Qué pasa aquíiii? ***********************/
 	  		header{background-color: lime;}
 	  		#cabecera{background-color: yellow;}
 	  		.container{background-color: grey;}
 	  		.menu{background-color: brown;}
 	  		#barra-menus{background-color: olive;}
 	  		#controles{background-color: orange;}
-	  		#herramientas-izda{background-color: cyan;}
+	  		/* #herramientas-izda{background-color: cyan;} */
 	  		#herramientas-dcha{background-color: blue;}
 	  		footer{background-color: silver;}
 	  		
@@ -62,32 +61,70 @@
 			<section id="entorno" class="main row">
 			
 				<aside id="herramientas-izda" class="col-xs-12 col-sm-1 col-md-1 col-lg-2">
-					<ul class="pull-right">
-						<li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li>
-						<li><span id="control_reunion" class="fa fa-dot-circle-o boton_hover boton_no_pulsado fa-2x"></span></li>
-						<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado fa-2x"></span></li>
-						<li><span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x"></span></li>
-						<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
-					</ul>
+					<div id="control-archivo">
+						<ul>
+							<li><input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg"/></li><!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
+							<li><span id="control_guardar" class="btn btn-default">Guardar im&aacute;gen</span></li>
+							<li><a id="descargar" href="#" target="_blank" class="invisible">Descargar im&aacute;gen</a></li>
+						</ul>
+					</div>
+					<div id="control-dibujo" class="clearfix">
+						<ul>
+							<li><i id="ruta">Ruta</i></li>
+							<li><i id="reunion">Reunión</i></li>
+							<li><i id="borrar">Borrar</i></li>
+							<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
+						</ul>
+						<ul id="iconos-dibujo" class="pull-right">
+							<li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li>
+							<li><span id="control_reunion" class="fa fa-dot-circle-o boton_hover boton_no_pulsado fa-2x lista-margen-arriba"></span></li>
+							<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado fa-2x lista-margen-arriba"></span></li>
+							<!-- <li><span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x lista-margen-arriba"></span></li> -->
+							<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
+						</ul>
+					</div>
 				</aside>
 				<!-- <div class="clearfix visible-sm-block"></div> -->
-				<article class="col-xs-12 col-sm-11 col-md-9 col-lg-8">
+				<article id="centro" class="col-xs-12 col-sm-11 col-md-9 col-lg-8 clearfix">
 				
 					<div id="barra-menus">
-						<span id="control_guardar" class="btn btn-default">Guardar im&aacute;gen</span>
-						<a id="descargar" href="#" target="_blank" class="invisible">Descargar</a>
+						<p>
+							<!-- TODO Incluir un video explicativo -->
+							Pig salami kielbasa, turducken hamburger turkey strip steak shankle ham hock tenderloin cupim. Pork loin tenderloin doner strip steak beef turkey. Tail shank swine tri-tip alcatra pig cupim filet mignon meatball capicola jerky chuck ham venison. Chuck salami shank, tenderloin alcatra ball tip brisket corned beef flank pig short ribs pork loin t-bone meatloaf cupim.
+						</p>
 					</div>
 	
-					<div id="canvas">
-						<canvas id="canvas_croquis" style="width:100%; border:0px solid #d3d3d3;">Su navegador no soporta Canvas. Instale la �ltima versi�n de Chrome</canvas>
-					</div>
-					
-					<div id="controles" class="clearfix">
-						<div class="col-xs-3">
-							<p>Abrir im&aacute;gen:</p>
-							<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg"/><!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
+					<div id="canvas-container">
+						<canvas id="canvas_croquis" class="cursor_none">Su navegador no soporta Canvas. Instale la �ltima versi�n de Chrome</canvas>
+						
+						<div>
+							<span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x cursor_hand"></span>
 						</div>
 						
+						<div id="zoom-container" class="clearfix">
+							<div class="flotar_izda">
+								<!-- Al estar dentro de zoom-container no funciona deslizar el slider ********************************** -->
+								<span id="zoom_menos" class="fa fa-minus-square-o cursor_hand" style="font-size: 25px;" onclick="moverZoom('abajo');"></span>
+							</div>
+							<div class="flotar_izda">
+								<!-- <input type="range" id="control_zoom" name="control_zoom" class="bar cursor_hand" onchange="setZoom();" style="margin-top: 1px;"/> -->
+								<input type="range" id="control_zoom" name="control_zoom" onchange="setZoom();"/>
+								<!-- <div id="zoom-slider">
+									<input class="bar" type="range" id="rangeinput" value="10" onchange="rangevalue.value=value"/>
+									<span class="highlight"></span>
+									<output id="rangevalue">50</output>
+								</div> -->
+							</div>
+							<div class="flotar_izda">
+								<span id="zoom_mas" class="fa fa-plus-square-o cursor_hand" style="font-size: 25px;" onclick="moverZoom('arriba');"></span>
+							</div>
+						</div>
+						<div id="zoom-1-1" class="cursor_hand" >
+							<input type="button" id="zoom_restaurar" name="zoom_restaurar" onclick="resetZoom();" value="1:1"/>
+						</div>
+					</div>
+
+					<div id="controles" class="clearfix">
 						<div class="col-xs-2">
 							<p>Color:</p>
 							<input type="color" id="control_color" name="control_color" onchange="getColor();"/>
@@ -107,20 +144,10 @@
 						<div id="zoom" class="col-xs-3">
 							<p>Zoom:
 								<input type="text" id="zoom_texto" size="2" readonly/>
-								<input type="button" id="zoom_restaurar" name="zoom_restaurar" onclick="resetZoom();" value="Reset"/>
 							</p>
-							<div class="flotar_izda">
-								<span id="zoom_menos" class="fa fa-minus-square-o" style="font-size: 25px" onclick="moverZoom('abajo');"></span>
-							</div>
-							<div class="flotar_izda">
-								<input type="range" id="control_zoom" name="control_zoom" class="zoom-range" onchange="setZoom();"  style="margin-top: 1px"/>
-							</div>
-							<div class="flotar_izda">
-								<span id="zoom_mas" class="fa fa-plus-square-o" style="font-size: 25px" onclick="moverZoom('arriba');"></span>
-							</div>
 						
 							<!-- <i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px"> -->
-							<!-- <input type="range" id="control_zoom" name="control_zoom"  min="0" max="10" onchange="setZoom();"/> -->
+							<!-- <input type="range" id="control_zoom" name="control_zoom"  onchange="setZoom();"/> --> 
 							<!-- <i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px"> -->
 						</div>
 					</div>
@@ -726,7 +753,7 @@
 			console.info("Ha entrado en onMouseDrag");
 			
 			if (controlMover){
-				//TODO Faltar�a poner el viewToProject *****************************
+				//TODO Faltar�a poner el viewToProject *****************************
 				for (i=0; i<project.layers.length;i++){
 					project.layers[i].position.x += event.delta.x;
 					project.layers[i].position.y += event.delta.y;
@@ -820,6 +847,7 @@
 				//document.getElementById("control_color").value = vectorColor;
 				canvas.classList.remove("cursor_mover");
 				canvas.classList.remove("cursor_borrar");
+				canvas.classList.add("cursor_none");
 				habilitarControles();
 				controlPincel = true;
 				controlReunion = false;
@@ -859,6 +887,7 @@
 				//document.getElementById("control_color").value = reunionColor;
 				canvas.classList.remove("cursor_mover");
 				canvas.classList.remove("cursor_borrar");
+				canvas.classList.add("cursor_none");
 				habilitarControles();
 				controlPincel = false;
 				controlReunion = true;
@@ -895,6 +924,7 @@
 				botonAuxBorrar.classList.toggle("boton_no_pulsado");
 				botonAuxBorrar.classList.add("boton_pulsado");
 				//document.getElementById("control_color").disabled = true;
+				canvas.classList.remove("cursor_none");
 				canvas.classList.remove("cursor_mover");
 				canvas.classList.add("cursor_borrar");
 				deshabilitarControles();
@@ -902,7 +932,7 @@
 				controlReunion = false;
 				controlBorrar = true;
 				controlMover = false;
-				cursorTamanoPincel.visible = false; //TODO En onMouseMove lo hace visible = true siempre asique no puede funcionar
+				cursorTamanoPincel.visible = false;
 				if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si est� pulsado boton_borrar lo desclickamos
 					botonAuxReunion.classList.remove("boton_pulsado");
 					botonAuxReunion.classList.add("boton_hover");
@@ -934,10 +964,11 @@
 				botonAuxMover.classList.toggle("boton_no_pulsado");
 				botonAuxMover.classList.add("boton_pulsado");
 				//document.getElementById("control_color").disabled = true;
+				canvas.classList.remove("cursor_none");
 				canvas.classList.remove("cursor_borrar");
 				canvas.classList.add("cursor_mover");
 				//TODO deshabilitar cursor
-				cursorTamanoPincel.visible = false; //TODO En onMouseMove lo hace visible = true siempre asique no puede funcionar
+				cursorTamanoPincel.visible = false;
 				deshabilitarControles();
 				controlPincel = false;
 				controlReunion = false;
