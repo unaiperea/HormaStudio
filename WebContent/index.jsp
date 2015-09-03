@@ -197,7 +197,7 @@
 		var segment, path; //variables para saber quï¿½ item y en quï¿½ parte del item se ha clickado
 		var moverPath = false; //Controla el movimiento en bloque del item
 		var dibujar = false; //Controla si se va a dibujar o no
-		var rutaImagen = "http://localhost:8080/HormaStudio/img/atxarte.jpg";
+		var rutaImagen = "http://localhost:8080/HormaStudio/img/aspe.jpg";
 		
 		var circuloReunion; //No sï¿½ si es imprescindible
 		//var rReunion; //Para si agrupamos el cï¿½rculo con la letra R en el centro 
@@ -340,7 +340,9 @@
 			imagenRaster = new paper.Raster({
 		  		source: rutaImagen,
 				selected: false});
-			
+				//Borro todo lo que haya en nuestro lienzo
+			contexto.clearRect(0,0,canvas_croquis.width,canvas_croquis.height);
+				
 			paper.view.draw(); //Nos aseguramos que la redibuja en el caso de cambiar la imï¿½gen (entra en imagenRaster.onload)
 			
 			//imagenRaster.position = view.center;
@@ -723,7 +725,14 @@
 		tool.onMouseDrag = function(event){
 			console.info("Ha entrado en onMouseDrag");
 			
-			if (dibujar){
+			if (controlMover){
+				//TODO Faltaría poner el viewToProject *****************************
+				for (i=0; i<project.layers.length;i++){
+					project.layers[i].position.x += event.delta.x;
+					project.layers[i].position.y += event.delta.y;
+				}
+			}
+			else if (dibujar){
 				//TODO controlar que no salga del lï¿½mite de la imï¿½gen y/o del canvas. Controlar cuando tiene zoom
 				console.info("dibujar");
 				path.add(event.point);
@@ -1145,7 +1154,7 @@
 				//point = $('#canvas_croquis').offset(); //var
 			    var x = event.clientX - posicionRaton.left; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n X dentro del canvas
 				var y =  event.clientY - posicionRaton.top; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n Y dentro del canvas
-				var point = paper.view.viewToProject(x,y); //point //Convertimos a coordenadas dentro del proyecto
+				var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
 	            var zoomCenter = point.subtract(paper.view.center);
 	            var moveFactor = tool.zoomFactor - 1.0;
 	            paper.view.zoom *= tool.zoomFactor;
@@ -1162,7 +1171,7 @@
 				
 				var x = event.clientX - posicionRaton.left; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n X dentro del canvas
 				var y =  event.clientY - posicionRaton.top; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n Y dentro del canvas
-				var point = paper.view.viewToProject(x,y); //point //Convertimos a coordenadas dentro del proyecto
+				var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
 	            var zoomCenter = point.subtract(paper.view.center);   
 	            var moveFactor = tool.zoomFactor - 1.0;
 	            paper.view.zoom /= tool.zoomFactor;
