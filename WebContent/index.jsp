@@ -83,6 +83,29 @@
 							<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
 						</ul>
 					</div>
+					<div id="control-propiedades" class="clearfix">
+						<ul class="pull-right">
+							<li>
+								<span>Color:</span>
+								<input type="color" id="control_color" name="control_color" onchange="getColor();"/>
+							</li>
+						</ul>
+						<ul class="pull-right">
+							<li>
+								<div id="grosor">
+									<p>Tama&ntilde;o:<input type="text" id="grosor_texto" size="1" readonly/></p>
+									<div class="flotar_izda">
+										<span id="grosor_menos" class="fa fa-minus-square-o" style="font-size: 25px; color: #FFFFFF;" onclick="moverGrosor('abajo');"></span>
+									</div>
+									<div class="flotar_izda">
+										<input type="range" id="control_grosor" name="control_grosor" class="zoom-range" min="2" max="50" onchange="setGrosor();"  style="margin-top: 1px"/>
+									</div>
+									<div class="flotar_izda">
+										<span id="grosor_mas" class="fa fa-plus-square-o" style="font-size: 25px; color: #FFFFFF;" onclick="moverGrosor('arriba');"></span>
+									</div>
+								</div>
+							</li>
+						</ul>
 				</aside>
 				<!-- <div class="clearfix visible-sm-block"></div> -->
 				<article id="centro" class="col-xs-12 col-sm-11 col-md-9 col-lg-8 clearfix">
@@ -125,22 +148,6 @@
 					</div>
 
 					<div id="controles" class="clearfix">
-						<div class="col-xs-2">
-							<p>Color:</p>
-							<input type="color" id="control_color" name="control_color" onchange="getColor();"/>
-						</div>
-						<div id="grosor" class="col-xs-3">
-							<p>Tama&ntilde;o:<input type="text" id="grosor_texto" size="2" readonly/></p>
-							<div class="flotar_izda">
-								<span id="grosor_menos" class="fa fa-minus-square-o" style="font-size: 25px" onclick="moverGrosor('abajo');"></span>
-							</div>
-							<div class="flotar_izda">
-								<input type="range" id="control_grosor" name="control_grosor" class="zoom-range" min="2" max="50" onchange="setGrosor();"  style="margin-top: 1px"/>
-							</div>
-							<div class="flotar_izda">
-								<span id="grosor_mas" class="fa fa-plus-square-o" style="font-size: 25px" onclick="moverGrosor('arriba');"></span>
-							</div>
-						</div>
 						<div id="zoom" class="col-xs-3">
 							<p>Zoom:
 								<input type="text" id="zoom_texto" size="2" readonly/>

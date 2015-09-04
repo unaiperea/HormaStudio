@@ -35,7 +35,7 @@ i{
 	color: #FFFFFF;
 }
 
-#herramientas-izda, #herramientas-izda div{
+#herramientas-izda, #control-archivo, #control-dibujo, #control-propiedades{
 	margin-top: 10px;
 	margin-bottom: 10px;
 	border-radius: 6px;
@@ -110,7 +110,8 @@ i{
 
 #canvas_croquis{ /* crosshair ----- cursor: url(img/dot.png), pointer; }*/
 	width: 100%;
-	border: 0px solid #d3d3d3;
+	border: 0px solid white;/*#d3d3d3;*/
+	background-color: white;
 }
 
 #zoom-container{
