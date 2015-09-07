@@ -431,10 +431,17 @@
 					//Pero si la altura sigue siendo m�s grande que el canvas se reduce con respecto a lo alto del canvas
 					if (Math.floor((tempH * MAX_WIDTH) / tempW) > MAX_HEIGHT){
 						//Reducir im�gen seg�n altura del canvas
-						tempW = Math.floor((tempW * MAX_HEIGHT) / tempH);
-						imagenRaster.height = tempH = MAX_HEIGHT;
-						canvas.width = imagenRaster.width = tempW;
-						canvas.style.width = tempW + 'px'; //Le da m�s calidad
+						//tempW = Math.floor((tempW * MAX_HEIGHT) / tempH);
+						//imagenRaster.height = tempH = MAX_HEIGHT;
+						//canvas.width = imagenRaster.width = tempW;
+						//canvas.style.width = tempW + 'px'; //Le da m�s calidad
+						var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
+			            var zoomCenter = point.subtract(paper.view.center); 
+			            var moveFactor = tool.zoomFactor - 1.0;
+			            //paper.view.zoom /= tool.zoomFactor;
+			            var ratioZoomFactor = (MAX_WIDTH / MAX_HEIGHT) * 1 / (tempW / tempH);
+			            paper.view.zoom /= ratioZoomFactor;
+			            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
 					}else{
 						//Reducir im�gen seg�n anchura del canvas
 						tempH = Math.floor((tempH * MAX_WIDTH) / tempW); //Redondeo hacia abajo el redimensionamiento
