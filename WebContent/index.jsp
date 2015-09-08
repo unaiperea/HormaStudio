@@ -439,7 +439,8 @@
 			            var zoomCenter = point.subtract(paper.view.center); 
 			            var moveFactor = tool.zoomFactor - 1.0;
 			            //paper.view.zoom /= tool.zoomFactor;
-			            var ratioZoomFactor = ((MAX_WIDTH / MAX_HEIGHT) / 1) * (tempW / tempH);
+			            //var ratioZoomFactor = ((MAX_WIDTH / MAX_HEIGHT) / 1) * (tempW / tempH);
+			            var ratioZoomFactor = (tempW / MAX_WIDTH);
 			            paper.view.zoom /= ratioZoomFactor;
 			            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
 					}else{
