@@ -231,7 +231,7 @@
 		var segment, path; //variables para saber qu� item y en qu� parte del item se ha clickado
 		var moverPath = false; //Controla el movimiento en bloque del item
 		var dibujar = false; //Controla si se va a dibujar o no
-		var rutaImagen = "http://localhost:8080/HormaStudio/img/aspe.jpg";
+		var rutaImagen = "http://localhost:8080/HormaStudio/img/egino1070x755.png";
 		
 		var circuloReunion; //No s� si es imprescindible
 		//var rReunion; //Para si agrupamos el c�rculo con la letra R en el centro 
@@ -388,16 +388,7 @@
 		
 		//Redimensiona el entorno
 		imagenRaster.onLoad = function() {
-			// finally query the various pixel ratios
-	        devicePixelRatio = window.devicePixelRatio || 1,
-	        backingStoreRatio = contexto.webkitBackingStorePixelRatio ||
-	                            contexto.mozBackingStorePixelRatio ||
-	                            contexto.msBackingStorePixelRatio ||
-	                            contexto.oBackingStorePixelRatio ||
-	                            contexto.backingStorePixelRatio || 1,
-	
-	        ratio = devicePixelRatio / backingStoreRatio;
-			
+
 			//PROBAR CON contexto.width;Return the dimensions of the bitmap, in CSS pixels. Can be set, to update the bitmap's dimensions. If the rendering context is bound to a canvas, this will also update the canvas' intrinsic dimensions.
 			/*canvas.onmousemove = function (e) { 
 			   var x = e.pageX - this.offsetLeft;
@@ -413,8 +404,7 @@
 			var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
 			var tempW = imagenRaster.width;
 			var tempH = imagenRaster.height;
-			
-			//TODO En vez de escalar la im�gen al cargarla que le haga Zoom y que el tama�o del canvas no se modifique nunca******************
+			var ratioZoomFactor = 1;
 			
 			//while (tempW > MAX_WIDTH || tempH > MAX_HEIGHT){
 				/*$('#canvas_croquis').width();
@@ -426,69 +416,35 @@
 				//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
 			//}
 			
-			if (tempW > tempH){ //Si la anchura de la im�gen es mayor que la altura de la im�gen se coge la anchura de la im�gen
-				if (tempW > MAX_WIDTH){ //Si la im�gen es mayor (en cuanto a anchura) que la del canvas, que permanezca la anchura del canvas
-					//Pero si la altura sigue siendo m�s grande que el canvas se reduce con respecto a lo alto del canvas
-					if (Math.floor((tempH * MAX_WIDTH) / tempW) > MAX_HEIGHT){
-						//Reducir im�gen seg�n altura del canvas
-						//tempW = Math.floor((tempW * MAX_HEIGHT) / tempH);
-						//imagenRaster.height = tempH = MAX_HEIGHT;
-						//canvas.width = imagenRaster.width = tempW;
-						//canvas.style.width = tempW + 'px'; //Le da m�s calidad
-						var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
-			            var zoomCenter = point.subtract(paper.view.center); 
-			            var moveFactor = tool.zoomFactor - 1.0;
-			            //paper.view.zoom /= tool.zoomFactor;
-			            //var ratioZoomFactor = ((MAX_WIDTH / MAX_HEIGHT) / 1) * (tempW / tempH);
-			            var ratioZoomFactor = (tempW / MAX_WIDTH);
-			            paper.view.zoom /= ratioZoomFactor;
-			            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
-					}else{
-						//Reducir im�gen seg�n anchura del canvas
-						tempH = Math.floor((tempH * MAX_WIDTH) / tempW); //Redondeo hacia abajo el redimensionamiento
-						imagenRaster.width = tempW = MAX_WIDTH; //OJO CON EL MARCO DEL CANVAS
-						canvas.height = imagenRaster.height = tempH;
-						canvas.style.height = tempH + 'px';
+			if (tempW >= MAX_WIDTH || tempH >= MAX_HEIGHT){ //Si cualquiera de las dimensiones de la imágen es mayor que la del canvas que quite nivel de zoom
+				if (tempW >= tempH){ //Si el ancho de la imágen es mayor que el alto de la imágen
+					if (tempH >= MAX_HEIGHT){ //Pero si el alto de la imágen es mayor que el alto del canvas que se calcule el ratio respecto del alto del canvas
+						ratioZoomFactor = (tempH / MAX_HEIGHT);
+					}else{ //Sino que se calcule el ratio respecto del ancho del canvas
+						ratioZoomFactor = (tempW / MAX_WIDTH);
 					}
-				}else{ //Reducir canvas
-					canvas.width = tempW;
-					canvas.style.width = tempW + 'px'; //Le da m�s calidad
-					canvas.height = tempH;
-					canvas.style.height = tempH + 'px'; //Le da m�s calidad
+				}else{//Si el alto de la imágen es mayor que el ancho de la imágen que se calcule el ratio respecto del alto de la imágen
+					//ratioZoomFactor = (tempW / MAX_WIDTH);
+					ratioZoomFactor = (tempH / MAX_HEIGHT);
 				}
-			}else{ //Si la altura de la im�gen es mayor que la anchura de la im�gen se coge la altura de la im�gen
-				if (tempH > MAX_HEIGHT){ //Si la im�gen es mayor (en cuanto a altura) que la del canvas, que permanezca la altura del canvas
-					//Pero si la anchura sigue siendo m�s grande que el canvas se reduce con respecto a lo ancho del canvas
-					if (Math.floor((tempW * MAX_HEIGHT) / tempH) > MAX_HEIGHT){
-						//Reducir im�gen
-						tempW = Math.floor((tempW * MAX_HEIGHT) / tempH);
-						imagenRaster.height = tempH = MAX_HEIGHT;
-						canvas.width = imagenRaster.width = tempW;
-						canvas.style.width = tempW + 'px'; //Le da m�s calidad
-					}else{
-						//Reducir im�gen seg�n anchura del canvas
-						tempH = Math.floor((tempH * MAX_WIDTH) / tempW); //Redondeo hacia abajo el redimensionamiento
-						imagenRaster.width = tempW = MAX_WIDTH; //OJO CON EL MARCO DEL CANVAS
-						canvas.height = imagenRaster.height = tempH;
-						canvas.style.height = tempH + 'px';
-					}
-				}else{ //Reducir canvas
-					canvas.width = tempW;
-					canvas.style.width = tempW + 'px'; //Le da m�s calidad
-					canvas.height = tempH;
-					canvas.style.height = tempH + 'px'; //Le da m�s calidad
-				}
-				
+			}else{ //Sino que deje el tamaño de la imágen al 100% y en el centro
+				ratioZoomFactor = 1;
 			}
+			 
+			var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
+			var zoomCenter = point.subtract(paper.view.center); 
+			var moveFactor = tool.zoomFactor - 1.0;
+			paper.view.zoom /= ratioZoomFactor;
+            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
 			
 			// now scale the context to counter
 	        // the fact that we've manually scaled
 	        // our canvas element
-	        contexto.scale(ratio, ratio);
+	        //contexto.scale(ratio, ratio);
 			
-			var puntoCentroImagen = new paper.Point(tempW / 2, tempH / 2);
+			var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
 			imagenRaster.position = puntoCentroImagen;
-			paper.view.draw;
+			//paper.view.draw;
 		}
 		
 		imagenRaster.onLoadk = function() {
