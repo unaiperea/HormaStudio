@@ -191,6 +191,7 @@
 	
 	  	//Variables para que se pueda interactuar entre los botones y el canvas
 	  	var canvas; //Para getMousePos(); sino meterlo dentro de onload
+	  	var contexto;
 		var imagenRaster;
 		var controlPincel;
 		var controlReunion;
@@ -204,6 +205,9 @@
 		var posicionRaton;
 		var upperZoomLimit;
 	    var lowerZoomLimit;
+	    
+	    var capaImagen;
+		var capaVectorial;
 		
 		//TODO No s� si es paper.project. ....
 		
@@ -221,17 +225,17 @@
 		var nodoTamano;
 	
 		//Declaramos variables
-		var capaImagen;
-		var capaVectorial;
+		//var capaImagen;
+		//var capaVectorial;
 		var capaGenerica; //Para cualquier otro objeto que afecte al dibujo
 		var capaCursor;					/*** CURSOR ***/
 		
-		var contexto;
+		//var contexto;
 		
 		var segment, path; //variables para saber qu� item y en qu� parte del item se ha clickado
 		var moverPath = false; //Controla el movimiento en bloque del item
 		var dibujar = false; //Controla si se va a dibujar o no
-		var rutaImagen = "http://localhost:8080/HormaStudio/img/egino1070x755.png";
+		var rutaImagen = "http://localhost:8080/HormaStudio/img/Ametzorbe766x1024.jpg";
 		
 		var circuloReunion; //No s� si es imprescindible
 		//var rReunion; //Para si agrupamos el c�rculo con la letra R en el centro 
@@ -342,116 +346,14 @@
 			//path.add(new Point(450, 300));
 		//}
 	
-		/**
-		*  Cargarmos la im�gen/raster en la capa capaImagen
-		*/
-		function cargarImagen(rutaImagen){
-			//Activamos la capa de la im�gen y la cargamos
-			capaImagen.activate();
-	
-			//Carga una im�gen. No la toma como dentro de la capa capaImagen
-			//var img = new Image();
-			//img.onload = function () {
-		    //	contexto.drawImage(img, 0, 0);
-			//}
-			//img.src = "http://localhost:8080/canvas/img/via.jpg";
-	
-			//Cargar im�gen como raster. Ahora s� que est� dentro de la capa capaImagen 
-			//var imagenRaster = new Raster(rutaImagen);
-			
-			if (imagenRaster != null){
-				console.info("va a borrar la im�gen")
-				imagenRaster.remove();
-				imagenRaster = null;
-				//contexto.clearRect(0, 0, canvas.width, canvas.height); //PROBAAAAAAAAR
-			}
-			
-			/*var puntoInsercion = new paper.Point(paper.view.center);
-			imagenRaster = new paper.Raster({
-		  		source: rutaImagen,
-		  		//position: view.center,
-				selected: false}, puntoInsercion);*/
-			imagenRaster = new paper.Raster({
-		  		source: rutaImagen,
-				selected: false});
-				//Borro todo lo que haya en nuestro lienzo
-			contexto.clearRect(0,0,canvas_croquis.width,canvas_croquis.height);
-				
-			paper.view.draw(); //Nos aseguramos que la redibuja en el caso de cambiar la im�gen (entra en imagenRaster.onload)
-			
-			//imagenRaster.position = view.center;
-			imagenRaster.selected = false;
-			capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar
-			controlPincel = true;
-		}
-	
-		
 		//Redimensiona el entorno
-		imagenRaster.onLoad = function() {
-
-			//PROBAR CON contexto.width;Return the dimensions of the bitmap, in CSS pixels. Can be set, to update the bitmap's dimensions. If the rendering context is bound to a canvas, this will also update the canvas' intrinsic dimensions.
-			/*canvas.onmousemove = function (e) { 
-			   var x = e.pageX - this.offsetLeft;
-			   var y = e.pageY - this.offsetTop;
-			
-			   var div = document.getElementById("coords");
-			   div.innerHTML = "x: " + x + " y: " + y; 
-			};*/
-			
-			//cnvs.width = mirror.width = window.innerWidth;
-			
-			var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
-			var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
-			var tempW = imagenRaster.width;
-			var tempH = imagenRaster.height;
-			var ratioZoomFactor = 1;
-			
-			//while (tempW > MAX_WIDTH || tempH > MAX_HEIGHT){
-				/*$('#canvas_croquis').width();
-					for (i=0 ; i < 10 ; i++){
-						setMenosZoom();
-						$('#canvas_croquis').width();
-					}*/
-
-				//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
-			//}
-			
-			if (tempW >= MAX_WIDTH || tempH >= MAX_HEIGHT){ //Si cualquiera de las dimensiones de la imágen es mayor que la del canvas que quite nivel de zoom
-				if (tempW >= tempH){ //Si el ancho de la imágen es mayor que el alto de la imágen
-					if (tempH >= MAX_HEIGHT){ //Pero si el alto de la imágen es mayor que el alto del canvas que se calcule el ratio respecto del alto del canvas
-						ratioZoomFactor = (tempH / MAX_HEIGHT);
-					}else{ //Sino que se calcule el ratio respecto del ancho del canvas
-						ratioZoomFactor = (tempW / MAX_WIDTH);
-					}
-				}else{//Si el alto de la imágen es mayor que el ancho de la imágen que se calcule el ratio respecto del alto de la imágen
-					//ratioZoomFactor = (tempW / MAX_WIDTH);
-					ratioZoomFactor = (tempH / MAX_HEIGHT);
-				}
-			}else{ //Sino que deje el tamaño de la imágen al 100% y en el centro
-				ratioZoomFactor = 1;
-			}
-			 
-			var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
-			var zoomCenter = point.subtract(paper.view.center); 
-			var moveFactor = tool.zoomFactor - 1.0;
-			paper.view.zoom /= ratioZoomFactor;
-            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
-			
-			// now scale the context to counter
-	        // the fact that we've manually scaled
-	        // our canvas element
-	        //contexto.scale(ratio, ratio);
-			
-			var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
-			imagenRaster.position = puntoCentroImagen;
-			//paper.view.draw;
+		imagenRaster.onLoad = function() { //Se ejecuta al cargar por primera vez la imágen 
+			redimensionarImagen();
 		}
 		
 		imagenRaster.onLoadk = function() {
-		
 			
 			//Mi forma
-			
 			
 				var anchoImagen = imagenRaster.width;
 				var altoImagen = imagenRaster.height;
@@ -787,6 +689,106 @@
 		/*************************
 		* FUNCIONES DE CONTROLES *
 		**************************/
+		/**
+		*  Cargarmos la im�gen/raster en la capa capaImagen
+		*/
+		function cargarImagen(rutaImagen){
+			//Activamos la capa de la im�gen y la cargamos
+			capaImagen.activate();
+	
+			//Carga una im�gen. No la toma como dentro de la capa capaImagen
+			//var img = new Image();
+			//img.onload = function () {
+		    //	contexto.drawImage(img, 0, 0);
+			//}
+			//img.src = "http://localhost:8080/canvas/img/via.jpg";
+	
+			//Cargar im�gen como raster. Ahora s� que est� dentro de la capa capaImagen 
+			//var imagenRaster = new Raster(rutaImagen);
+			
+			if (imagenRaster != null){
+				console.info("va a borrar la im�gen")
+				imagenRaster.remove();
+				imagenRaster = null;
+				contexto.clearRect(0, 0, canvas.width, canvas.height); //Borro todo lo que haya en nuestro lienzo
+			}
+			
+			/*var puntoInsercion = new paper.Point(paper.view.center);
+			imagenRaster = new paper.Raster({
+		  		source: rutaImagen,
+		  		//position: view.center,
+				selected: false}, puntoInsercion);*/
+			imagenRaster = new paper.Raster({
+		  		source: rutaImagen,
+				selected: false});
+			
+			redimensionarImagen();
+			//paper.view.draw(); //Nos aseguramos que la redibuja en el caso de cambiar la im�gen (entra en imagenRaster.onload)
+			
+			//imagenRaster.position = view.center;
+			imagenRaster.selected = false;
+			capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar
+			controlPincel = true;
+		}
+	
+		function redimensionarImagen(){
+			//PROBAR CON contexto.width;Return the dimensions of the bitmap, in CSS pixels. Can be set, to update the bitmap's dimensions. If the rendering context is bound to a canvas, this will also update the canvas' intrinsic dimensions.
+			/*canvas.onmousemove = function (e) { 
+			   var x = e.pageX - this.offsetLeft;
+			   var y = e.pageY - this.offsetTop;
+			
+			   var div = document.getElementById("coords");
+			   div.innerHTML = "x: " + x + " y: " + y; 
+			};*/
+			
+			//cnvs.width = mirror.width = window.innerWidth;
+			
+			var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
+			var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
+			var tempW = imagenRaster.width;
+			var tempH = imagenRaster.height;
+			var ratioZoomFactor = 1;
+			
+			//while (tempW > MAX_WIDTH || tempH > MAX_HEIGHT){
+				/*$('#canvas_croquis').width();
+					for (i=0 ; i < 10 ; i++){
+						setMenosZoom();
+						$('#canvas_croquis').width();
+					}*/
+
+				//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+			//}
+			
+			if (tempW >= MAX_WIDTH || tempH >= MAX_HEIGHT){ //Si cualquiera de las dimensiones de la imágen es mayor que la del canvas que quite nivel de zoom
+				//if (tempW >= tempH){ //Comprobamos la dimensión que va a predominar. Si el ancho de la imágen es mayor que el alto de la imágen
+					if (tempH >= MAX_HEIGHT){ //Pero si el alto de la imágen es mayor que el alto del canvas que se calcule el ratio respecto del alto del canvas
+						ratioZoomFactor = (tempH / MAX_HEIGHT);
+					}else{ //Sino que se calcule el ratio respecto del ancho del canvas
+						ratioZoomFactor = (tempW / MAX_WIDTH);
+					}
+				//}else{//Si el alto de la imágen es mayor que el ancho de la imágen que se calcule el ratio respecto del alto de la imágen
+					//ratioZoomFactor = (tempW / MAX_WIDTH);
+				//	ratioZoomFactor = (tempH / MAX_HEIGHT);
+				//}
+			}else{ //Sino que deje el tamaño de la imágen al 100% y en el centro
+				ratioZoomFactor = 1;
+			}
+			 
+			var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
+			var zoomCenter = point.subtract(paper.view.center); 
+			var moveFactor = tool.zoomFactor - 1.0;
+			paper.view.zoom /= ratioZoomFactor;
+            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
+			
+			// now scale the context to counter
+	        // the fact that we've manually scaled
+	        // our canvas element
+	        //contexto.scale(ratio, ratio);
+			
+			var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
+			imagenRaster.position = puntoCentroImagen;
+			//paper.view.draw;
+		}
 		
 		control_imagen.onchange = function( event ){
 			if (this.files && this.files[0]){
@@ -797,9 +799,9 @@
 				//	   $('#canvas_croquis').attr('src', e.target.result);
 				//	  }
 				//var dataURL = fichero.readAsDataURL(this.files[0]);
-				
 				//cargarImagen("C:\\Users\Atxa\\Desktop\\" + this.files[0].name);
-				rutaImagen = "http://localhost:8080/HormaStudio/img/Ametzorbe300x401.jpg"; //le paso una im�gen para probar ya que el proceso ser�a: 1.- Escalara al tama�o del canvas 2.- subirlo a la web
+				rutaImagen = "http://localhost:8080/HormaStudio/img/aspe1600x1550.jpg";//le paso una im�gen para probar ya que el proceso ser�a: 1.- Escalara al tama�o del canvas 2.- subirlo a la web
+
 				cargarImagen(rutaImagen);
 			}
 		}
@@ -814,12 +816,14 @@
 				botonAuxPincel.classList.remove("boton_hover");
 				botonAuxPincel.classList.toggle("boton_no_pulsado");
 				botonAuxPincel.classList.add("boton_pulsado");
-				//document.getElementById("control_color").disabled = false;
-				//document.getElementById("control_color").value = vectorColor;
 				canvas.classList.remove("cursor_mover");
 				canvas.classList.remove("cursor_borrar");
 				canvas.classList.add("cursor_none");
-				habilitarControles();
+				
+				document.getElementById("control_grosor").disabled = false;
+				document.getElementById("grosor_texto").value = document.getElementById("control_grosor").value = vectorGrosor;
+				document.getElementById("control_color").disabled = false;
+				document.getElementById("control_color").value = vectorColor;
 				controlPincel = true;
 				controlReunion = false;
 				controlBorrar = false;
@@ -854,12 +858,14 @@
 				botonAuxReunion.classList.remove("boton_hover");
 				botonAuxReunion.classList.toggle("boton_no_pulsado");
 				botonAuxReunion.classList.add("boton_pulsado");
-				//document.getElementById("control_color").disabled = false;
-				//document.getElementById("control_color").value = reunionColor;
 				canvas.classList.remove("cursor_mover");
 				canvas.classList.remove("cursor_borrar");
 				canvas.classList.add("cursor_none");
-				habilitarControles();
+				
+				document.getElementById("control_grosor").disabled = false;
+				document.getElementById("grosor_texto").value = document.getElementById("control_grosor").value = reunionRadio;
+				document.getElementById("control_color").disabled = false;
+				document.getElementById("control_color").value = reunionColor;
 				controlPincel = false;
 				controlReunion = true;
 				controlBorrar = false;
@@ -894,11 +900,12 @@
 				botonAuxBorrar.classList.remove("boton_hover");
 				botonAuxBorrar.classList.toggle("boton_no_pulsado");
 				botonAuxBorrar.classList.add("boton_pulsado");
-				//document.getElementById("control_color").disabled = true;
 				canvas.classList.remove("cursor_none");
 				canvas.classList.remove("cursor_mover");
 				canvas.classList.add("cursor_borrar");
-				deshabilitarControles();
+
+				document.getElementById("control_grosor").disabled = true;
+				document.getElementById("control_color").disabled = true;
 				controlPincel = false;
 				controlReunion = false;
 				controlBorrar = true;
@@ -934,10 +941,11 @@
 				botonAuxMover.classList.remove("boton_hover");
 				botonAuxMover.classList.toggle("boton_no_pulsado");
 				botonAuxMover.classList.add("boton_pulsado");
-				//document.getElementById("control_color").disabled = true;
 				canvas.classList.remove("cursor_none");
 				canvas.classList.remove("cursor_borrar");
 				canvas.classList.add("cursor_mover");
+				document.getElementById("control_grosor").disabled = true;
+				document.getElementById("control_color").disabled = true;
 				//TODO deshabilitar cursor
 				cursorTamanoPincel.visible = false;
 				deshabilitarControles();
@@ -963,16 +971,6 @@
 			botonAuxReunion = null;
 			botonAuxBorrar = null;
 			botonAuxMover = null;
-		}
-		
-		function deshabilitarControles(){
-			document.getElementById("control_grosor").disabled = true;
-			document.getElementById("control_color").disabled = true;
-		}
-		
-		function habilitarControles(){
-			document.getElementById("control_grosor").disabled = false;
-			document.getElementById("control_color").disabled = false;
 		}
 		
 		control_guardar.onclick = function( event ){
