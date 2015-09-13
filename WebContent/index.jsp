@@ -532,12 +532,15 @@
 				}
 			}else if (controlReunion){ //Si se ha pulsado el bot�n de Reuni�n que cree una nueva reuni�n al clickar sobre el canvas
 				console.info("controlReunion = true");
+				if (project.activeLayer = capaVectorial) console.info("capaVectorial");
+				else console.info("otra capa");
 				circuloReunion = new paper.Path.Circle({
 					center: event.point,
 					radius: reunionRadio,
 					fillColor: reunionColor,
 					name: "reunion"
 					});
+				console.info(circuloReunion.visible);
 			}else if (controlPincel){ //si no se ha pulsado ning�n item o se ha clickado sobre el raster/im�gen que cree un nuevo path y en onMouseDrag se dibuja
 				 //|| hitNombreItem == "cursor"					/*** CURSOR ***/
 				if (!hitResult || hitClaseItem === "Raster" || hitResult.type == "fill" || hitNombreItem == "cursor"){ //si hitResult=null o se ha clickado sobre la im�gen o sobre un objeto con relleno/Reuni�n
@@ -948,7 +951,6 @@
 				document.getElementById("control_color").disabled = true;
 				//TODO deshabilitar cursor
 				cursorTamanoPincel.visible = false;
-				deshabilitarControles();
 				controlPincel = false;
 				controlReunion = false;
 				controlBorrar = false;
@@ -1044,14 +1046,14 @@
 		
 		function setGrosor(){
 			document.getElementById("grosor_texto").value = document.getElementById("control_grosor").value;
+			var radioNuevo = (cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth) / 2; //seteamos el radio sumando (el ancho total del c�rculo + el grosor de la l�nea exterior) / 2
 			if (controlPincel) {
 				vectorGrosor = document.getElementById("control_grosor").value;
+				cursorTamanoPincel.scale((vectorGrosor/2)/radioNuevo);
 			}else if (controlReunion){
 				reunionRadio = document.getElementById("control_grosor").value;
+				cursorTamanoPincel.scale((reunionRadio/2)/radioNuevo);
 			}
-			//Tama�o de cursor
-			var radioNuevo = (cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth) / 2; //seteamos el radio sumando (el ancho total del c�rculo + el grosor de la l�nea exterior) / 2
-			cursorTamanoPincel.scale((vectorGrosor/2)/radioNuevo);
 		}
 		
 		function moverGrosor(direccion){
