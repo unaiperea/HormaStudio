@@ -831,6 +831,7 @@
 				controlReunion = false;
 				controlBorrar = false;
 				controlMover = false;
+				setGrosor(); //Restauramos el grosor del cursor para el grosor del vector
 				if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si est� pulsado boton_reunion lo desclickamos
 					botonAuxReunion.classList.remove("boton_pulsado");
 					botonAuxReunion.classList.add("boton_hover");
@@ -873,6 +874,7 @@
 				controlReunion = true;
 				controlBorrar = false;
 				controlMover = false;
+				setGrosor(); //Restauramos el grosor del cursor para el grosor de la reunión
 				if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si est� pulsado boton_borrar lo desclickamos
 					botonAuxBorrar.classList.remove("boton_pulsado");
 					botonAuxBorrar.classList.add("boton_hover");
@@ -1046,13 +1048,19 @@
 		
 		function setGrosor(){
 			document.getElementById("grosor_texto").value = document.getElementById("control_grosor").value;
-			var radioNuevo = (cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth) / 2; //seteamos el radio sumando (el ancho total del c�rculo + el grosor de la l�nea exterior) / 2
+
+			var anteriorRadioSinStroke;
+			var nuevoRadioSinStroke;
+			
+			anteriorRadioSinStroke = cursorTamanoPincel.bounds.width / 2;
 			if (controlPincel) {
-				vectorGrosor = document.getElementById("control_grosor").value;
-				cursorTamanoPincel.scale((vectorGrosor/2)/radioNuevo);
+				nuevoRadioSinStroke = (document.getElementById("control_grosor").value - cursorTamanoPincel.strokeWidth) / 2; //Calculamos el nuevo radio sín la línea del círculo)
+				cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaño del círculo
+				vectorGrosor = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//Diámetro actual = Ancho círculo + ancho línea círculo. Así se consigue el diámetro del círculo
 			}else if (controlReunion){
-				reunionRadio = document.getElementById("control_grosor").value;
-				cursorTamanoPincel.scale((reunionRadio/2)/radioNuevo);
+				nuevoRadioSinStroke = (document.getElementById("control_grosor").value - cursorTamanoPincel.strokeWidth) / 2;
+				cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaño del círculo
+				reunionRadio = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//Diámetro actual = Ancho círculo + ancho línea círculo. Así se consigue el diámetro del círculo
 			}
 		}
 		
