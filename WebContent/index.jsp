@@ -87,7 +87,7 @@
 					<div id="control-dibujo" class="clearfix">
 						<ul>
 							<li><i id="ruta">Ruta</i></li>
-							<li><i id="reunion">ReuniÃ³n</i></li>
+							<li><i id="reunion">Reunión</i></li>
 							<li><i id="borrar">Borrar</i></li>
 							<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
 						</ul>
@@ -140,21 +140,21 @@
 						</div>
 						
 						<div id="zoom-container" class="clearfix">
-							<div class="flotar_izda">
+							<div class="flotar_dcha">
 								<!-- Al estar dentro de zoom-container no funciona deslizar el slider ********************************** -->
-								<span id="zoom_menos" class="fa fa-minus-square-o cursor_hand" style="font-size: 25px;" onclick="moverZoom('abajo');"></span>
+								<span id="zoom_menos" class="fa fa-plus-square-o cursor_hand" style="font-size: 25px;" onclick="moverZoom('arriba');"></span>
 							</div>
-							<div class="flotar_izda">
+							<div class="flotar_dcha">
 								<!-- <input type="range" id="control_zoom" name="control_zoom" class="bar cursor_hand" onchange="setZoom();" style="margin-top: 1px;"/> -->
-								<input type="range" id="control_zoom" name="control_zoom" onchange="setZoom();"/>
+								<input type="range" id="control_zoom" name="control_zoom" min="0.13" max="10" onchange="setZoom();"/>
 								<!-- <div id="zoom-slider">
 									<input class="bar" type="range" id="rangeinput" value="10" onchange="rangevalue.value=value"/>
 									<span class="highlight"></span>
 									<output id="rangevalue">50</output>
 								</div> -->
 							</div>
-							<div class="flotar_izda">
-								<span id="zoom_mas" class="fa fa-plus-square-o cursor_hand" style="font-size: 25px;" onclick="moverZoom('arriba');"></span>
+							<div class="flotar_dcha">
+								<span id="zoom_mas" class="fa fa-minus-square-o cursor_hand" style="font-size: 25px;" onclick="moverZoom('abajo');"></span>
 							</div>
 						</div>
 						<div id="zoom-1-1" class="cursor_hand" >
@@ -162,17 +162,18 @@
 						</div>
 					</div>
 
-					<div id="controles" class="clearfix">
+					<!-- <div id="controles" class="clearfix">
 						<div id="zoom" class="col-xs-3">
 							<p>Zoom:
 								<input type="text" id="zoom_texto" size="2" readonly/>
 							</p>
-						
+					-->	
 							<!-- <i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px"> -->
 							<!-- <input type="range" id="control_zoom" name="control_zoom"  onchange="setZoom();"/> --> 
 							<!-- <i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px"> -->
-						</div>
+					<!-- 	</div>
 					</div>
+					-->
 					
 				</article>
 				
@@ -224,8 +225,9 @@
 		
 		var upperZoomLimit;
 	    var lowerZoomLimit;
-	    var porcentajeZoom;
+	    //var porcentajeZoom;
 	    var ratioZoomFactor;
+	    var diferenciaZoom;
 	    
 	    var capaImagen;
 		var capaVectorial;
@@ -292,12 +294,13 @@
 		    paper.setup('canvas_croquis'); //Crea una clase intermedia para poder utilizar el lenguaje javascript en vez de paperscript
 		    tool = new paper.Tool(); //Crea una herramienta para manejar los eventos del teclado y ratï¿½n. Machaco la var tool ya existente
 		    
-		    //Zoom
+		    //TODO Zoom
 		    paper.tool.distanceThreshold = 8;
 		    paper.tool.mouseStartPos = new paper.Point();
 		    paper.tool.zoomFactor = 1.3;
 		    lowerZoomLimit = 0.13;
 		    upperZoomLimit = 10;
+		    diferenciaZoom = document.getElementById("control_zoom").value;
 		    
 		    //Creamos un contexto contra la etiqueta canvas
 			contexto = canvas.getContext('2d');
@@ -375,8 +378,8 @@
 			var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
 			var tempW = imagenRaster.width;
 			var tempH = imagenRaster.height;
-			ratioZoomFactor = 1;
-			porcentajeZoom = 0;
+			//ratioZoomFactor = 1;
+			//porcentajeZoom = 0;
 			
 			//while (tempW > MAX_WIDTH || tempH > MAX_HEIGHT){
 				/*$('#canvas_croquis').width();
@@ -387,14 +390,14 @@
 
 				//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
 			//}
-			
+			//TODO
 			if (tempW >= MAX_WIDTH || tempH >= MAX_HEIGHT){ //Si cualquiera de las dimensiones de la imÃ¡gen es mayor que la del canvas que quite nivel de zoom
 				//if (tempW >= tempH){ //Comprobamos la dimensiÃ³n que va a predominar. Si el ancho de la imÃ¡gen es mayor que el alto de la imÃ¡gen
 				if (tempH >= MAX_HEIGHT){ //Pero si el alto de la imÃ¡gen es mayor que el alto del canvas que se calcule el ratio respecto del alto del canvas
-					porcentajeZoom = Math.abs(MAX_HEIGHT * 100 / tempH);
+					//porcentajeZoom = Math.abs(MAX_HEIGHT * 100 / tempH);
 					ratioZoomFactor = (tempH / MAX_HEIGHT);
 				}else{ //Sino que se calcule el ratio respecto del ancho del canvas
-					porcentajeZoom = Math.abs(MAX_WIDTH * 100 / tempW);
+					//porcentajeZoom = Math.abs(MAX_WIDTH * 100 / tempW);
 					ratioZoomFactor = (tempW / MAX_WIDTH);
 				}
 				//porcentajeZoom = Math.abs(1 - ratioZoomFactor);
@@ -421,7 +424,7 @@
 			imagenRaster.position = puntoCentroImagen;
 			//paper.view.draw;
 			
-			document.getElementById("zoom_texto").value =  porcentajeZoom;
+			//document.getElementById("zoom_texto").value =  porcentajeZoom;
 		
 		}
 		
@@ -770,7 +773,7 @@
 			//var imagenRaster = new Raster(rutaImagen);
 			
 			if (imagenRaster != null){
-				console.info("va a borrar la imÃ¡gen")
+				console.info("va a borrar la imágen")
 				imagenRaster.remove();
 				imagenRaster = null;
 				contexto.clearRect(0, 0, canvas.width, canvas.height); //Borro todo lo que haya en nuestro lienzo
@@ -795,22 +798,11 @@
 		}
 	
 		function redimensionarImagen(){
-			//PROBAR CON contexto.width;Return the dimensions of the bitmap, in CSS pixels. Can be set, to update the bitmap's dimensions. If the rendering context is bound to a canvas, this will also update the canvas' intrinsic dimensions.
-			/*canvas.onmousemove = function (e) { 
-			   var x = e.pageX - this.offsetLeft;
-			   var y = e.pageY - this.offsetTop;
-			
-			   var div = document.getElementById("coords");
-			   div.innerHTML = "x: " + x + " y: " + y; 
-			};*/
-			
-			//cnvs.width = mirror.width = window.innerWidth;
-			
 			var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
 			var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
 			var tempW = imagenRaster.width;
 			var tempH = imagenRaster.height;
-			var ratioZoomFactor = 1;
+			ratioZoomFactor = 1;
 			porcentajeZoom = 0;
 			
 			//while (tempW > MAX_WIDTH || tempH > MAX_HEIGHT){
@@ -822,15 +814,17 @@
 
 				//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
 			//}
-			
+			//TODO
 			if (tempW >= MAX_WIDTH || tempH >= MAX_HEIGHT){ //Si cualquiera de las dimensiones de la imÃ¡gen es mayor que la del canvas que quite nivel de zoom
 				//if (tempW >= tempH){ //Comprobamos la dimensiÃ³n que va a predominar. Si el ancho de la imÃ¡gen es mayor que el alto de la imÃ¡gen
 				if (tempH >= MAX_HEIGHT){ //Pero si el alto de la imÃ¡gen es mayor que el alto del canvas que se calcule el ratio respecto del alto del canvas
-					ratioZoomFactor = (MAX_HEIGHT * 100 / tempH);
+					porcentajeZoom = Math.abs(MAX_HEIGHT * 100 / tempH);
+					ratioZoomFactor = (tempH / MAX_HEIGHT);
 				}else{ //Sino que se calcule el ratio respecto del ancho del canvas
-					ratioZoomFactor = (MAX_WIDTH * 100 / tempW);
+					porcentajeZoom = Math.abs(MAX_WIDTH * 100 / tempW);
+					ratioZoomFactor = (tempW / MAX_WIDTH);
 				}
-				porcentajeZoom = Math.abs(1 - ratioZoomFactor);
+				//porcentajeZoom = Math.abs(1 - ratioZoomFactor);
 				//}else{//Si el alto de la imÃ¡gen es mayor que el ancho de la imÃ¡gen que se calcule el ratio respecto del alto de la imÃ¡gen
 					//ratioZoomFactor = (tempW / MAX_WIDTH);
 				//	ratioZoomFactor = (tempH / MAX_HEIGHT);
@@ -857,7 +851,7 @@
 			//document.getElementById("zoom_texto").value =  porcentajeZoom;
 		}
 		
-		control_imagen.onchange = function( event ){
+		/*control_imagen.onchange = function( event ){
 			if (this.files && this.files[0]){
 				//imagenRaster.remove();
 				//paper.view.draw();
@@ -871,7 +865,7 @@
 
 				cargarImagen(rutaImagen);
 			}
-		}
+		}*/
 		
 		control_pincel.onclick = function( event ){
 			var botonAuxPincel = document.getElementById("control_pincel");
@@ -1139,38 +1133,42 @@
 			}
 		}
 		
-		function setZoom(){ //Al mover el slider del Zoom
-			var z = document.getElementById("control_zoom").value - document.getElementById("zoom_texto").value;
-			if (z>0){ //Si es positivo hago zoom
-				for (i=0 ; i < z ; i++){
-					setMasZoom();
-				}
+		//Al mover el slider del Zoom
+		function setZoom(){
+			diferenciaZoom = document.getElementById("control_zoom").value - diferenciaZoom; // - document.getElementById("zoom_texto").value;
+			if (diferenciaZoom>0){ //Si es positivo hago zoom
+				//for (i=0 ; i < z ; i++){
+					setMasZoom(diferenciaZoom);
+				//}
 			}else{ //Si es negativo quito zoom
-				z*=-1; //Lo convierto a positivo
-				for (i=0 ; i < z ; i++){
-					setMenosZoom();
-				}
+				//z*=-1; //Lo convierto a positivo
+				//for (i=0 ; i < z ; i++){
+					setMenosZoom( Math.abs(diferenciaZoom) );//Lo convierto a positivo
+				//}
 			}
-			document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+			//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+			diferenciaZoom = document.getElementById("control_zoom").value;
 		}
 	
-		function moverZoom(direccion){ //Al pulsar - o + del Zoom
+		//Al pulsar - o + del Zoom
+		function moverZoom(direccion){
 			var controlZoom = document.getElementById("control_zoom");
 			if (direccion == "arriba"){
 				if (controlZoom.value < upperZoomLimit){
 					controlZoom.stepUp(1);
-					setMasZoom();
+					setMasZoom(1);
 				}
 			}else if (direccion == "abajo"){
 				if (controlZoom.value > lowerZoomLimit){
 					controlZoom.stepDown(1);
-					setMenosZoom();
+					setMenosZoom(1);
 				}
 			}
-			document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+			//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+			diferenciaZoom = document.getElementById("control_zoom").value;
 		}
 	
-		function setMasZoom(){
+		function setMasZoom(posiciones){
 	       	//var children = project.activeLayer.children;
 	       	if (paper.view.zoom < upperZoomLimit) { 
 	               //scroll up
@@ -1182,13 +1180,13 @@
 	   			point = paper.view.viewToProject(imagenRaster.view.center); //point //Convertimos a coordenadas dentro del proyecto
 	            var zoomCenter = point.subtract(paper.view.center);
 	            var moveFactor = tool.zoomFactor - 1.0;
-	            paper.view.zoom *= tool.zoomFactor;
+	            paper.view.zoom *= (tool.zoomFactor * posiciones);
 	            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
 	            tool.mode = '';
 	        }
 		}
 		
-		function setMenosZoom(){
+		function setMenosZoom(posiciones){
 			if (paper.view.zoom > lowerZoomLimit){ //scroll down
 	            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 	
@@ -1199,7 +1197,7 @@
 				var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
 	            var zoomCenter = point.subtract(paper.view.center);   
 	            var moveFactor = tool.zoomFactor - 1.0;
-	            paper.view.zoom /= tool.zoomFactor;
+	            paper.view.zoom /= (tool.zoomFactor * posiciones);
 	            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor))
 	        }
 		}
@@ -1211,7 +1209,7 @@
 		$("#canvas_croquis").mousewheel(function(event, delta) {
 	    	var delta = 0;
 	        //var children = project.activeLayer.children;
-			var zTexto = document.getElementById("zoom_texto");
+			//var zTexto = document.getElementById("zoom_texto");
 	        var zControl = document.getElementById("control_zoom");
 	            
 	        event.preventDefault();
@@ -1226,24 +1224,90 @@
 	        if((delta > 0) && (paper.view.zoom < upperZoomLimit)) { //scroll up
 	            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 				//point = $('#canvas_croquis').offset(); //var
-			    var x = event.clientX - posicionRaton.left; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n X dentro del canvas
+			    
+				//Más
+				//Zoom(1);
+				var x = event.clientX - posicionRaton.left; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n X dentro del canvas
 				var y =  event.clientY - posicionRaton.top; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n Y dentro del canvas
 				var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
 	            var zoomCenter = point.subtract(paper.view.center);
 	            var moveFactor = tool.zoomFactor - 1.0;
 	            paper.view.zoom *= tool.zoomFactor;
-	            document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
-	            //document.getElementById("zoom_texto").value = porcentajeZoom;
 	            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
 	            tool.mode = '';
+	            
+	            /*porcentajeZoom = ((ratioZoomFactor + tool.zoomFactor) * porcentajeZoom) / ratioZoomFactor;
+	            document.getElementById("zoom_texto").value = porcentajeZoom;*/
+	            //porcentajeZoom = Math.abs(1 - ratioZoomFactor);
+	            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
+	            //document.getElementById("zoom_texto").value = porcentajeZoom;
+	            
+	            
 	            //zTexto.value = parseInt(zTexto.value) + 1;
 	            zControl.value = parseInt(zControl.value) + 1;
 	        }
-	        else if((delta < 0) && (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de mï¿½s por lo que lo evito poniï¿½ndolo en las condiciï¿½n
+	        else if((delta < 0) && (paper.view.zoom > lowerZoomLimit)){ // && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de mï¿½s por lo que lo evito poniï¿½ndolo en las condiciï¿½n
 				//TODO cuando llegue al nivel mï¿½ximo de zoom se quede en el medio del canvas 
 				
 	        	//var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 				//var point = $('#canvas_croquis').offset();
+				
+				//Menos
+				//Zoom(2);
+				var x = event.clientX - posicionRaton.left; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n X dentro del canvas
+				var y =  event.clientY - posicionRaton.top; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n Y dentro del canvas
+				var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
+	            var zoomCenter = point.subtract(paper.view.center);   
+	            var moveFactor = tool.zoomFactor - 1.0;
+	            paper.view.zoom /= tool.zoomFactor;
+	            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
+	            
+	            //redimensionarImagen();
+	            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
+	            //document.getElementById("zoom_texto").value = porcentajeZoom;
+	            
+	            
+	            
+	            //zTexto.value = parseInt(zTexto.value) - 1; //Cambiamos el texto del zoom
+	            zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
+	        }
+	        
+	    });
+		
+		/*function Zoom(tipo){
+			var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
+			var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
+			var tempW = imagenRaster.width;
+			var tempH = imagenRaster.height;
+			
+			if (tempW >= MAX_WIDTH || tempH >= MAX_HEIGHT){ //Si cualquiera de las dimensiones de la imÃ¡gen es mayor que la del canvas que quite nivel de zoom
+				//if (tempW >= tempH){ //Comprobamos la dimensiÃ³n que va a predominar. Si el ancho de la imÃ¡gen es mayor que el alto de la imÃ¡gen
+				if (tempH >= MAX_HEIGHT){ //Pero si el alto de la imÃ¡gen es mayor que el alto del canvas que se calcule el ratio respecto del alto del canvas
+					//porcentajeZoom = Math.abs(MAX_HEIGHT * 100 / tempH);
+					ratioZoomFactor = (tempH / MAX_HEIGHT);
+				}else{ //Sino que se calcule el ratio respecto del ancho del canvas
+					//porcentajeZoom = Math.abs(MAX_WIDTH * 100 / tempW);
+					ratioZoomFactor = (tempW / MAX_WIDTH);
+				}
+
+			}else{ //Sino que deje el tamaÃ±o de la imÃ¡gen al 100% y en el centro
+				ratioZoomFactor = 1;
+			}
+			
+			//Más zoom
+			if (tipo = 1){
+				
+				var x = event.clientX - posicionRaton.left; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n X dentro del canvas
+				var y =  event.clientY - posicionRaton.top; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n Y dentro del canvas
+				var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
+	            var zoomCenter = point.subtract(paper.view.center);
+	            var moveFactor = tool.zoomFactor - 1.0;
+	            paper.view.zoom *= tool.zoomFactor;
+	            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
+	            tool.mode = '';
+				
+			//Menos zoom
+			}else{
 				
 				var x = event.clientX - posicionRaton.left; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n X dentro del canvas
 				var y =  event.clientY - posicionRaton.top; //De la posiciï¿½n del ratï¿½n dentro de la pantalla calculamos la posiciï¿½n Y dentro del canvas
@@ -1251,16 +1315,24 @@
 	            var zoomCenter = point.subtract(paper.view.center);   
 	            var moveFactor = tool.zoomFactor - 1.0;
 	            paper.view.zoom /= tool.zoomFactor;
-	            document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
-	            //document.getElementById("zoom_texto").value = porcentajeZoom;
 	            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
-	            //zTexto.value = parseInt(zTexto.value) - 1; //Cambiamos el texto del zoom
-	            zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
-	        }
-	        
-	    });
+				
+			}
 			
-			        
+			//var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
+			//var zoomCenter = point.subtract(paper.view.center); 
+			//var moveFactor = tool.zoomFactor - 1.0;
+			paper.view.zoom /= ratioZoomFactor;
+	        paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
+			
+			// now scale the context to counter
+	        // the fact that we've manually scaled
+	        // our canvas element
+	        //contexto.scale(ratio, ratio);
+			
+			var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
+			imagenRaster.position = puntoCentroImagen;
+		}*/
 	    
 	
 		//El original - Llamada desde onMouseMove QUITARRRRRRRR
