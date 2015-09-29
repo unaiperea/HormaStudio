@@ -1,4 +1,4 @@
-package hormastudio.bean;
+package java.hormastudio.bean;
 
 public class Mensaje {
 	
