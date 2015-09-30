@@ -5,33 +5,14 @@
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
   <servlet>
-    <description>Controlador para subir al servidor la imágen</description>
-    <display-name>HormaImagenController</display-name>
-    <servlet-name>HormaImagenController</servlet-name>
-    <servlet-class>controladores.HormaImagenController</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>HormaImagenController</servlet-name>
-    <url-pattern>/hormaImagen</url-pattern>
-  </servlet-mapping>
-  <servlet>
     <description>Controlador para subir la imágen al servidor</description>
     <display-name>ImagenController</display-name>
     <servlet-name>ImagenController</servlet-name>
-    <servlet-class>hormastudio.controladores.ImagenController</servlet-class>
+    <servlet-class>com.hormastudio.controladores.ImagenController</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>ImagenController</servlet-name>
     <url-pattern>/imagen</url-pattern>
   </servlet-mapping>
-  <servlet>
-    <description>Constantes para toda la web</description>
-    <display-name>Constantes</display-name>
-    <servlet-name>Constantes</servlet-name>
-    <servlet-class>hormastudio.Constantes</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Constantes</servlet-name>
-    <url-pattern>/constantes</url-pattern>
-  </servlet-mapping>
+  
 </web-app>

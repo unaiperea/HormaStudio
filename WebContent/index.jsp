@@ -4,7 +4,7 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 
-<%@page import="java.hormastudio.Constantes"%>
+<%@page import="com.hormastudio.Constantes"%>
 <html lang="es">
 
 	<head>
@@ -78,6 +78,7 @@
 									role="form">
 									<!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
 									<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg"/>
+									<input type="submit" id="btn_submit" class="btn btn-outline btn-primary" value="Guardar"/>
 								</form>
 							</li>
 							<li><span id="control_guardar" class="btn btn-default">Guardar im&aacute;gen</span></li>

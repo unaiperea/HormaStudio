@@ -1,7 +1,4 @@
-package java.hormastudio.controladores;
-
-import java.hormastudio.Constantes;
-import java.hormastudio.bean.Mensaje;
+package com.hormastudio.controladores;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +18,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import com.hormastudio.Constantes;
+import com.hormastudio.bean.Mensaje;
 
 /**
  * Servlet implementation class ImagenController
@@ -70,6 +70,7 @@ public class ImagenController extends HttpServlet {
 			request.setAttribute("msg", msg);
 		}	
 		
+		//dispatcher.
 		dispatcher.forward(request, response);
 	}
 
