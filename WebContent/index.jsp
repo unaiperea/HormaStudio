@@ -147,7 +147,7 @@
 							</div>
 							<div class="flotar_dcha">
 								<!-- <input type="range" id="control_zoom" name="control_zoom" class="bar cursor_hand" onchange="setZoom();" style="margin-top: 1px;"/> -->
-								<input type="range" id="control_zoom" name="control_zoom" min="0.13" max="10" onchange="setZoom();"/>
+								<input type="range" id="control_zoom" name="control_zoom" min="0" max="10" step="1" onchange="setZoom();"/>
 								<!-- <div id="zoom-slider">
 									<input class="bar" type="range" id="rangeinput" value="10" onchange="rangevalue.value=value"/>
 									<span class="highlight"></span>
@@ -163,12 +163,15 @@
 						</div>
 					</div>
 
-					<!-- <div id="controles" class="clearfix">
+					<div id="controles" class="clearfix">
 						<div id="zoom" class="col-xs-3">
 							<p>Zoom:
 								<input type="text" id="zoom_texto" size="2" readonly/>
 							</p>
-					-->	
+							<p>ratioZoomFactor:
+								<input type="text" id="zoom_factor_texto" size="20" readonly/>
+							</p>
+						
 							<!-- <i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px"> -->
 							<!-- <input type="range" id="control_zoom" name="control_zoom"  onchange="setZoom();"/> --> 
 							<!-- <i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px"> -->
@@ -227,6 +230,8 @@
 		var upperZoomLimit;
 	    var lowerZoomLimit;
 	    //var porcentajeZoom;
+	    var originalZoom;
+	    var originalCentro;
 	    var ratioZoomFactor;
 	    var diferenciaZoom;
 	    
@@ -299,7 +304,7 @@
 		    paper.tool.distanceThreshold = 8;
 		    paper.tool.mouseStartPos = new paper.Point();
 		    paper.tool.zoomFactor = 1.3;
-		    lowerZoomLimit = 0.13;
+		    lowerZoomLimit = 0;
 		    upperZoomLimit = 10;
 		    diferenciaZoom = document.getElementById("control_zoom").value;
 		    
@@ -413,7 +418,7 @@
 			var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
 			var zoomCenter = point.subtract(paper.view.center); 
 			var moveFactor = tool.zoomFactor - 1.0;
-			paper.view.zoom /= ratioZoomFactor;
+			originalZoom = paper.view.zoom /= ratioZoomFactor;
             paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
 			
 			// now scale the context to counter
@@ -422,7 +427,7 @@
 	        //contexto.scale(ratio, ratio);
 			
 			var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
-			imagenRaster.position = puntoCentroImagen;
+			originalCentro = imagenRaster.position = puntoCentroImagen;
 			//paper.view.draw;
 			
 			//document.getElementById("zoom_texto").value =  porcentajeZoom;
@@ -1136,23 +1141,31 @@
 		
 		//Al mover el slider del Zoom
 		function setZoom(){
-			diferenciaZoom = document.getElementById("control_zoom").value - diferenciaZoom; // - document.getElementById("zoom_texto").value;
-			if (diferenciaZoom>0){ //Si es positivo hago zoom
-				//for (i=0 ; i < z ; i++){
-					setMasZoom(diferenciaZoom);
-				//}
-			}else{ //Si es negativo quito zoom
-				//z*=-1; //Lo convierto a positivo
-				//for (i=0 ; i < z ; i++){
-					setMenosZoom( Math.abs(diferenciaZoom) );//Lo convierto a positivo
-				//}
-			}
+ 			diferenciaZoom = document.getElementById("control_zoom").value - diferenciaZoom; // - document.getElementById("zoom_texto").value;
+	 			if (diferenciaZoom > 0){ //Si es positivo hago zoom
+	 				for (i=0 ; i < diferenciaZoom ; i++){
+						setMasZoom(1); //setMasZoom(diferenciaZoom);
+					}
+				}else{ //Si es negativo quito zoom
+					diferenciaZoom = Math.abs(diferenciaZoom);
+					//z*=-1; //Lo convierto a positivo
+					for (i=0 ; i < diferenciaZoom ; i++){
+						setMenosZoom(1); //setMenosZoom( Math.abs(diferenciaZoom) );//Lo convierto a positivo
+					}
+				}
 			//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
-			diferenciaZoom = document.getElementById("control_zoom").value;
+			document.getElementById("zoom_factor_texto").value = diferenciaZoom;
+			
+			diferenciaZoom = document.getElementById("control_zoom").value;//Esta siiiiiii
+			
+			document.getElementById("zoom_texto").value = diferenciaZoom;
 		}
 	
 		//Al pulsar - o + del Zoom
 		function moverZoom(direccion){
+			document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+			document.getElementById("zoom_factor_texto").value = ratioZoomFactor;
+			
 			var controlZoom = document.getElementById("control_zoom");
 			if (direccion == "arriba"){
 				if (controlZoom.value < upperZoomLimit){
@@ -1171,8 +1184,9 @@
 	
 		function setMasZoom(posiciones){
 	       	//var children = project.activeLayer.children;
-	       	if (paper.view.zoom < upperZoomLimit) { 
-	               //scroll up
+	       	//scroll up
+	       	if (document.getElementById("control_zoom").value <= upperZoomLimit) { //paper.view.zoom < upperZoomLimit 
+
 	               //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 	               
 	   			//var point = $('#canvas_croquis').offset(); //var
@@ -1181,14 +1195,15 @@
 	   			point = paper.view.viewToProject(imagenRaster.view.center); //point //Convertimos a coordenadas dentro del proyecto
 	            var zoomCenter = point.subtract(paper.view.center);
 	            var moveFactor = tool.zoomFactor - 1.0;
-	            paper.view.zoom *= (tool.zoomFactor * posiciones);
+	            paper.view.zoom *= tool.zoomFactor;
 	            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
 	            tool.mode = '';
 	        }
 		}
 		
 		function setMenosZoom(posiciones){
-			if (paper.view.zoom > lowerZoomLimit){ //scroll down
+			//scroll down
+			if (document.getElementById("control_zoom").value >= lowerZoomLimit){ //paper.view.zoom > lowerZoomLimit
 	            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 	
 				//var point = $('#canvas_croquis').offset();
@@ -1198,20 +1213,22 @@
 				var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
 	            var zoomCenter = point.subtract(paper.view.center);   
 	            var moveFactor = tool.zoomFactor - 1.0;
-	            paper.view.zoom /= (tool.zoomFactor * posiciones);
+	            paper.view.zoom /= tool.zoomFactor;
 	            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor))
 	        }
 		}
 	
 		function resetZoom(){
-			//TODO
+			paper.view.zoom = originalZoom;
+            paper.view.center = originalCentro;
 		}
 		
 		$("#canvas_croquis").mousewheel(function(event, delta) {
 	    	var delta = 0;
 	        //var children = project.activeLayer.children;
 			//var zTexto = document.getElementById("zoom_texto");
-	        var zControl = document.getElementById("control_zoom");
+	        
+			var zControl = document.getElementById("control_zoom");
 	            
 	        event.preventDefault();
 	        event = event || window.event;
@@ -1246,8 +1263,9 @@
 	            
 	            //zTexto.value = parseInt(zTexto.value) + 1;
 	            zControl.value = parseInt(zControl.value) + 1;
+	            document.getElementById("zoom_texto").value = paper.view.zoom;
 	        }
-	        else if((delta < 0) && (paper.view.zoom > lowerZoomLimit)){ // && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de mï¿½s por lo que lo evito poniï¿½ndolo en las condiciï¿½n
+	        else if((delta < 0) && (paper.view.zoom > lowerZoomLimit)){ // (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de mï¿½s por lo que lo evito poniï¿½ndolo en las condiciï¿½n
 				//TODO cuando llegue al nivel mï¿½ximo de zoom se quede en el medio del canvas 
 				
 	        	//var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
@@ -1271,8 +1289,9 @@
 	            
 	            //zTexto.value = parseInt(zTexto.value) - 1; //Cambiamos el texto del zoom
 	            zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
+	            document.getElementById("zoom_texto").value = paper.view.zoom;
 	        }
-	        
+
 	    });
 		
 		/*function Zoom(tipo){
