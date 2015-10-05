@@ -21,7 +21,13 @@
 	display: block; 
 }
 
+#titulo{
+	float: left !important;
+}
 
+/*#subtitulo{
+	vertical-align: ;
+}*/
 
 .flotar_izda {
 	float: left;

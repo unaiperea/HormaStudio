@@ -30,6 +30,8 @@ public class ImagenController extends HttpServlet {
 	
 	RequestDispatcher dispatcher = null;
 	
+	byte pAccion = 0;
+	
 	//Imagen file
 	File file = null;
        
@@ -52,36 +54,44 @@ public class ImagenController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		Mensaje msg = new Mensaje(Mensaje.MSG_DANGER,  "Excepcion al modificar");
 		
 		try{
-		//recoger parametros del formulario y subida de imagen
-		getParametersForm(request);
-		
-		request.setAttribute("msg", msg);
-		
-		}catch( FileSizeLimitExceededException e){		
-			e.printStackTrace();
-			msg = new Mensaje( Mensaje.MSG_DANGER , "La imagen excede del tamaño maximo permitido " + Constantes.IMG_MAX_FILE_SIZE + " bytes" );
-			request.setAttribute("msg", msg);	
+			
+			pAccion = Byte.parseByte(request.getParameter("accion"));
+			
+			//subida de imagen y cargar la imÃ¡gen
+			switch (pAccion){
+			case Constantes.ACCION_SUBIR_IMAGEN:
+				subirImagen(request, response);
+				break;
+			}
+			
+			request.setAttribute("msg", msg);
+
 		}catch(Exception e){
 			e.printStackTrace();
 			msg = new Mensaje( Mensaje.MSG_DANGER , e.getMessage() );
 			request.setAttribute("msg", msg);
-		}	
+		}
 		
-		//dispatcher.
+		//AJAX
+		dispatcher = request.getRequestDispatcher(Constantes.VIEW_BACK_HORMA);
 		dispatcher.forward(request, response);
 	}
 
 	/**
-	* Recoger los parametros enviados desde el formulario
+	 * Recoger los parametros enviados desde el formulario
 	* @see backoffice\pages\sectores\form.jsp
-	* @param request
-	 * @throws UnsupportedEncodingException 
-	*/
-	private void getParametersForm(HttpServletRequest request) throws Exception {
-
+	 * @param request
+	 * @param response
+	 */
+	private void subirImagen(HttpServletRequest request, HttpServletResponse response) {
+		
+		Mensaje msg = new Mensaje(Mensaje.MSG_DANGER,  "Excepcion al modificar");
+		
+		try{
 			request.setCharacterEncoding("UTF-8");
 			
 			DiskFileItemFactory factory = new DiskFileItemFactory(); //Factoria para trabajar con ficheros
@@ -137,7 +147,7 @@ public class ImagenController extends HttpServlet {
 				                	if (ficherosUploads[i].isFile()){
 				                		//Si el nombre es igual
 				                		if (item.getName().equalsIgnoreCase(ficherosUploads[i].getName())){*/
-				                			//Añadimos la fecha
+				                			//Aï¿½adimos la fecha
 				                			Date fecha = new Date();
 				                			SimpleDateFormat formato = new SimpleDateFormat ("yyyy.MM.dd hh:mm:ss.SSS"); //TimeStamp para que tenga milisegundos??????
 				                			
@@ -168,7 +178,7 @@ public class ImagenController extends HttpServlet {
 		    	} //End: fileName
 		    } //End: for items<FileItem>
 	            
-		    //Se comprueba el tamaño del fichero desde el form.jsp en javascript
+		    //Se comprueba el tamaï¿½o del fichero desde el form.jsp en javascript
 		    
 		    //Cojo los parametros pero del propio HashMap dataParameters
 		    /*pID = Integer.parseInt(dataParameters.get("id"));
@@ -176,6 +186,16 @@ public class ImagenController extends HttpServlet {
 			pIDZona = Integer.parseInt(dataParameters.get("zona"));*/
 	            
 	        //TODO actualizar modelo
+			
+		}catch( FileSizeLimitExceededException e){		
+			e.printStackTrace();
+			msg = new Mensaje( Mensaje.MSG_DANGER , "La imagen excede del tamaï¿½o maximo permitido " + Constantes.IMG_MAX_FILE_SIZE + " bytes" );
+			request.setAttribute("msg", msg);	
+		}catch(Exception e){
+			e.printStackTrace();
+			msg = new Mensaje( Mensaje.MSG_DANGER , e.getMessage() );
+			request.setAttribute("msg", msg);
+		}
+		
 	}
-	
 }

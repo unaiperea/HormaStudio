@@ -50,8 +50,13 @@
 	<!-- for others: use <body oncontextmenu="return false;"> to prevent browser context menus from appearing on right click. -->
 	
 		<header id="cabecera">
-			<div class="container">
-				<h1>T&iacute;tulo</h1>
+			<div class="container clearfix">
+				<span id="titulo" class="">
+					<h1>Horma Studio</h1>
+				</span>
+				<span id="subtitulo" class="">
+					<h4>Climbing Tools</h4>
+				</span>
 			</div>
 		</header>
 		
@@ -77,8 +82,9 @@
 									method="post"
 									role="form">
 									<!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled-->
-									<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg"/>
-									<input type="submit" id="btn_submit" class="btn btn-outline btn-primary" value="Guardar"/>
+									<input type="file" id="control_imagen" name="control_imagen" onchange="abrirImagen();" accept="image/jpeg"/>
+									<input type="submit" id="btn_submit" class="btn btn-outline btn-primary disabled" onclick="escribirAccion(<%=Constantes.ACCION_SUBIR_IMAGEN%>);" disabled value="Subir"/>
+									<input type="hidden" id="accion" name="accion" value="-1"/>
 								</form>
 							</li>
 							<li><span id="control_guardar" class="btn btn-default">Guardar im&aacute;gen</span></li>
@@ -1045,6 +1051,18 @@
 			botonAuxMover = null;
 		}
 		
+		function escribirAccion(ac){
+			//Subir y cargar imágen
+			document.getElementById("accion").value = ac;
+		}
+		
+		function abrirImagen(){
+			//Quito la propiedad
+			document.getElementById("btn_submit").disabled = false;
+			//Quito la clase (estilo)
+			document.getElementById("btn_submit").classList.remove("disabled");
+		}
+			
 		control_guardar.onclick = function( event ){
 			/*
 			//var capaActual = paper.project.activeLayer; //capa activa actual
