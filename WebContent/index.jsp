@@ -427,7 +427,7 @@
 	        //contexto.scale(ratio, ratio);
 			
 			var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
-			originalCentro = imagenRaster.position = puntoCentroImagen;
+			originalCentro = imagenRaster.position = paper.view.viewToProject(puntoCentroImagen);
 			//paper.view.draw;
 			
 			//document.getElementById("zoom_texto").value =  porcentajeZoom;
@@ -567,12 +567,16 @@
 				*/
 				
 			/*} else{*/
-				//Obtenemos dï¿½nde se ha pulsado el ratï¿½n 
+			//Obtenemos dï¿½nde se ha pulsado el ratï¿½n
 			var hitResult = project.hitTest(event.point, hitOptions);
-			var hitClaseItem = hitResult.item.className; //Otra forma mï¿½s fiable de saber quï¿½ item hemos clickado
-			var hitNombreItem = hitResult.item.name; //Otra forma para evitar que clicke el tooltiptext
-			
-			console.info(hitResult.item.name);
+			if (hitResult != null){
+				var hitClaseItem = hitResult.item.className; //Otra forma mï¿½s fiable de saber quï¿½ item hemos clickado
+				var hitNombreItem = hitResult.item.name; //Otra forma para evitar que clicke el tooltiptext
+				
+				console.info(hitResult.item.name);
+			}else{ //Si no ha pinchado nada, useasé, controlMover = true
+				return;
+			}
 			
 			//EN MODO DEBUG CON EL CHROME NO ENTRAN LOS MODIFICADORES CONTROL NI SHIFT
 			//Si pulsamos CTRL o SHIFT + Click ratï¿½n ...
@@ -1219,8 +1223,30 @@
 		}
 	
 		function resetZoom(){
+			
+			//TODO centrar todas las capas o el paper ***********************************
 			paper.view.zoom = originalZoom;
+			//paper.view.center = paper.view.viewToProject(originalCentro);
+			//paper.view.center = paper.view.projectToView(originalCentro);
             paper.view.center = originalCentro;
+            
+            //var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
+			//imagenRaster.position = 
+			//paper.view.center = paper.view.projectToView(puntoCentroImagen);
+			
+			//paper.view.center = paper.view.viewToProject(originalCentro);
+			
+			/*var tempW = imagenRaster.width;
+			var tempH = imagenRaster.height;
+			
+			var puntoActual = new paper.Point(tempW/2, tempH/2);
+			
+			for (i=0; i<project.layers.length;i++){
+				project.layers[i].position.x = originalCentro.x;
+				project.layers[i].position.y = originalCentro.y;
+			}*/
+			document.getElementById("control_zoom").value = 5;
+			
 		}
 		
 		$("#canvas_croquis").mousewheel(function(event, delta) {
@@ -1239,7 +1265,7 @@
 	                delta = event.originalEvent.detail*-1;  //FireFox reverses the scroll so we force to to re-reverse...
 	            }
 	
-	        if((delta > 0) && (paper.view.zoom < upperZoomLimit)) { //scroll up
+	        if((delta > 0) && (document.getElementById("control_zoom").value < upperZoomLimit)) { //scroll up. paper.view.zoom
 	            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 				//point = $('#canvas_croquis').offset(); //var
 			    
@@ -1265,7 +1291,7 @@
 	            zControl.value = parseInt(zControl.value) + 1;
 	            document.getElementById("zoom_texto").value = paper.view.zoom;
 	        }
-	        else if((delta < 0) && (paper.view.zoom > lowerZoomLimit)){ // (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de mï¿½s por lo que lo evito poniï¿½ndolo en las condiciï¿½n
+	        else if((delta < 0) && (document.getElementById("control_zoom").value > lowerZoomLimit)){ // (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de mï¿½s por lo que lo evito poniï¿½ndolo en las condiciï¿½n
 				//TODO cuando llegue al nivel mï¿½ximo de zoom se quede en el medio del canvas 
 				
 	        	//var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
