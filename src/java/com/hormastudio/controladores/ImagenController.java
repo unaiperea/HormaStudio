@@ -2,7 +2,6 @@ package com.hormastudio.controladores;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,7 +29,9 @@ public class ImagenController extends HttpServlet {
 	
 	RequestDispatcher dispatcher = null;
 	
-	byte pAccion = 0;
+	int pAccion = 0;
+	
+	Mensaje msg = null;
 	
 	//Imagen file
 	File file = null;
@@ -48,6 +49,9 @@ public class ImagenController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println(request.getAttribute("accion"));
+		System.out.println(request.getParameter("t"));
+		System.out.println(request.getParameter("accion"));
 	}
 
 	/**
@@ -55,19 +59,23 @@ public class ImagenController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		Mensaje msg = new Mensaje(Mensaje.MSG_DANGER,  "Excepcion al modificar");
+		msg = new Mensaje(Mensaje.MSG_DANGER,  "No se ha podido subir la imágen, por favor, vuelva a intentarlo");
 		
 		try{
-			
-			pAccion = Byte.parseByte(request.getParameter("accion"));
+			System.out.println(request.getAttribute("accion"));
+			System.out.println(request.getParameter("t"));
+			System.out.println(request.getParameter("accion"));
+			pAccion = Integer.parseInt(request.getParameter("accion"));
 			
 			//subida de imagen y cargar la imágen
 			switch (pAccion){
 			case Constantes.ACCION_SUBIR_IMAGEN:
 				subirImagen(request, response);
+				msg.setTexto("se ha subido la imágen");
+				msg.setTipo(Mensaje.MSG_SUCCESS);
 				break;
+			default:
 			}
-			
 			request.setAttribute("msg", msg);
 
 		}catch(Exception e){
@@ -76,7 +84,7 @@ public class ImagenController extends HttpServlet {
 			request.setAttribute("msg", msg);
 		}
 		
-		//AJAX
+		//POR AJAX
 		dispatcher = request.getRequestDispatcher(Constantes.VIEW_BACK_HORMA);
 		dispatcher.forward(request, response);
 	}

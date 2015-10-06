@@ -24,6 +24,6 @@ public class Constantes {
 	public static final ArrayList<String> IMG_CONTENT_TYPES = new ArrayList<String>(Arrays.asList("image/jpeg","image/png")); //Para inicializarlo. Por ser constante no se podría añadir elementos con .add();
 	
 	//Acciones
-	public static final byte ACCION_SUBIR_IMAGEN = 1;
+	public static final int ACCION_SUBIR_IMAGEN = 1;
 	
 }

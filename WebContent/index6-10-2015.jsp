@@ -1,52 +1,4 @@
-<!doctype html>
-
-<!-- Para que salgan acentos -->
-<%@page contentType="text/html"%>
-<%@page pageEncoding="UTF-8"%>
-
-<%@page import="com.hormastudio.Constantes"%>
-<html lang="es">
-
-	<head>
-	
-		<base href="<%=request.getContextPath()%>/">
-		
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		
-		<title>Canvas</title>
-		<meta name="description" content="Horma Studio, crea tus propias vï¿½as de escalada">
-		<meta name="author" content="Unai Perea Cruz">
-		
-		<!-- Estilos CSS -->
-		<link rel="stylesheet" type="text/css" href="css/styles.css?v=1.0">
-		
-		<!-- Responsive Design -->
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-		
-		<!-- Bootstrap minified CSS -->
-		<link rel="stylesheet" href="js/bootstrap-3.3.5-dist/css/bootstrap.min.css">
-		
-		<!-- Font Awesome -->		
-		<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.4.0/css/font-awesome.min.css">
-		
-		<style>
-			body{background-color: purple;}
-	  		#control_pincel, #control_reunion, #control_borrar{ cursor: pointer;} /*QuÃ© pasa aquÃ­iii? ***********************/
-	  		header{background-color: lime;}
-	  		#cabecera{background-color: yellow;}
-	  		.container{background-color: grey;}
-	  		.menu{background-color: brown;}
-	  		#barra-menus{background-color: olive;}
-	  		#controles{background-color: orange;}
-	  		/* #herramientas-izda{background-color: cyan;} */
-	  		#herramientas-dcha{background-color: blue;}
-	  		footer{background-color: silver;}
-	  		
-		</style>
-	  
-	</head>
-	
-	<body>
+<body>
 	<!-- for others: use <body oncontextmenu="return false;"> to prevent browser context menus from appearing on right click. -->
 	
 		<header id="cabecera">
@@ -83,7 +35,7 @@
 									<!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled -->
 									<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg" onchange="abrirImagen();">
 									<!-- onclick="return escribirAccion(< %=Constantes.ACCION_SUBIR_IMAGEN%>);" -->
-									<input type="submit" id="btn_submit" class="btn btn-outline btn-primary disabled" disabled="" value="Subir">
+									<input type="submit" id="btn_submit" class="btn btn-outline btn-primary disabled" disabled value="Subir">
 								</li>
 								<li><span id="control_guardar" class="btn btn-default">Guardar imágen</span></li>
 								<li><a id="descargar" href="#" target="_blank" class="invisible">Descargar imágen</a></li>
@@ -104,8 +56,8 @@
 					<div class="clearfix">
 						<div id="control-propiedades" class="pull-right clearfix">
 							<ul class="iconos-dibujo>
-								<li><input type="color" id="control_color" name="control_color" onchange="getColor();"></li>
-								<li><input type="text" id="grosor_texto" size="1" readonly></li>
+								<li><input type=" color"="" id="control_color" name="control_color" onchange="getColor();">
+								<li><input type="text" id="grosor_texto" size="1" readonly=""></li>
 								<li><span id="grosor_menos" class="fa fa-minus-circle fa-1 pull-right" style="color: #FFFFFF;" onclick="moverGrosor('abajo');"></span></li>
 								<li><input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li>
 								<li><span id="grosor_mas" class="fa fa-plus-circle fa-1" style="color: #FFFFFF;" onclick="moverGrosor('arriba');"></span></li>
@@ -124,7 +76,7 @@
 					</div>
 	
 					<div id="canvas-container">
-						<canvas id="canvas_croquis" class="cursor_none" name="imagen">Su navegador no soporta Canvas. Instale la ultima version de Chrome</canvas>
+						<canvas id="canvas_croquis" class="cursor_none" name="imagen" width="918" height="459" style="-webkit-user-select: none; touch-action: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">Su navegador no soporta Canvas. Instale la ultima version de Chrome</canvas>
 						<div>
 							<span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x cursor_hand"></span>
 						</div>
@@ -136,7 +88,7 @@
 							</div>
 							<div class="flotar_dcha">
 								<!-- <input type="range" id="control_zoom" name="control_zoom" class="bar cursor_hand" onchange="setZoom();" style="margin-top: 1px;"/> -->
-								<input type="range" id="control_zoom" name="control_zoom" min="0" max="10" step="1" onchange="setZoom();"/>
+								<input type="range" id="control_zoom" name="control_zoom" min="0" max="10" step="1" onchange="setZoom();">
 								<!-- <div id="zoom-slider">
 									<input class="bar" type="range" id="rangeinput" value="10" onchange="rangevalue.value=value"/>
 									<span class="highlight"></span>
@@ -147,18 +99,18 @@
 								<span id="zoom_mas" class="fa fa-minus-square-o cursor_hand" style="font-size: 25px;" onclick="moverZoom('abajo');"></span>
 							</div>
 						</div>
-						<div id="zoom-1-1" class="cursor_hand" >
-							<input type="button" id="zoom_restaurar" name="zoom_restaurar" onclick="resetZoom();" value="1:1"/>
+						<div id="zoom-1-1" class="cursor_hand">
+							<input type="button" id="zoom_restaurar" name="zoom_restaurar" onclick="resetZoom();" value="1:1">
 						</div>
 					</div>
 
 					<div id="controles" class="clearfix">
 						<div id="zoom" class="col-xs-3">
 							<p>Zoom:
-								<input type="text" id="zoom_texto" size="2" readonly/>
+								<input type="text" id="zoom_texto" size="2" readonly="">
 							</p>
 							<p>ratioZoomFactor:
-								<input type="text" id="zoom_factor_texto" size="20" readonly/>
+								<input type="text" id="zoom_factor_texto" size="20" readonly="">
 							</p>
 						
 							<!-- <i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px"> -->
@@ -168,7 +120,7 @@
 					</div>
 					-->
 					
-				</article>
+				</div></div></article>
 				
 				<aside id="herramientas-dcha" class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
 					<p>
@@ -194,7 +146,7 @@
 		<script src="js/jquery-2.1.4.min.js"></script>
 		
 		<!-- JQuery MouseWheel -->
-		<script type='text/javascript' src='js/jquery.mousewheel.min.js'></script>
+		<script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
 		
 		<script type="text/javascript">
 	
@@ -1034,13 +986,16 @@
 			botonAuxMover = null;
 		}
 		
-		/*function escribirAccion(ac){
+		function escribirAccion(ac){
 			//Subir y cargar imágen
-			document.getElementById("accion").value = ac;
-		}*/
+			//document.getElementById("accion").value = ac;
+			//return true;
+		}
 		
 		function abrirImagen(){
+			//TODO
 			//Quito la propiedad
+			//document.getElementById("accion").value = accion;
 			document.getElementById("btn_submit").disabled = false;
 			//Quito la clase (estilo)
 			document.getElementById("btn_submit").classList.remove("disabled");
@@ -1123,13 +1078,13 @@
 			
 			anteriorRadioSinStroke = cursorTamanoPincel.bounds.width / 2;
 			if (controlPincel) {
-				nuevoRadioSinStroke = (document.getElementById("control_grosor").value - cursorTamanoPincel.strokeWidth) / 2; //Calculamos el nuevo radio sÃ­n la lÃ­nea del cÃ­rculo)
-				cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaÃ±o del cÃ­rculo
-				vectorGrosor = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//DiÃ¡metro actual = Ancho cÃ­rculo + ancho lÃ­nea cÃ­rculo. AsÃ­ se consigue el diÃ¡metro del cÃ­rculo
+				nuevoRadioSinStroke = (document.getElementById("control_grosor").value - cursorTamanoPincel.strokeWidth) / 2; //Calculamos el nuevo radio sÃ&shy;n la lÃ&shy;nea del cÃ&shy;rculo)
+				cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaÃ±o del cÃ&shy;rculo
+				vectorGrosor = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//DiÃ¡metro actual = Ancho cÃ&shy;rculo + ancho lÃ&shy;nea cÃ&shy;rculo. AsÃ&shy; se consigue el diÃ¡metro del cÃ&shy;rculo
 			}else if (controlReunion){
 				nuevoRadioSinStroke = (document.getElementById("control_grosor").value - cursorTamanoPincel.strokeWidth) / 2;
-				cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaÃ±o del cÃ­rculo
-				reunionRadio = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//DiÃ¡metro actual = Ancho cÃ­rculo + ancho lÃ­nea cÃ­rculo. AsÃ­ se consigue el diÃ¡metro del cÃ­rculo
+				cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaÃ±o del cÃ&shy;rculo
+				reunionRadio = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//DiÃ¡metro actual = Ancho cÃ&shy;rculo + ancho lÃ&shy;nea cÃ&shy;rculo. AsÃ&shy; se consigue el diÃ¡metro del cÃ&shy;rculo
 			}
 		}
 		
@@ -1394,5 +1349,7 @@
 		
 		<!-- Bootstrap minified JavaScript -->
 	  	<script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
-	</body>
-</html>
+	
+
+
+</body>
