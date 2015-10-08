@@ -16,6 +16,10 @@
 
 */
 
+s{
+	float: left;
+}
+
 #canvas_croquis{
 	margin: 0 auto;
 	display: block; 
