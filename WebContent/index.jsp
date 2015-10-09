@@ -30,6 +30,7 @@
 		<!-- Font Awesome -->		
 		<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.4.0/css/font-awesome.min.css">
 		
+		<!-- TODO crear style.css -->
 		<style>
 			body{background-color: purple;}
 	  		#control_pincel, #control_reunion, #control_borrar{ cursor: pointer;} /*QuÃ© pasa aquÃ­iii? ***********************/
@@ -193,9 +194,7 @@
 			</footer>
 		
 		</div>
-		
-		<!-- Paper.js dibujo en Canvas -->
-		<script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
+				
 		
 		<!--  jQuery -->
 		<script src="js/jquery-2.1.4.min.js"></script>
@@ -203,10 +202,24 @@
 		<!-- JQuery MouseWheel -->
 		<script type='text/javascript' src='js/jquery.mousewheel.min.js'></script>
 		
+		<!-- Bootstrap minified JavaScript -->
+	  	<script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+		
+		<!-- Paper.js dibujo en Canvas -->
+		<script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
+		
 		<!-- Horma Studio -->
 		<script type="text/javascript" src="js/horma-studio.js"></script>
 		
-		<!-- Bootstrap minified JavaScript -->
-	  	<script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+		<!-- HormaStudio variables globales -->
+		<script type="text/javascript" src="js/horma-studio-vars-globales.js"></script>
+		
+		<!-- HormaStudio funciones canvas -->
+		<script type="text/javascript" src="js/horma-studio-funciones-canvas.js"></script>
+		
+		<!-- HormaStudio funciones controles -->
+		<script type="text/javascript" src="js/horma-studio-funciones-controles.js"></script>
+		
+		
 	</body>
 </html>
