@@ -20,6 +20,7 @@
 		<!-- Estilos CSS -->
 		<link rel="stylesheet" type="text/css" href="css/styles.css?v=1.0">
 		<link rel="stylesheet" type="text/css" href="css/range_slider.css?v=1.0">
+		<link rel="stylesheet" type="text/css" href="js/bootstrap-slider-master/css/bootstrap-slider.css">
 		
 		<!-- Responsive Design -->
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -41,7 +42,7 @@
 	  		#barra-menus{background-color: olive;}
 	  		#controles{background-color: orange;}
 	  		/* #herramientas-izda{background-color: cyan;} */
-	  		#herramientas-dcha{background-color: blue;}
+	  		#herramientas-dcha{background-color: #424242;}
 	  		footer{background-color: silver;}
 	  		
 		</style>
@@ -72,7 +73,7 @@
 			
 			<section id="entorno" class="main row">
 			
-				<aside id="herramientas-izda" class="col-xs-12 col-sm-1 col-md-1 col-lg-2">
+				<aside id="herramientas-izda" class="col-xs-2">
 					<!-- SUBIR FICHEROS -->
 					<!-- Formulario -->
 					<!-- @see: http://www.tutorialspoint.com/servlets/servlets-file-uploading.htm -->
@@ -83,7 +84,7 @@
 									<input type="text" id="accion" name="accion" value="1">
 									<input type="text" id="texto" name="t">
 									<!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled -->
-									<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg" onchange="abrirImagen();">
+									<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg"> <!-- onchange="abrirImagen();"> -->
 									<!-- onclick="return escribirAccion(< %=Constantes.ACCION_SUBIR_IMAGEN%>);" -->
 									<input type="submit" id="btn_submit" class="btn btn-outline btn-primary disabled" disabled="" value="Subir">
 								</li>
@@ -103,88 +104,96 @@
 							</ul>
 						</div>
 					</div>
+					<div class="clearfix">
+						<div id="control-propiedades" class="pull-right">
+							<ul class="iconos-dibujo pull-right">
+								<li><input type="color" id="control_color" name="control_color" onchange="getColor();"></li>
+								<li><input type="text" id="grosor_texto" size="1" readonly></li>
+								<li><span id="grosor_menos" class="fa fa-minus-circle fa-1x" style="color: #FFFFFF;" onclick="moverGrosor('abajo');"></span></li>
+								<li><input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range s" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li></li>
+								<!-- 
+								<li><input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li>
+								-->
+								
+								<!-- <li><input id="ex17a" type="text"/></li> -->
+	      						
+								
+								<li><span id="grosor_mas" class="fa fa-plus-circle fa-1x" style="color: #FFFFFF;" onclick="moverGrosor('arriba');"></span></li>
+							</ul>
+						</div>
+					</div>
 					
 				</aside>
 				
-				<div class="clearfix">
-					<div id="control-propiedades" class="pull-right">
-						<ul class="iconos-dibujo">
-							<li><input type="color" id="control_color" name="control_color" onchange="getColor();"></li>
-							<li><input type="text" id="grosor_texto" size="1" readonly></li>
-							<li><span id="grosor_menos" class="fa fa-minus-circle fa-1 pull-right" style="color: #FFFFFF;" onclick="moverGrosor('abajo');"></span></li>
-							<li><input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li>
-							<li><span id="grosor_mas" class="fa fa-plus-circle fa-1" style="color: #FFFFFF;" onclick="moverGrosor('arriba');"></span></li>
-						</ul>
-					</div>
-				</div>
-				
+				<!-- 
 				<div id="control-propiedades" class="clearfix">
 					<input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range s" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li>
 				</div>
-				<!-- <div class="clearfix visible-sm-block"></div> -->
-				<article id="centro" class="col-xs-12 col-sm-11 col-md-9 col-lg-8 clearfix">
+				-->
 				
+				<!-- <div class="clearfix visible-sm-block"></div> -->
+				
+				<article id="centro" class="col-xs-8">
 					<div id="barra-menus">
 						<p>
 							<!-- TODO Incluir un video explicativo -->
 							Pig salami kielbasa, turducken hamburger turkey strip steak shankle ham hock tenderloin cupim. Pork loin tenderloin doner strip steak beef turkey. Tail shank swine tri-tip alcatra pig cupim filet mignon meatball capicola jerky chuck ham venison. Chuck salami shank, tenderloin alcatra ball tip brisket corned beef flank pig short ribs pork loin t-bone meatloaf cupim.
 						</p>
 					</div>
-	
+					
 					<div id="canvas-container">
 						<canvas id="canvas_croquis" class="cursor_none" name="imagen">Su navegador no soporta Canvas. Instale la ultima version de Chrome</canvas>
-						<div>
-							<span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x cursor_hand"></span>
+					</div>
+				</article>
+
+				<!-- colocar a la izda -->
+				<aside id="herramientas-dcha" class="col-xs-2">
+					<div id="herramientas-dcha-container" style="width: 47px;">
+						<div style="width: 20px; margin:auto;">
+							<span id="zoom_menos" class="fa fa-minus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('arriba');"></span>
+							<!-- <input type="range" id="control_zoom" name="control_zoom" class="bar cursor_hand" onchange="setZoom();" style="margin-top: 1px;"/> -->
+							<!-- <input type="range" id="control_zoom" name="control_zoom" min="0" max="10" step="1" onchange="setZoom();"/> ERA EL BUENO -->
+							<input id="control_zoom" type="text" id="control_zoom" name="control_zoom" onchange="setZoom();"/>
+							<!-- <div id="zoom-slider">
+								<input class="bar" type="range" id="rangeinput" value="10" onchange="rangevalue.value=value"/>
+								<span class="highlight"></span>
+								<output id="rangevalue">50</output>
+							</div> -->
+							<span id="zoom_mas" class="fa fa-plus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('abajo');"></span>
 						</div>
 						
-						<div id="zoom-container" class="clearfix">
-							<div class="flotar_dcha">
-								<!-- Al estar dentro de zoom-container no funciona deslizar el slider ********************************** -->
-								<span id="zoom_menos" class="fa fa-plus-square-o cursor_hand" style="font-size: 25px;" onclick="moverZoom('arriba');"></span>
-							</div>
-							<div class="flotar_dcha">
-								<!-- <input type="range" id="control_zoom" name="control_zoom" class="bar cursor_hand" onchange="setZoom();" style="margin-top: 1px;"/> -->
-								<input type="range" id="control_zoom" name="control_zoom" min="0" max="10" step="1" onchange="setZoom();"/>
-								<!-- <div id="zoom-slider">
-									<input class="bar" type="range" id="rangeinput" value="10" onchange="rangevalue.value=value"/>
-									<span class="highlight"></span>
-									<output id="rangevalue">50</output>
-								</div> -->
-							</div>
-							<div class="flotar_dcha">
-								<span id="zoom_mas" class="fa fa-minus-square-o cursor_hand" style="font-size: 25px;" onclick="moverZoom('abajo');"></span>
-							</div>
+						<div id="zoom-1-1" class="cursor_hand">
+							<input type="button" id="zoom_restaurar" name="zoom_restaurar" class="btn btn-primary" onclick="resetZoom();" value="1:1"/>
 						</div>
-						<div id="zoom-1-1" class="cursor_hand" >
-							<input type="button" id="zoom_restaurar" name="zoom_restaurar" onclick="resetZoom();" value="1:1"/>
+						
+						<div id="mover-container" class="text-center">
+							<span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x cursor_hand"></span>
 						</div>
 					</div>
 
-					<div id="controles" class="clearfix">
-						<div id="zoom" class="col-xs-3">
-							<p>Zoom:
-								<input type="text" id="zoom_texto" size="2" readonly/>
-							</p>
-							<p>ratioZoomFactor:
-								<input type="text" id="zoom_factor_texto" size="20" readonly/>
-							</p>
-						
-							<!-- <i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px"> -->
-							<!-- <input type="range" id="control_zoom" name="control_zoom"  onchange="setZoom();"/> --> 
-							<!-- <i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px"> -->
-					<!-- 	</div>
-					</div>
-					-->
-					
-				</article>
-				
-				<aside id="herramientas-dcha" class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-					<p>
-						<!-- TODO Incluir un video explicativo -->
-						Pig salami kielbasa, turducken hamburger turkey strip steak shankle ham hock tenderloin cupim. Pork loin tenderloin doner strip steak beef turkey. Tail shank swine tri-tip alcatra pig cupim filet mignon meatball capicola jerky chuck ham venison. Chuck salami shank, tenderloin alcatra ball tip brisket corned beef flank pig short ribs pork loin t-bone meatloaf cupim.
-					</p>
+					<!-- TODO Incluir un video explicativo -->
 				</aside>
 				
+				
+				
+				
+				
+				
+				<!-- Colocar bien y mirar los estilos -->
+				<div id="controles" class="row">
+					<div id="zoom" class="col-xs-12">
+						<p>Zoom:
+							<input type="text" id="zoom_texto" size="2" readonly/>
+						</p>
+						<p>ratioZoomFactor:
+							<input type="text" id="zoom_factor_texto" size="20" readonly/>
+						</p>
+					
+						<!-- <i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px"> -->
+						<!-- <input type="range" id="control_zoom" name="control_zoom"  onchange="setZoom();"/> --> 
+						<!-- <i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px"> -->
+					</div>
+				</div>
 			</section>
 			
 			<footer>
@@ -205,21 +214,17 @@
 		<!-- Bootstrap minified JavaScript -->
 	  	<script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
 		
+		<!-- Slider for Bootstrap -->
+	  	<script src="js/bootstrap-slider-master/js/bootstrap-slider.js"></script>
+		
 		<!-- Paper.js dibujo en Canvas -->
 		<script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
 		
 		<!-- Horma Studio -->
 		<script type="text/javascript" src="js/horma-studio.js"></script>
 		
-		<!-- HormaStudio variables globales -->
-		<script type="text/javascript" src="js/horma-studio-vars-globales.js"></script>
-		
-		<!-- HormaStudio funciones canvas -->
-		<script type="text/javascript" src="js/horma-studio-funciones-canvas.js"></script>
-		
 		<!-- HormaStudio funciones controles -->
 		<script type="text/javascript" src="js/horma-studio-funciones-controles.js"></script>
-		
-		
+			      
 	</body>
 </html>

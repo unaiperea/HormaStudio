@@ -5,49 +5,7 @@
  */
 
 		/**
-		*  Cargarmos la imagen/raster en la capa capaImagen
-		*/
-		function cargarImagen(rutaImagen){
-			//Activamos la capa de la im�gen y la cargamos
-			capaImagen.activate();
-	
-			//Carga una im�gen. No la toma como dentro de la capa capaImagen
-			//var img = new Image();
-			//img.onload = function () {
-		    //	contexto.drawImage(img, 0, 0);
-			//}
-			//img.src = "http://localhost:8080/canvas/img/via.jpg";
-	
-			//Cargar im�gen como raster. Ahora s� que est� dentro de la capa capaImagen 
-			//var imagenRaster = new Raster(rutaImagen);
-			
-			if (imagenRaster != null){
-				console.info("va a borrar la imagen")
-				imagenRaster.remove();
-				imagenRaster = null;
-				contexto.clearRect(0, 0, canvas.width, canvas.height); //Borro todo lo que haya en nuestro lienzo
-			}
-			
-			/*var puntoInsercion = new paper.Point(paper.view.center);
-			imagenRaster = new paper.Raster({
-		  		source: rutaImagen,
-		  		//position: view.center,
-				selected: false}, puntoInsercion);*/
-			imagenRaster = new paper.Raster({
-		  		source: rutaImagen,
-				selected: false});
-			
-			redimensionarImagen();
-			//paper.view.draw(); //Nos aseguramos que la redibuja en el caso de cambiar la im�gen (entra en imagenRaster.onload)
-			
-			//imagenRaster.position = view.center;
-			imagenRaster.selected = false;
-			capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar
-			controlPincel = true;
-		}
-	
-		/**
-		 * TYODO
+		 * TODO
 		 */
 		function redimensionarImagen(){
 			var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
@@ -292,11 +250,104 @@
 			document.getElementById("accion").value = ac;
 		}*/
 		
-		function abrirImagen(){
+		
+		
+		function loadImagen(e){
 			//Quito la propiedad
 			document.getElementById("btn_submit").disabled = false;
 			//Quito la clase (estilo)
 			document.getElementById("btn_submit").classList.remove("disabled");
+			
+			var fichero = new FileReader();
+			//Activamos la capa de la im�gen y la cargamos
+			capaImagen.activate();
+			
+			fichero.onload = function(event){
+			
+				if (imagenRaster != null){
+					console.info("va a borrar la imagen")
+					imagenRaster.remove();
+					imagenRaster = null;
+				}
+				contexto.clearRect(0, 0, canvas.width, canvas.height); //Borro todo lo que haya en nuestro lienzo
+				
+				imagenRaster = new paper.Raster({
+			  		source: event.target.result, //rutaImagen,
+					selected: false});
+				
+		        //var img = new Image();
+				/*imagenRaster.onload = function(){
+					redimensionarImagen();
+		        }*/
+				
+				
+				
+				//Redimensiona el entorno
+				//imagenRaster.onload = function() { //Se ejecuta al cargar por primera vez la imágen 
+					//redimensionarImagen();
+				
+					var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
+					var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
+					var tempW = imagenRaster.width;
+					var tempH = imagenRaster.height;
+					//ratioZoomFactor = 1;
+					//porcentajeZoom = 0;
+					
+					//while (tempW > MAX_WIDTH || tempH > MAX_HEIGHT){
+						/*$('#canvas_croquis').width();
+							for (i=0 ; i < 10 ; i++){
+								setMenosZoom();
+								$('#canvas_croquis').width();
+							}*/
+
+						//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+					//}
+					//TODO
+					if (tempW >= MAX_WIDTH || tempH >= MAX_HEIGHT){ //Si cualquiera de las dimensiones de la imágen es mayor que la del canvas que quite nivel de zoom
+						//if (tempW >= tempH){ //Comprobamos la dimensión que va a predominar. Si el ancho de la imágen es mayor que el alto de la imágen
+						if (tempH >= MAX_HEIGHT){ //Pero si el alto de la imágen es mayor que el alto del canvas que se calcule el ratio respecto del alto del canvas
+							//porcentajeZoom = Math.abs(MAX_HEIGHT * 100 / tempH);
+							ratioZoomFactor = (tempH / MAX_HEIGHT);
+						}else{ //Sino que se calcule el ratio respecto del ancho del canvas
+							//porcentajeZoom = Math.abs(MAX_WIDTH * 100 / tempW);
+							ratioZoomFactor = (tempW / MAX_WIDTH);
+						}
+						//porcentajeZoom = Math.abs(1 - ratioZoomFactor);
+						//}else{//Si el alto de la imágen es mayor que el ancho de la imágen que se calcule el ratio respecto del alto de la imágen
+							//ratioZoomFactor = (tempW / MAX_WIDTH);
+						//	ratioZoomFactor = (tempH / MAX_HEIGHT);
+						//}
+					}else{ //Sino que deje el tamaño de la imágen al 100% y en el centro
+						ratioZoomFactor = 1;
+					}
+					 
+					var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
+					var zoomCenter = point.subtract(paper.view.center); 
+					var moveFactor = tool.zoomFactor - 1.0;
+					originalZoom = paper.view.zoom /= ratioZoomFactor;
+			        paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
+					
+					// now scale the context to counter
+			        // the fact that we've manually scaled
+			        // our canvas element
+			        //contexto.scale(ratio, ratio);
+					
+					var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
+					originalCentro = imagenRaster.position = paper.view.viewToProject(puntoCentroImagen);
+					//paper.view.draw;
+					
+					//document.getElementById("zoom_texto").value =  porcentajeZoom;
+					capaVectorial.activate();                                              //***************************************
+				//}				
+				
+				
+				
+		    }
+			fichero.readAsDataURL(e.target.files[0]); //imágen en formato base64
+			
+			//imagenRaster.selected = false;
+			capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar //***************************************
+			controlPincel = true;
 		}
 			
 		control_guardar.onclick = function( event ){
@@ -402,13 +453,13 @@
  			diferenciaZoom = document.getElementById("control_zoom").value - diferenciaZoom; // - document.getElementById("zoom_texto").value;
 	 			if (diferenciaZoom > 0){ //Si es positivo hago zoom
 	 				for (i=0 ; i < diferenciaZoom ; i++){
-						setMasZoom(1); //setMasZoom(diferenciaZoom);
+						setMasZoom(); //setMasZoom(diferenciaZoom);
 					}
 				}else{ //Si es negativo quito zoom
 					diferenciaZoom = Math.abs(diferenciaZoom);
 					//z*=-1; //Lo convierto a positivo
 					for (i=0 ; i < diferenciaZoom ; i++){
-						setMenosZoom(1); //setMenosZoom( Math.abs(diferenciaZoom) );//Lo convierto a positivo
+						setMenosZoom(); //setMenosZoom( Math.abs(diferenciaZoom) );//Lo convierto a positivo
 					}
 				}
 			//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
@@ -427,27 +478,45 @@
 			var controlZoom = document.getElementById("control_zoom");
 			if (direccion == "arriba"){
 				if (controlZoom.value < upperZoomLimit){
-					controlZoom.stepUp(1);
-					setMasZoom(1);
+					controlZoom.stepUp();
+					setMasZoom();
 				}
 			}else if (direccion == "abajo"){
 				if (controlZoom.value > lowerZoomLimit){
-					controlZoom.stepDown(1);
-					setMenosZoom(1);
+					controlZoom.stepDown();
+					setMenosZoom();
 				}
 			}
 			//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
 			diferenciaZoom = document.getElementById("control_zoom").value;
 		}
 	
+		/**
+		 * Si el canvas contiene algo dibujado o una imágen que haga Scroll
+		 */
+		function comprobarContenidoCanvas(){
+			var resul = false;
+			//Recorre todas las capas
+			for (i=0; i<project.layers.length;i++){
+				//Si contiene hijos: líneas, puntos, imágenes
+				if (project.layers[i].name != "capa del cursor" && project.layers[i].name != "capa generica"){
+					if (project.layers[i].hasChildren()){
+						resul = true;
+					}
+				}
+			}
+			return resul;
+		}
+		
+		
 		//TODO            QUITAR EL PARÁMETRO SI NO LO UTILIZA
-		function setMasZoom(posiciones){
+		function setMasZoom(){
 	       	//var children = project.activeLayer.children;
-	       	//scroll up
-			var zControl = document.getElementById("control_zoom");
-	       	if (document.getElementById("control_zoom").value <= upperZoomLimit) { //paper.view.zoom < upperZoomLimit 
+	       	//Scroll up
 
-	               //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+			if (comprobarContenidoCanvas && document.getElementById("control_zoom").value <= upperZoomLimit) { //paper.view.zoom < upperZoomLimit 
+
+	            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 	               
 	   			//var point = $('#canvas_croquis').offset(); //var
 	   		    //var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
@@ -459,13 +528,12 @@
 	            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
 	            tool.mode = '';
 	            
-	            zControl.value = parseInt(zControl.value) + 1; //Cambiamos el slider del zoom
+		        //document.getElementById("control_zoom").value ++; //Cambiamos el slider del zoom
 	        }
 		}
 		
-		function setMenosZoom(posiciones){
+		function setMenosZoom(){
 			//scroll down
-			var zControl = document.getElementById("control_zoom");
 			if (document.getElementById("control_zoom").value >= lowerZoomLimit){ //paper.view.zoom > lowerZoomLimit
 	            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 	
@@ -479,7 +547,7 @@
 	            paper.view.zoom /= tool.zoomFactor;
 	            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor))
 	            
-	            zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
+	            //document.getElementById("control_zoom").value --; //Cambiamos el slider del zoom
 	        }
 		}
 	
@@ -520,65 +588,67 @@
 	        event.preventDefault();
 	        event = event || window.event;
 	        if (event.type == 'mousewheel') {       //this is for chrome/IE
-	                delta = event.originalEvent.wheelDelta;
-	            }
-	            else if (event.type == 'DOMMouseScroll') {  //this is for FireFox
-	                delta = event.originalEvent.detail*-1;  //FireFox reverses the scroll so we force to to re-reverse...
-	            }
+                delta = event.originalEvent.wheelDelta;
+            }
+            else if (event.type == 'DOMMouseScroll') {  //this is for FireFox
+                delta = event.originalEvent.detail*-1;  //FireFox reverses the scroll so we force to to re-reverse...
+            }
 	
-	        if((delta > 0) && (document.getElementById("control_zoom").value < upperZoomLimit)) { //scroll up. paper.view.zoom
-	            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
-				//point = $('#canvas_croquis').offset(); //var
-			    
-				//M�s
-				//Zoom(1);
-				var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
-				var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
-				var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
-	            var zoomCenter = point.subtract(paper.view.center);
-	            var moveFactor = tool.zoomFactor - 1.0;
-	            paper.view.zoom *= tool.zoomFactor;
-	            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
-	            tool.mode = '';
-	            
-	            /*porcentajeZoom = ((ratioZoomFactor + tool.zoomFactor) * porcentajeZoom) / ratioZoomFactor;
-	            document.getElementById("zoom_texto").value = porcentajeZoom;*/
-	            //porcentajeZoom = Math.abs(1 - ratioZoomFactor);
-	            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
-	            //document.getElementById("zoom_texto").value = porcentajeZoom;
-	            
-	            
-	            //zTexto.value = parseInt(zTexto.value) + 1;
-	            zControl.value = parseInt(zControl.value) + 1;
-	            document.getElementById("zoom_texto").value = paper.view.zoom;
+	        var v = comprobarContenidoCanvas();
+	        if (v == true){ // Comprobamos que exista algo dentro del canvas
+		        if((delta > 0) && (document.getElementById("control_zoom").value < upperZoomLimit)) { //scroll up. paper.view.zoom
+		            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+					//point = $('#canvas_croquis').offset(); //var
+				    
+					//M�s
+					//Zoom(1);
+					var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
+					var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
+					var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
+		            var zoomCenter = point.subtract(paper.view.center);
+		            var moveFactor = tool.zoomFactor - 1.0;
+		            paper.view.zoom *= tool.zoomFactor;
+		            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
+		            tool.mode = '';
+		            
+		            /*porcentajeZoom = ((ratioZoomFactor + tool.zoomFactor) * porcentajeZoom) / ratioZoomFactor;
+		            document.getElementById("zoom_texto").value = porcentajeZoom;*/
+		            //porcentajeZoom = Math.abs(1 - ratioZoomFactor);
+		            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
+		            //document.getElementById("zoom_texto").value = porcentajeZoom;
+		            
+		            
+		            //zTexto.value = parseInt(zTexto.value) + 1;
+		            zControl.value = parseInt(zControl.value) + 1;
+		            document.getElementById("zoom_texto").value = paper.view.zoom;
+		        }
+		        else if((delta < 0) && (document.getElementById("control_zoom").value > lowerZoomLimit)){ // (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de m�s por lo que lo evito poni�ndolo en las condici�n
+					//TODO cuando llegue al nivel m�ximo de zoom se quede en el medio del canvas 
+					
+		        	//var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+					//var point = $('#canvas_croquis').offset();
+					
+					//Menos
+					//Zoom(2);
+					var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
+					var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
+					var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
+		            var zoomCenter = point.subtract(paper.view.center);   
+		            var moveFactor = tool.zoomFactor - 1.0;
+		            paper.view.zoom /= tool.zoomFactor;
+		            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
+		            
+		            //redimensionarImagen();
+		            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
+		            //document.getElementById("zoom_texto").value = porcentajeZoom;
+		            
+		            
+		            
+		            //zTexto.value = parseInt(zTexto.value) - 1; //Cambiamos el texto del zoom
+		            zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
+		            document.getElementById("zoom_texto").value = paper.view.zoom;
+		        }
 	        }
-	        else if((delta < 0) && (document.getElementById("control_zoom").value > lowerZoomLimit)){ // (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de m�s por lo que lo evito poni�ndolo en las condici�n
-				//TODO cuando llegue al nivel m�ximo de zoom se quede en el medio del canvas 
-				
-	        	//var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
-				//var point = $('#canvas_croquis').offset();
-				
-				//Menos
-				//Zoom(2);
-				var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
-				var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
-				var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
-	            var zoomCenter = point.subtract(paper.view.center);   
-	            var moveFactor = tool.zoomFactor - 1.0;
-	            paper.view.zoom /= tool.zoomFactor;
-	            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
-	            
-	            //redimensionarImagen();
-	            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
-	            //document.getElementById("zoom_texto").value = porcentajeZoom;
-	            
-	            
-	            
-	            //zTexto.value = parseInt(zTexto.value) - 1; //Cambiamos el texto del zoom
-	            zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
-	            document.getElementById("zoom_texto").value = paper.view.zoom;
-	        }
-
 	    });
 		
 		/*function Zoom(tipo){
@@ -650,3 +720,6 @@
 		      y: event.clientY - rect.top
 		    };
 		}*/
+		
+		
+	
