@@ -5,7 +5,7 @@
  */
 
 		/**
-		 * TODO
+		 * TODO QUITAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR (no se usa)
 		 */
 		function redimensionarImagen(){
 			var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
@@ -250,8 +250,6 @@
 			document.getElementById("accion").value = ac;
 		}*/
 		
-		
-		
 		function loadImagen(e){
 			//Quito la propiedad
 			document.getElementById("btn_submit").disabled = false;
@@ -261,7 +259,8 @@
 			var fichero = new FileReader();
 			//Activamos la capa de la im�gen y la cargamos
 			capaImagen.activate();
-			
+
+			//Trigger del fichero cargado desde el cuadro de dialogo
 			fichero.onload = function(event){
 			
 				if (imagenRaster != null){
@@ -269,8 +268,12 @@
 					imagenRaster.remove();
 					imagenRaster = null;
 				}
-				contexto.clearRect(0, 0, canvas.width, canvas.height); //Borro todo lo que haya en nuestro lienzo
+				//Borramos el contenido de las capas imagen y vectorial
+				capaImagen.removeChildren();
+				capaVectorial.removeChildren();
+				contexto.clearRect(0, 0, canvas.width, canvas.height);
 				
+				//Cargamos la imagen elegida
 				imagenRaster = new paper.Raster({
 			  		source: event.target.result, //rutaImagen,
 					selected: false});
@@ -290,7 +293,7 @@
 					var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
 					var tempW = imagenRaster.width;
 					var tempH = imagenRaster.height;
-					//ratioZoomFactor = 1;
+					paper.view.zoom = ratioZoomFactor = 1;
 					//porcentajeZoom = 0;
 					
 					//while (tempW > MAX_WIDTH || tempH > MAX_HEIGHT){
@@ -334,20 +337,20 @@
 					
 					var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
 					originalCentro = imagenRaster.position = paper.view.viewToProject(puntoCentroImagen);
+					originalMoveFactor = tool.zoomFactor; //Para PROBARRRRRRRRRRRRRRRRRRRRRRRRRR
+					originalCentro = zoomCenter; //Para PROBARRRRRRRRRRRRRRRRRRRRRRRRRR
 					//paper.view.draw;
 					
 					//document.getElementById("zoom_texto").value =  porcentajeZoom;
-					capaVectorial.activate();                                              //***************************************
+					//imagenRaster.selected = false;
+					capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar //***************************************
+					controlPincel = true;
 				//}				
 				
 				
 				
 		    }
 			fichero.readAsDataURL(e.target.files[0]); //imágen en formato base64
-			
-			//imagenRaster.selected = false;
-			capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar //***************************************
-			controlPincel = true;
 		}
 			
 		control_guardar.onclick = function( event ){
@@ -502,6 +505,7 @@
 				if (project.layers[i].name != "capa del cursor" && project.layers[i].name != "capa generica"){
 					if (project.layers[i].hasChildren()){
 						resul = true;
+						break;
 					}
 				}
 			}
@@ -553,29 +557,22 @@
 	
 		function resetZoom(){
 			
-			//TODO centrar todas las capas o el paper ***********************************
+			//TODO centrar todas las capas o el paper. bORRAR LAS VARIABLES GLOBALES QUE UTILIZO AQUÍ (loadImagen(e)) ***********************************
 			paper.view.zoom = originalZoom;
 			//paper.view.center = paper.view.viewToProject(originalCentro);
 			//paper.view.center = paper.view.projectToView(originalCentro);
-            paper.view.center = originalCentro;
-            
-            //var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
-			//imagenRaster.position = 
-			//paper.view.center = paper.view.projectToView(puntoCentroImagen);
+			paper.view.center = originalCentro;
+			tool.zoomFactor = originalMoveFactor;
+			//Fuerzo el update ya que no lo hace automaticamente en este caso
+			//paper.view.update();//Comprobar que sea imprescindible ********************************************
+			/*var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
+			var zoomCenter = point.subtract(paper.view.center); 
+			var moveFactor = tool.zoomFactor - 1.0;
+			paper.view.zoom /= ratioZoomFactor;
+            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
+			*/
 			
-			//paper.view.center = paper.view.viewToProject(originalCentro);
-			
-			/*var tempW = imagenRaster.width;
-			var tempH = imagenRaster.height;
-			
-			var puntoActual = new paper.Point(tempW/2, tempH/2);
-			
-			for (i=0; i<project.layers.length;i++){
-				project.layers[i].position.x = originalCentro.x;
-				project.layers[i].position.y = originalCentro.y;
-			}*/
 			document.getElementById("control_zoom").value = 5;
-			
 		}
 		
 		$("#canvas_croquis").mousewheel(function(event, delta) {
@@ -594,8 +591,8 @@
                 delta = event.originalEvent.detail*-1;  //FireFox reverses the scroll so we force to to re-reverse...
             }
 	
-	        var v = comprobarContenidoCanvas();
-	        if (v == true){ // Comprobamos que exista algo dentro del canvas
+	        //var v = comprobarContenidoCanvas();
+	        if (comprobarContenidoCanvas()){ // Comprobamos que exista algo dentro del canvas
 		        if((delta > 0) && (document.getElementById("control_zoom").value < upperZoomLimit)) { //scroll up. paper.view.zoom
 		            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 					//point = $('#canvas_croquis').offset(); //var

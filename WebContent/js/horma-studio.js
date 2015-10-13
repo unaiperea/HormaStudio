@@ -32,6 +32,7 @@
 	    //var porcentajeZoom;
 	    var originalZoom;
 	    var originalCentro;
+	    var originalMoveFactor;
 	    var ratioZoomFactor;
 	    var diferenciaZoom;
 	    
@@ -202,9 +203,9 @@
 
 		
 		/**
-		*  Cargarmos la imagen/raster en la capa capaImagen
+		*  Cargamos la imagen/raster en la capa capaImagen // BORRRRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR SI NO LO UTILIZO MÁS
 		*/
-		function cargarImagen(rutaImagen){
+		function cargarImagenssdd(rutaImagen){ 
 			//Activamos la capa de la im�gen y la cargamos
 			capaImagen.activate();
 	
@@ -231,7 +232,7 @@
 		  		//position: view.center,
 				selected: false}, puntoInsercion);*/
 			imagenRaster = new paper.Raster({
-		  		source: rutaImagen,
+		  		source: rutaImagen,                                         // ELIMINAR VARIABLEEEEEEEEEEEEEEEEEEEEE
 				selected: false});
 			
 			redimensionarImagen();
