@@ -8,6 +8,7 @@
  * @version: 1.0 Beta
  * 
  */
+
 	  	//Variables para que se pueda interactuar entre los botones y el canvas
 	  	var canvas; //Para getMousePos(); sino meterlo dentro de onload
 	  	var contexto;
@@ -47,9 +48,10 @@
 	  	console.info('paper.js instalado');
 	  	
 		// With JQuery
-	    $("#ex17a").slider({min  : 0, max  : 10, value: 0, tooltip_position:'bottom'});
+	    /*$("#ex17a").slider({min  : 0, max  : 10, value: 0, tooltip_position:'bottom'});
 	    $("#control_zoom").slider({min  : 0, max  : 10, value: 5, orientation: 'vertical', tooltip_position:'left'});
-	      
+	    */
+	  	
 		// Without JQuery
 	    //new Slider("#ex17a", {min  : 0, max  : 10, value: 0, tooltip_position:'bottom'});
 	    //new Slider("#ex17b", {min  : 0, max  : 10, value: 0, orientation: 'vertical', tooltip_position:'left'});
@@ -57,6 +59,28 @@
 		//Only executed our code once the DOM is ready.
 		window.onload = function() {
 	
+			
+			var etiqueta = document.querySelector(".etiqueta");
+			var elInput =  document.querySelector(".elInput");
+			var w = parseInt(window.getComputedStyle(elInput, null).getPropertyValue('width'));console.log(w);
+			w = 50;
+			var paso = w/90;
+
+			var left = window.getComputedStyle(etiqueta, null).getPropertyValue('left');
+			elInput.setAttribute('value', elInput.value);//Igual se puede borrarrrrrrrrrrrrr*************************
+			etiqueta.innerHTML = "<p>"+elInput.value+"</p>";
+			var modifyValueAttr = function() {
+			  elInput.setAttribute('value', elInput.value);
+			  etiqueta.innerHTML = "<p>"+elInput.value+"</p>";
+			  etiqueta.style.left = ((elInput.value * paso) +0 ) + "px"; //((elInput.value * paso) -8) El nº es la posicion de la bola del slider
+			};
+
+			window.addEventListener('load',modifyValueAttr, false);
+			elInput.addEventListener('input',modifyValueAttr, false);
+			
+			
+			
+			
 			
 			     console.info('window loaded');	
 				//Atributos de hitTest (eventos provocados por el rat�n al clickar sobre un item/Path/Segmento/Stroke
@@ -161,7 +185,7 @@
 
 		function inicializarDibujoVectorial(){
 			vectorColor         = '#0000FF';
-			vectorGrosor        = 5;
+			vectorGrosor        = 6; // Comprobar 	QUE FUNCIONAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA*  **********   IMPORTANTEEEEEEEEEEE
 			vectorRedondezPunta = 'round';
 			nodoTamano          = vectorGrosor*2;
 			

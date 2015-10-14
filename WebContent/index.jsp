@@ -107,16 +107,20 @@
 					</div>
 					<!-- PROPIEDADES -->
 					<div class="clearfix">
-						<div id="control-propiedades" class="pull-right">
-							<ul class="iconos-dibujo pull-right">
+						<div id="control-propiedades">
+							<ul class="iconos-dibujo">
 								<li><input type="color" id="control_color" name="control_color" onchange="getColor();"></li>
-								<!-- <li><input type="text" id="grosor_texto" size="1" readonly></li> -->
+								<li><input type="text" id="grosor_texto" size="1" readonly></li>
 								<li><span id="grosor_menos" class="fa fa-minus-circle fa-1x" style="color: #FFFFFF;" onclick="moverGrosor('abajo');"></span></li>
-								<li><input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range s" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li></li>
 								<!-- 
 								<li><input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li>
 								-->
-								
+								<li>
+									<div id="grosor_container" class="text-center">
+										<div class="etiqueta"></div>
+										<input id="control_grosor" class="elInput" type='range' min='0' max ='50' value='6' autocomplete="off" />
+									</div>
+								</li>
 								<!-- <li><input id="ex17a" type="text"/></li> -->
 	      						
 								
@@ -156,7 +160,8 @@
 							<span id="zoom_menos" class="fa fa-minus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('arriba');"></span>
 							<!-- <input type="range" id="control_zoom" name="control_zoom" class="bar cursor_hand" onchange="setZoom();" style="margin-top: 1px;"/> -->
 							<!-- <input type="range" id="control_zoom" name="control_zoom" min="0" max="10" step="1" onchange="setZoom();"/> ERA EL BUENO -->
-							<input id="control_zoom" type="text" id="control_zoom" name="control_zoom" onchange="setZoom();"/>
+							<!-- <input id="control_zoom" type="text" id="control_zoom" name="control_zoom" onchange="setZoom();"/> ES EL MEJOR -->
+							<input id="control_zoom" type="range" min=0 max=10 step=1 value=0>
 							<!-- <div id="zoom-slider">
 								<input class="bar" type="range" id="rangeinput" value="10" onchange="rangevalue.value=value"/>
 								<span class="highlight"></span>
@@ -228,6 +233,6 @@
 		
 		<!-- HormaStudio funciones controles -->
 		<script type="text/javascript" src="js/horma-studio-funciones-controles.js"></script>
-			      
+
 	</body>
 </html>
