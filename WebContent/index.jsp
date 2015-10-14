@@ -93,6 +93,7 @@
 							</ul>
 						</div>
 					</form>
+					<!-- CONTROLES -->
 					<div class="clearfix">
 						<div id="control-dibujo" class="pull-right">
 							<ul class="iconos-dibujo">
@@ -104,11 +105,12 @@
 							</ul>
 						</div>
 					</div>
+					<!-- PROPIEDADES -->
 					<div class="clearfix">
 						<div id="control-propiedades" class="pull-right">
 							<ul class="iconos-dibujo pull-right">
 								<li><input type="color" id="control_color" name="control_color" onchange="getColor();"></li>
-								<li><input type="text" id="grosor_texto" size="1" readonly></li>
+								<!-- <li><input type="text" id="grosor_texto" size="1" readonly></li> -->
 								<li><span id="grosor_menos" class="fa fa-minus-circle fa-1x" style="color: #FFFFFF;" onclick="moverGrosor('abajo');"></span></li>
 								<li><input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range s" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li></li>
 								<!-- 
@@ -132,7 +134,7 @@
 				-->
 				
 				<!-- <div class="clearfix visible-sm-block"></div> -->
-				
+				<!-- CANVAS -->
 				<article id="centro" class="col-xs-8">
 					<div id="barra-menus">
 						<p>
@@ -146,6 +148,7 @@
 					</div>
 				</article>
 
+				<!-- UTILIDADES -->
 				<!-- colocar a la izda -->
 				<aside id="herramientas-dcha" class="col-xs-2">
 					<div id="herramientas-dcha-container" style="width: 47px;">
