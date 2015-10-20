@@ -46,33 +46,60 @@ s{
 }
 
 .lista-margen-arriba{
-	margin-top: 10px;
+	margin-top: 5px;
 }
 
 i{
 	color: #FFFFFF;
 }
 
-#control-dibujo{
+#control_select select{
+	background: transparent;
+	color: #fff;
+	border:solid 1px #888888;
+	cursor:pointer;
+	/*background: transparent;
+	width: 268px;
+	padding: 5px;
+	font-size: 16px;
+	line-height: 1;
+	border: 0;
+	border-radius: 0;
+	height: 34px;
+	-webkit-appearance: none;*/
+}
+
+#barra-menus{
+	margin-top: 10px;
 	padding-left: 8px;
-    padding-right: 8px;
     padding-top: 8px;
+    padding-bottom: 8px;
+	border-radius: 3px;
+	background: #424242;  /* Fondo más oscuro que el original */
+	box-shadow: inset -1px -1px 1px rgba(0,0,0,.3), inset 1px 1px 1px rgba(255,255,255,.2);
+}
+
+#control-dibujo{
+	padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 3px;
 	border-radius: 3px;
 	background: #424242;  /* Fondo más oscuro que el original */
 	box-shadow: inset -1px -1px 1px rgba(0,0,0,.3), inset 1px 1px 1px rgba(255,255,255,.2);
 }
 
 #control-propiedades{
-	margin-top: 5px;
+	margin-top: 10px;
 	padding-left: 8px;
     padding-right: 8px;
-    padding-top: 8px;
+    padding-top: 5px;
 	border-radius: 3px;
 	background: #424242;  /* Fondo más oscuro que el original */
 	box-shadow: inset -1px -1px 1px rgba(0,0,0,.3), inset 1px 1px 1px rgba(255,255,255,.2);
 }
 
 #herramientas-izda, #control-archivo{
+	padding-bottom: 10px;
 	margin-top: 10px;
 	margin-bottom: 10px;
 	border-radius: 6px;
@@ -91,11 +118,10 @@ i{
 /* Estilos de controles */
 
 .boton_pulsado/* Al presionarse el botón */ {
-	width: 40px;  /* Ancho del botón */
-	height: 40px;  /* Alto del botón */
-	padding-top: 7px;
+	width: 30px;  /* Ancho del botón */
+	height: 30px;  /* Alto del botón */
+	padding-top: 2px;
 	padding-left: 2px;
-	//padding: 5px;
 	text-align: center;  /* Alineación del texto */
 	text-shadow: 1px 1px rgba(0,0,0,.3);  /* Sombra del texto */
 	background:#343434;  /* Fondo más oscuro que el original */
@@ -107,10 +133,10 @@ i{
 
 .boton_no_pulsado {
 	box-shadow: inset 3px 3px 3px rgba(255,255,255,.7), inset -2px -2px 3px rgba(0,0,0,.1), 2px 2px 10px rgba(0,0,0,.1);
-	width: 40px;  /* Ancho del botón */
-	height: 40px;  /* Alto del botón */
+	width: 30px;  /* Ancho del botón */
+	height: 30px;  /* Alto del botón */
 	border: 0; /* Borde */
-	padding-top: 7px;
+	padding-top: 2px;
 	padding-left: 2px;
 	background: #535353;  /* Fondo */
 	text-align: center;  /* Alineación del texto */
@@ -171,7 +197,18 @@ i{
 }
 
 .iconos-dibujo{
-	margin-right: 20%;
+	/*margin-top: 5px;*/
+	margin-bottom: 5px;
+}
+
+#control_pincel{
+	font-size: 17px;
+	padding-top: 6px;
+}
+
+#control_reunion, #control_borrar, #control_mover{
+	font-size: 21px;
+	padding-top: 5px;
 }
 
 /*#ruta{

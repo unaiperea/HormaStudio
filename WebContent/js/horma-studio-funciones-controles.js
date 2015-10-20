@@ -92,7 +92,8 @@
 				canvas.classList.add("cursor_none");
 				
 				document.getElementById("control_grosor").disabled = false;
-				document.getElementById("grosor_texto").value = document.getElementById("control_grosor").value = vectorGrosor;
+				document.getElementById("control_grosor").value = vectorGrosor;
+				document.getElementById("etiqueta").innerHTML = "Tamaño pincel: " + vectorGrosor;
 				document.getElementById("control_color").disabled = false;
 				document.getElementById("control_color").value = vectorColor;
 				controlPincel = true;
@@ -135,7 +136,8 @@
 				canvas.classList.add("cursor_none");
 				
 				document.getElementById("control_grosor").disabled = false;
-				document.getElementById("grosor_texto").value = document.getElementById("control_grosor").value = reunionRadio;
+				document.getElementById("control_grosor").value = vectorGrosor;
+				document.getElementById("etiqueta").innerHTML = "Tamaño pincel: " + vectorGrosor;
 				document.getElementById("control_color").disabled = false;
 				document.getElementById("control_color").value = reunionColor;
 				controlPincel = false;
@@ -423,7 +425,7 @@
 		}
 		
 		function setGrosor(){
-			document.getElementById("grosor_texto").value = document.getElementById("control_grosor").value;
+			document.getElementById("etiqueta").innerHTML = "Tamaño pincel: " + document.getElementById("control_grosor").value;
 
 			var anteriorRadioSinStroke;
 			var nuevoRadioSinStroke;

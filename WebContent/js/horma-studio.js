@@ -59,28 +59,44 @@
 		//Only executed our code once the DOM is ready.
 		window.onload = function() {
 	
-			
-			var etiqueta = document.querySelector(".etiqueta");
-			var elInput =  document.querySelector(".elInput");
-			var w = parseInt(window.getComputedStyle(elInput, null).getPropertyValue('width'));console.log(w);
-			w = 50;
-			var paso = w/90;
+			/**
+			 * input type=range
+			 */
+			var elInput = document.querySelector('#control_grosor');
+			if (elInput) {
+			  var etiqueta = document.querySelector('#etiqueta');
+			  if (etiqueta) {
+			    etiqueta.innerHTML = "Tamaño pincel: " + elInput.value;
 
-			var left = window.getComputedStyle(etiqueta, null).getPropertyValue('left');
-			elInput.setAttribute('value', elInput.value);//Igual se puede borrarrrrrrrrrrrrr*************************
-			etiqueta.innerHTML = "<p>"+elInput.value+"</p>";
-			var modifyValueAttr = function() {
-			  elInput.setAttribute('value', elInput.value);
-			  etiqueta.innerHTML = "<p>"+elInput.value+"</p>";
-			  etiqueta.style.left = ((elInput.value * paso) +0 ) + "px"; //((elInput.value * paso) -8) El nº es la posicion de la bola del slider
-			};
-
-			window.addEventListener('load',modifyValueAttr, false);
-			elInput.addEventListener('input',modifyValueAttr, false);
+			    elInput.addEventListener('input', function() {
+			      etiqueta.innerHTML = "Tamaño pincel: " + elInput.value;
+			    }, false);
+			  }
+			}
 			
 			
-			
-			
+			/**
+			 * input type=color - Spectrum Color Picker
+			 */
+			$("#control_color").spectrum({
+			    showPaletteOnly: true,
+			    togglePaletteOnly: true,
+			    togglePaletteMoreText: 'más',
+			    togglePaletteLessText: 'menos',
+			    chooseText: "Ok",
+			    cancelText: "Cancelar",
+			    color: 'blue',
+			    palette: [
+			        ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+			        ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+			        ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+			        ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+			        ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+			        ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+			        ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+			        ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+			    ]
+			});
 			
 			     console.info('window loaded');	
 				//Atributos de hitTest (eventos provocados por el rat�n al clickar sobre un item/Path/Segmento/Stroke
@@ -278,7 +294,7 @@
 			
 			//Tama�o pincel
 			document.getElementById("control_grosor").value = vectorGrosor;
-			document.getElementById("grosor_texto").value = vectorGrosor;
+			document.getElementById("etiqueta").innerHTML = "Tamaño pincel: " + vectorGrosor;
 			
 			//Zoom
 			//document.getElementById("control_zoom").value = lowerZoomLimit;

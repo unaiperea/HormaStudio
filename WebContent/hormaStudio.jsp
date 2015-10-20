@@ -393,10 +393,11 @@
 						hitResult.segment.remove();
 					}
 				}
-			}else if (controlReunion){ //Si se ha pulsado el bot�n de Reuni�n que cree una nueva reuni�n al clickar sobre el canvas
+			}else if (controlReunion && hitClaseItem === "Raster"){ //Si se ha pulsado el bot�n de Reuni�n que cree una nueva reuni�n al clickar sobre el canvas
 				console.info("controlReunion = true");
-				if (project.activeLayer = capaVectorial) console.info("capaVectorial");
-				else console.info("otra capa");
+				if (project.activeLayer != capaVectorial){
+					capaVectorial.activate();
+				}
 				circuloReunion = new paper.Path.Circle({
 					center: event.point,
 					radius: reunionRadio,
@@ -406,6 +407,9 @@
 				console.info(circuloReunion.visible);
 			}else if (controlPincel){ //si no se ha pulsado ning�n item o se ha clickado sobre el raster/im�gen que cree un nuevo path y en onMouseDrag se dibuja
 				 //|| hitNombreItem == "cursor"					/*** CURSOR ***/
+				if (project.activeLayer != capaVectorial){
+					capaVectorial.activate();
+				}
 				if (!hitResult || hitClaseItem === "Raster" || hitResult.type == "fill" || hitNombreItem == "cursor"){ //si hitResult=null o se ha clickado sobre la im�gen o sobre un objeto con relleno/Reuni�n
 					path = new paper.Path({ //Crea un nuevo Path
 						strokeColor: vectorColor,

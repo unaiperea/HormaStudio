@@ -19,7 +19,8 @@
 		
 		<!-- Estilos CSS -->
 		<link rel="stylesheet" type="text/css" href="css/styles.css?v=1.0">
-		<link rel="stylesheet" type="text/css" href="css/range_slider.css?v=1.0">
+		<link rel='stylesheet' type="text/css" href="css/spectrum.css" />
+		<link rel="stylesheet" type="text/css" href="css/range_slider.css?v=1.0"> 
 		<link rel="stylesheet" type="text/css" href="js/bootstrap-slider-master/css/bootstrap-slider.css">
 		
 		<!-- Responsive Design -->
@@ -39,7 +40,7 @@
 	  		#cabecera{background-color: yellow;}
 	  		.container{background-color: grey;}
 	  		.menu{background-color: brown;}
-	  		#barra-menus{background-color: olive;}
+	  		/*#barra-menus{background-color: olive;}*/
 	  		#controles{background-color: orange;}
 	  		/* #herramientas-izda{background-color: cyan;} */
 	  		#herramientas-dcha{background-color: #424242;}
@@ -97,9 +98,10 @@
 					<div class="clearfix">
 						<div id="control-dibujo" class="pull-right">
 							<ul class="iconos-dibujo">
-								<li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li>
-								<li><span id="control_reunion" class="fa fa-dot-circle-o boton_hover boton_no_pulsado fa-2x lista-margen-arriba"></span></li>
-								<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado fa-2x lista-margen-arriba"></span></li>
+								<li><span id="control_pincel" class="glyphicon glyphicon-pencil boton_pulsado"></span></li>
+								<!-- <li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li> -->
+								<li><span id="control_reunion" class="fa fa-dot-circle-o boton_hover boton_no_pulsado lista-margen-arriba"></span></li>
+								<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado lista-margen-arriba"></span></li>
 								<!-- <li><span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x lista-margen-arriba"></span></li> -->
 								<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
 							</ul>
@@ -107,28 +109,26 @@
 					</div>
 					<!-- PROPIEDADES -->
 					<div class="clearfix">
-						<div id="control-propiedades">
-							<ul class="iconos-dibujo">
-								<li><input type="color" id="control_color" name="control_color" onchange="getColor();"></li>
-								<li><input type="text" id="grosor_texto" size="1" readonly></li>
-								<li><span id="grosor_menos" class="fa fa-minus-circle fa-1x" style="color: #FFFFFF;" onclick="moverGrosor('abajo');"></span></li>
+						<div id="control-propiedades" class="pull-right">
+							<ul class="iconos-propiedades">
+								<li><input type="color" id="control_color" name="control_color" class="pull_right" name="control_color" onchange="getColor();"></li>
 								<!-- 
 								<li><input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li>
 								-->
 								<li>
-									<div id="grosor_container" class="text-center">
-										<div class="etiqueta"></div>
-										<input id="control_grosor" class="elInput" type='range' min='0' max ='50' value='6' autocomplete="off" />
+									<div id="grosor_container" class="inputDiv clearfix">
+										<div class=flotar_dcha>
+										  	<!-- <span id="grosor_menos" class="fa fa-minus-circle fa-1x flotar_izda" style="color: #FFFFFF;" onclick="moverGrosor('abajo');"></span> -->
+										  	<div id="etiqueta"></div>
+										  	<input id="control_grosor" type="range" value="25" min="2" max="50" autocomplete="off" onchange="setGrosor();">
+										  	<!-- <span id="grosor_mas" class="fa fa-plus-circle fa-1x flotar_izda" style="color: #FFFFFF;" onclick="moverGrosor('arriba');"></span> -->
+										</div>
 									</div>
 								</li>
-								<!-- <li><input id="ex17a" type="text"/></li> -->
-	      						
-								
-								<li><span id="grosor_mas" class="fa fa-plus-circle fa-1x" style="color: #FFFFFF;" onclick="moverGrosor('arriba');"></span></li>
+	
 							</ul>
 						</div>
 					</div>
-					
 				</aside>
 				
 				<!-- 
@@ -141,10 +141,12 @@
 				<!-- CANVAS -->
 				<article id="centro" class="col-xs-8">
 					<div id="barra-menus">
-						<p>
-							<!-- TODO Incluir un video explicativo -->
-							Pig salami kielbasa, turducken hamburger turkey strip steak shankle ham hock tenderloin cupim. Pork loin tenderloin doner strip steak beef turkey. Tail shank swine tri-tip alcatra pig cupim filet mignon meatball capicola jerky chuck ham venison. Chuck salami shank, tenderloin alcatra ball tip brisket corned beef flank pig short ribs pork loin t-bone meatloaf cupim.
-						</p>
+							<div id="control_select">
+							   <select>
+							      <option>Here is the first option</option>
+							      <option>The second option</option>
+							   </select>
+							</div>
 					</div>
 					
 					<div id="canvas-container">
@@ -169,13 +171,23 @@
 							</div> -->
 							<span id="zoom_mas" class="fa fa-plus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('abajo');"></span>
 						</div>
-						
+						<!-- hacer que funcioneel gliphicons -->
+						<div class="btn-toolbar">
+						  <div class="btn-group">
+						  	<span class="glyphicon glyphicon-pencil"></span>
+						    <a class="btn" href="#"><i class="icon-align-left"></i></a>
+						    <a class="btn" href="#"><i class="icon-align-center"></i></a>
+						    <a class="btn" href="#"><i class="icon-align-right"></i></a>
+						    <a class="btn" href="#"><i class="icon-align-justify"></i></a>
+						  </div>
+						</div>
 						<div id="zoom-1-1" class="cursor_hand">
-							<input type="button" id="zoom_restaurar" name="zoom_restaurar" class="btn btn-primary" onclick="resetZoom();" value="1:1"/>
+							<!-- <input type="button" id="zoom_restaurar" name="zoom_restaurar" class="btn btn-primary" onclick="resetZoom();" value="1:1"/> -->
+							<span id="control_mover" class="fa fa-compress boton_hover boton_no_pulsado cursor_hand"></span>
 						</div>
 						
 						<div id="mover-container" class="text-center">
-							<span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x cursor_hand"></span>
+							<span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado cursor_hand"></span>
 						</div>
 					</div>
 
@@ -221,6 +233,9 @@
 		
 		<!-- Bootstrap minified JavaScript -->
 	  	<script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+		
+		<!-- Spectrum Color Picker  - http://bgrins.github.io/spectrum/-->
+		<script src="js/spectrum.js"></script>
 		
 		<!-- Slider for Bootstrap -->
 	  	<script src="js/bootstrap-slider-master/js/bootstrap-slider.js"></script>
