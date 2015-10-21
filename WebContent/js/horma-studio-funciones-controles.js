@@ -247,11 +247,6 @@
 			botonAuxMover = null;
 		}
 		
-		/*function escribirAccion(ac){
-			//Subir y cargar im�gen
-			document.getElementById("accion").value = ac;
-		}*/
-		
 		function loadImagen(e){
 			//Quito la propiedad
 			document.getElementById("btn_submit").disabled = false;
@@ -264,50 +259,32 @@
 
 			//Trigger del fichero cargado desde el cuadro de dialogo
 			fichero.onload = function(event){
-			
+				//canvas.classList.remove("cursor_none");
+				//canvas.classList.add("cursor_wait");
 				if (imagenRaster != null){
 					console.info("va a borrar la imagen")
 					imagenRaster.remove();
 					imagenRaster = null;
+					hayImagen = false;
+
+					//Borramos el contenido de las capas imagen y vectorial
+					capaImagen.removeChildren();
+					capaVectorial.removeChildren();
+					contexto.clearRect(0, 0, canvas.width, canvas.height);
 				}
-				//Borramos el contenido de las capas imagen y vectorial
-				capaImagen.removeChildren();
-				capaVectorial.removeChildren();
-				contexto.clearRect(0, 0, canvas.width, canvas.height);
-				
-				//Cargamos la imagen elegida
-				imagenRaster = new paper.Raster({
-			  		source: event.target.result, //rutaImagen,
-					selected: false});
-				
-		        //var img = new Image();
-				/*imagenRaster.onload = function(){
-					redimensionarImagen();
-		        }*/
-				
-				
-				
-				//Redimensiona el entorno
-				//imagenRaster.onload = function() { //Se ejecuta al cargar por primera vez la imágen 
-					//redimensionarImagen();
-				
+					//Cargamos la imagen elegida
+					imagenRaster = new paper.Raster({
+				  		source: event.target.result, //rutaImagen,
+						selected: false});
+					
+					//Redimensiona el entorno
 					var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
 					var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
 					var tempW = imagenRaster.width;
 					var tempH = imagenRaster.height;
 					paper.view.zoom = ratioZoomFactor = 1;
 					//porcentajeZoom = 0;
-					
-					//while (tempW > MAX_WIDTH || tempH > MAX_HEIGHT){
-						/*$('#canvas_croquis').width();
-							for (i=0 ; i < 10 ; i++){
-								setMenosZoom();
-								$('#canvas_croquis').width();
-							}*/
-
-						//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
-					//}
-					//TODO
+		
 					if (tempW >= MAX_WIDTH || tempH >= MAX_HEIGHT){ //Si cualquiera de las dimensiones de la imágen es mayor que la del canvas que quite nivel de zoom
 						//if (tempW >= tempH){ //Comprobamos la dimensión que va a predominar. Si el ancho de la imágen es mayor que el alto de la imágen
 						if (tempH >= MAX_HEIGHT){ //Pero si el alto de la imágen es mayor que el alto del canvas que se calcule el ratio respecto del alto del canvas
@@ -332,11 +309,6 @@
 					originalZoom = paper.view.zoom /= ratioZoomFactor;
 			        paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
 					
-					// now scale the context to counter
-			        // the fact that we've manually scaled
-			        // our canvas element
-			        //contexto.scale(ratio, ratio);
-					
 					var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
 					originalCentro = imagenRaster.position = paper.view.viewToProject(puntoCentroImagen);
 					originalMoveFactor = tool.zoomFactor; //Para PROBARRRRRRRRRRRRRRRRRRRRRRRRRR
@@ -344,13 +316,11 @@
 					//paper.view.draw;
 					
 					//document.getElementById("zoom_texto").value =  porcentajeZoom;
-					//imagenRaster.selected = false;
 					capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar //***************************************
 					controlPincel = true;
-				//}				
-				
-				
-				
+					hayImagen = true;
+					//canvas.classList.remove("cursor_wait");
+					//canvas.classList.add("cursor_none");
 		    }
 			fichero.readAsDataURL(e.target.files[0]); //imágen en formato base64
 		}
@@ -599,7 +569,7 @@
 		            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
 					//point = $('#canvas_croquis').offset(); //var
 				    
-					//M�s
+					//Mas
 					//Zoom(1);
 					var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
 					var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas

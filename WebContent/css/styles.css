@@ -185,10 +185,6 @@ i{
 	
 }
 
-#zoom-1-1{
-	
-}
-
 #control_mover{
 	/*display: inline-block;
 	position: absolute;
@@ -234,6 +230,10 @@ i{
 	left: 38px;
     top: 157px;
 }*/
+
+.cursor_wait{
+	cursor: wait;
+}
 
 .cursor_mover{
 	cursor: move;

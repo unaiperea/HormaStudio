@@ -163,23 +163,21 @@
 							<!-- <input type="range" id="control_zoom" name="control_zoom" class="bar cursor_hand" onchange="setZoom();" style="margin-top: 1px;"/> -->
 							<!-- <input type="range" id="control_zoom" name="control_zoom" min="0" max="10" step="1" onchange="setZoom();"/> ERA EL BUENO -->
 							<!-- <input id="control_zoom" type="text" id="control_zoom" name="control_zoom" onchange="setZoom();"/> ES EL MEJOR -->
-							<input id="control_zoom" type="range" min=0 max=10 step=1 value=0>
+							<div id="zoom_container" class="inputDiv clearfix">
+								<div class=flotar_dcha>
+								  	<!-- <span id="grosor_menos" class="fa fa-minus-circle fa-1x flotar_izda" style="color: #FFFFFF;" onclick="moverGrosor('abajo');"></span> -->
+								  	<div id="etiqueta"></div>
+								  	<input id="control_zoom" type="range" value="0" min="0" max="10" autocomplete="off"  onchange="setZoom();"> <!-- onchange="setGrosor();"> -->
+								  	<!-- <span id="grosor_mas" class="fa fa-plus-circle fa-1x flotar_izda" style="color: #FFFFFF;" onclick="moverGrosor('arriba');"></span> -->
+								</div>
+							</div>
+							<!-- <input id="control_zoom" type="range" min=0 max=10 step=1 value=0> -->
 							<!-- <div id="zoom-slider">
 								<input class="bar" type="range" id="rangeinput" value="10" onchange="rangevalue.value=value"/>
 								<span class="highlight"></span>
 								<output id="rangevalue">50</output>
 							</div> -->
 							<span id="zoom_mas" class="fa fa-plus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('abajo');"></span>
-						</div>
-						<!-- hacer que funcioneel gliphicons -->
-						<div class="btn-toolbar">
-						  <div class="btn-group">
-						  	<span class="glyphicon glyphicon-pencil"></span>
-						    <a class="btn" href="#"><i class="icon-align-left"></i></a>
-						    <a class="btn" href="#"><i class="icon-align-center"></i></a>
-						    <a class="btn" href="#"><i class="icon-align-right"></i></a>
-						    <a class="btn" href="#"><i class="icon-align-justify"></i></a>
-						  </div>
 						</div>
 						<div id="zoom-1-1" class="cursor_hand">
 							<!-- <input type="button" id="zoom_restaurar" name="zoom_restaurar" class="btn btn-primary" onclick="resetZoom();" value="1:1"/> -->

@@ -38,6 +38,7 @@
 	    var diferenciaZoom;
 	    
 	    var controlImagen; //input type=file
+	    var hayImagen = false; //Para poder pintar sobre la imagen
 	    
 	    var capaImagen;
 		var capaVectorial;
@@ -119,7 +120,7 @@
 				var segment, path; //variables para saber qu� item y en qu� parte del item se ha clickado
 				var moverPath = false; //Controla el movimiento en bloque del item
 				var dibujar = false; //Controla si se va a dibujar o no
-				var rutaImagen = "http://localhost:8080/HormaStudio/img/Ametzorbe766x1024.jpg";
+				var rutaImagen = "http://localhost:8080/HormaStudio/img/krokis.png";
 				
 				var circuloReunion; //No s� si es imprescindible
 				//var rReunion; //Para si agrupamos el c�rculo con la letra R en el centro 
@@ -135,7 +136,7 @@
 				inicializarCanvas();
 				inicializarCapas(); //Creamos las capas (im�gen, l�neas)
 				inicializarDibujoVectorial();
-				//cargarImagen(rutaImagen);
+				cargarImagenInicial(rutaImagen);
 				inicializarControles();
 				inicializarToolTip();
 			
@@ -243,28 +244,14 @@
 
 		
 		/**
-		*  Cargamos la imagen/raster en la capa capaImagen // BORRRRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR SI NO LO UTILIZO MÁS
+		*  Cargamos la imagen/raster en la capa capaImagen
 		*/
-		function cargarImagenssdd(rutaImagen){ 
+		function cargarImagenInicial(rutaImagen){ 
 			//Activamos la capa de la im�gen y la cargamos
 			capaImagen.activate();
-	
-			//Carga una im�gen. No la toma como dentro de la capa capaImagen
-			//var img = new Image();
-			//img.onload = function () {
-		    //	contexto.drawImage(img, 0, 0);
-			//}
-			//img.src = "http://localhost:8080/canvas/img/via.jpg";
-	
-			//Cargar im�gen como raster. Ahora s� que est� dentro de la capa capaImagen 
-			//var imagenRaster = new Raster(rutaImagen);
 			
-			if (imagenRaster != null){
-				console.info("va a borrar la imagen")
-				imagenRaster.remove();
-				imagenRaster = null;
-				contexto.clearRect(0, 0, canvas.width, canvas.height); //Borro todo lo que haya en nuestro lienzo
-			}
+			contexto.clearRect(0, 0, canvas.width, canvas.height); //Borro todo lo que haya en nuestro lienzo
+			hayImagen = false;
 			
 			/*var puntoInsercion = new paper.Point(paper.view.center);
 			imagenRaster = new paper.Raster({
@@ -272,16 +259,17 @@
 		  		//position: view.center,
 				selected: false}, puntoInsercion);*/
 			imagenRaster = new paper.Raster({
-		  		source: rutaImagen,                                         // ELIMINAR VARIABLEEEEEEEEEEEEEEEEEEEEE
+		  		source: rutaImagen,
 				selected: false});
+			hayImagen = false;
 			
-			redimensionarImagen();
-			//paper.view.draw(); //Nos aseguramos que la redibuja en el caso de cambiar la im�gen (entra en imagenRaster.onload)
+			//Centra la imagen
+			var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
+			var MAX_HEIGHT = $('#canvas_croquis').height();//$('#entorno').height(); //Altura del div
+			var puntoCentroImagen = new paper.Point(MAX_WIDTH / 2, MAX_HEIGHT / 2);
+			imagenRaster.position = paper.view.viewToProject(puntoCentroImagen);
 			
-			//imagenRaster.position = view.center;
-			imagenRaster.selected = false;
 			capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar
-			controlPincel = true;
 		}
 		
 		function inicializarControles(){
@@ -453,20 +441,23 @@
 						hitResult.segment.remove();
 					}
 				}
-			}else if (controlReunion){ //Si se ha pulsado el bot�n de Reuni�n que cree una nueva reuni�n al clickar sobre el canvas
+			}else if (controlReunion && hayImagen){ //Si se ha pulsado el bot�n de Reuni�n que cree una nueva reuni�n al clickar sobre el canvas
 				console.info("controlReunion = true");
-				if (project.activeLayer = capaVectorial) console.info("capaVectorial");
-				else console.info("otra capa");
-				circuloReunion = new paper.Path.Circle({
-					center: event.point,
-					radius: reunionRadio,
-					fillColor: reunionColor,
-					name: "reunion"
-					});
-				console.info(circuloReunion.visible);
-			}else if (controlPincel){ //si no se ha pulsado ning�n item o se ha clickado sobre el raster/im�gen que cree un nuevo path y en onMouseDrag se dibuja
+					if (project.activeLayer != capaVectorial){
+						capaVectorial.activate();
+					}
+					circuloReunion = new paper.Path.Circle({
+						center: event.point,
+						radius: reunionRadio,
+						fillColor: reunionColor,
+						name: "reunion"
+						});
+			}else if (controlPincel && hayImagen){ //si no se ha pulsado ning�n item o se ha clickado sobre el raster/im�gen que cree un nuevo path y en onMouseDrag se dibuja
 				 //|| hitNombreItem == "cursor"					/*** CURSOR ***/
 				if (!hitResult || hitClaseItem === "Raster" || hitResult.type == "fill" || hitNombreItem == "cursor"){ //si hitResult=null o se ha clickado sobre la im�gen o sobre un objeto con relleno/Reuni�n
+					if (project.activeLayer != capaVectorial){
+						capaVectorial.activate();
+					}
 					path = new paper.Path({ //Crea un nuevo Path
 						strokeColor: vectorColor,
 						strokeWidth: vectorGrosor,

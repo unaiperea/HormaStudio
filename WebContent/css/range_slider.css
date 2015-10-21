@@ -1,4 +1,5 @@
-#grosor_container {
+/* Slider para controlar el grosor del pincel */
+#grosor_container, #zoom_container {
   width: 100px;
   position: relative;
 }
@@ -10,22 +11,25 @@
   font-size: 0.8em;
 }
 
-#control_grosor {
+#control_grosor, #control_zoom {
   display: block;
   width: 100%;
 }
 
-#control_grosor:focus {
+#control_grosor:focus, #control_zoom:focus {
   outline: none;
 }
 
-#control_grosor,
+#control_grosor, #control_zoom,
 #control_grosor::-webkit-slider-runnable-track,
-#control_grosor::-webkit-slider-thumb {
+#control_zoom::-webkit-slider-runnable-track,
+#control_grosor::-webkit-slider-thumb,
+#control_zoom::-webkit-slider-thumb {
   -webkit-appearance: none;
 }
 
-#control_grosor::-webkit-slider-thumb {
+#control_grosor::-webkit-slider-thumb,
+#control_zoom::-webkit-slider-thumb {
   background-color: #777;
   width: 20px;
   height: 20px;
@@ -34,7 +38,8 @@
   margin-top: -9px;
 }
 
-#control_grosor::-moz-range-thumb {
+#control_grosor::-moz-range-thumb,
+#control_zoom::-moz-range-thumb {
   background-color: #777;
   width: 15px;
   height: 15px;
@@ -42,7 +47,8 @@
   border-radius: 50%;
 }
 
-#control_grosor::-ms-thumb {
+#control_grosor::-ms-thumb,
+#control_zoom::-ms-thumb {
   background-color: #777;
   width: 20px;
   height: 20px;
@@ -50,29 +56,35 @@
   border-radius: 50%;
 }
 
-#control_grosor::-webkit-slider-runnable-track {
+#control_grosor::-webkit-slider-runnable-track,
+#control_zoom::-webkit-slider-runnable-track {
   background-color: #777;
   height: 3px;
 }
 
-#control_grosor:focus::-webkit-slider-runnable-track {
+#control_grosor:focus::-webkit-slider-runnable-track,
+#control_zoom:focus::-webkit-slider-runnable-track {
   outline: none;
 }
 
-#control_grosor::-moz-range-track {
+#control_grosor::-moz-range-track,
+#control_zoom::-moz-range-track {
   background-color: #777;
   height: 3px;
 }
 
-#control_grosor::-ms-track {
+#control_grosor::-ms-track,
+#control_zoom::-ms-track {
   background-color: #777;
   height: 3px;
 }
 
-#control_grosor::-ms-fill-lower {
+#control_grosor::-ms-fill-lower,
+#control_zoom::-ms-fill-lower {
   background-color: HotPink
 }
 
-#control_grosor::-ms-fill-upper {
+#control_grosor::-ms-fill-upper,
+#control_zoom::-ms-fill-upper {
   background-color: black;
 } 
