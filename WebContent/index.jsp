@@ -230,16 +230,16 @@
 		<script type='text/javascript' src='js/jquery.mousewheel.min.js'></script>
 		
 		<!-- Bootstrap minified JavaScript -->
-	  	<script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+	  	<script src="js/bootstrap.min.js"></script>
 		
 		<!-- Spectrum Color Picker  - http://bgrins.github.io/spectrum/-->
 		<script src="js/spectrum.js"></script>
 		
 		<!-- Slider for Bootstrap -->
-	  	<script src="js/bootstrap-slider-master/js/bootstrap-slider.js"></script>
+	  	<script src="js/bootstrap-slider.js"></script>
 		
 		<!-- Paper.js dibujo en Canvas -->
-		<script type="text/javascript" src="js/paperjs-v0.9.23/dist/paper-full.js" canvas="canvas_croquis"></script>
+		<script type="text/javascript" src="js/paper-full.min.js" canvas="canvas_croquis"></script>
 		
 		<!-- Horma Studio -->
 		<script type="text/javascript" src="js/horma-studio.js"></script>
