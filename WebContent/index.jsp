@@ -20,13 +20,12 @@
 		<!-- Estilos CSS -->
 		<link rel="stylesheet" type="text/css" href="css/styles.css?v=1.0">
 		<link rel='stylesheet' type="text/css" href="css/spectrum.css" />
-		<link rel="stylesheet" type="text/css" href="css/range_slider.css?v=1.0"> 
-		<link rel="stylesheet" type="text/css" href="js/bootstrap-slider-master/css/bootstrap-slider.css">
+		<link rel="stylesheet" type="text/css" href="css/range_slider.css?v=1.0">
 		
 		<!-- Responsive Design -->
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		
-		<!-- Bootstrap minified CSS -->
+		<!-- Bootstrap minified -->
 		<link rel="stylesheet" href="js/bootstrap-3.3.5-dist/css/bootstrap.min.css">
 		
 		<!-- Font Awesome -->		
@@ -84,8 +83,6 @@
 								<li>
 									<input type="text" id="accion" name="accion" value="1">
 									<input type="text" id="texto" name="t">
-									<!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled -->
-									<input type="file" id="control_imagen" name="control_imagen" accept="image/jpeg"> <!-- onchange="abrirImagen();"> -->
 									<!-- onclick="return escribirAccion(< %=Constantes.ACCION_SUBIR_IMAGEN%>);" -->
 									<input type="submit" id="btn_submit" class="btn btn-outline btn-primary disabled" disabled="" value="Subir">
 								</li>
@@ -119,13 +116,56 @@
 									<div id="grosor_container" class="inputDiv clearfix">
 										<div class=flotar_dcha>
 										  	<!-- <span id="grosor_menos" class="fa fa-minus-circle fa-1x flotar_izda" style="color: #FFFFFF;" onclick="moverGrosor('abajo');"></span> -->
-										  	<div id="etiqueta"></div>
+										  	<div id="etiqueta-grosor"></div>
 										  	<input id="control_grosor" type="range" value="25" min="2" max="50" autocomplete="off" onchange="setGrosor();">
 										  	<!-- <span id="grosor_mas" class="fa fa-plus-circle fa-1x flotar_izda" style="color: #FFFFFF;" onclick="moverGrosor('arriba');"></span> -->
 										</div>
 									</div>
 								</li>
 	
+							</ul>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div id="control-dibujo2" class="pull-right">
+							<ul id="navigationMenu">
+							    <li>
+								    <a class="home" href="#">
+							            <span>Home</span>
+							        </a>
+							    </li>
+							
+							    <li>
+							    	<a class="about" href="#">
+							            <span>About</span>
+							        </a>
+							    </li>
+							
+							    <li>
+								     <a class="services" href="#">
+							            <span>Services</span>
+							         </a>
+							    </li>
+							
+							    <li>
+							    	<a class="portfolio" href="#">
+							            <span>Portfolio</span>
+							        </a>
+							    </li>
+							
+							    <li>
+							    	<a class="contact" href="#">
+							            <span>Contact us</span>
+							        </a>
+							    </li>
+							</ul>
+							<ul class="iconos-dibujo2">
+								<li><span id="control_pincel2" class="glyphicon glyphicon-pencil boton_pulsado"></span></li>
+								<!-- <li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li> -->
+								<li><span id="control_reunion2" class="fa fa-dot-circle-o boton_hover boton_no_pulsado lista-margen-arriba"></span></li>
+								<li><span id="control_borrar2" class="fa fa-eraser boton_hover boton_no_pulsado lista-margen-arriba"></span></li>
+								<!-- <li><span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x lista-margen-arriba"></span></li> -->
+								<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
 							</ul>
 						</div>
 					</div>
@@ -138,15 +178,26 @@
 				-->
 				
 				<!-- <div class="clearfix visible-sm-block"></div> -->
-				<!-- CANVAS -->
-				<article id="centro" class="col-xs-8">
+				<!-- CANVAS Y MENU -->
+				<article id="centro" class="col-xs-8 clearfix">
 					<div id="barra-menus">
-							<div id="control_select">
-							   <select>
-							      <option>Here is the first option</option>
-							      <option>The second option</option>
-							   </select>
-							</div>
+						<nav id="colorNav">
+							<ul>
+								<li class="green">
+									<span class="fa fa-cogs"></span>
+									<ul>
+										<li><span onclick="abrirDialogo();">Cargar imagen</span></li>
+										<li><span>Guardar imagen</span></li>
+									</ul>
+								</li>
+						
+								<!-- More menu items -->
+						
+							</ul>
+						</nav>
+						<div class="text-center">
+							<span id="nombre-krokis"></span>
+						</div>
 					</div>
 					
 					<div id="canvas-container">
@@ -157,31 +208,21 @@
 				<!-- UTILIDADES -->
 				<!-- colocar a la izda -->
 				<aside id="herramientas-dcha" class="col-xs-2">
-					<div id="herramientas-dcha-container" style="width: 47px;">
-						<div style="width: 20px; margin:auto;">
-							<span id="zoom_menos" class="fa fa-minus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('arriba');"></span>
-							<!-- <input type="range" id="control_zoom" name="control_zoom" class="bar cursor_hand" onchange="setZoom();" style="margin-top: 1px;"/> -->
-							<!-- <input type="range" id="control_zoom" name="control_zoom" min="0" max="10" step="1" onchange="setZoom();"/> ERA EL BUENO -->
-							<!-- <input id="control_zoom" type="text" id="control_zoom" name="control_zoom" onchange="setZoom();"/> ES EL MEJOR -->
-							<div id="zoom_container" class="inputDiv clearfix">
-								<div class=flotar_dcha>
-								  	<!-- <span id="grosor_menos" class="fa fa-minus-circle fa-1x flotar_izda" style="color: #FFFFFF;" onclick="moverGrosor('abajo');"></span> -->
-								  	<div id="etiqueta"></div>
-								  	<input id="control_zoom" type="range" value="0" min="0" max="10" autocomplete="off"  onchange="setZoom();"> <!-- onchange="setGrosor();"> -->
-								  	<!-- <span id="grosor_mas" class="fa fa-plus-circle fa-1x flotar_izda" style="color: #FFFFFF;" onclick="moverGrosor('arriba');"></span> -->
-								</div>
+					<div id="herramientas-dcha-container"> <!-- style="width: 47px;"> -->
+						<!-- <div style="width: 20px; margin:auto;">
+							<span id="zoom_menos" class="fa fa-minus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('arriba');"></span> -->
+							<div id="zoom_container" class="inputDiv">
+							  	<!-- <div id="control-div"> -->
+							  		<input id="control_zoom" type="range" value="5" min="0" max="10" autocomplete="off" class="vertical" onchange="setZoom();"/>
+							  	<!-- </div> -->
+							  	
 							</div>
-							<!-- <input id="control_zoom" type="range" min=0 max=10 step=1 value=0> -->
-							<!-- <div id="zoom-slider">
-								<input class="bar" type="range" id="rangeinput" value="10" onchange="rangevalue.value=value"/>
-								<span class="highlight"></span>
-								<output id="rangevalue">50</output>
-							</div> -->
-							<span id="zoom_mas" class="fa fa-plus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('abajo');"></span>
-						</div>
+							<div id="etiqueta-zoom" class="col-xs-8"></div>
+							<!-- <span id="zoom_mas" class="fa fa-plus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('abajo');"></span>
+						</div> -->
 						<div id="zoom-1-1" class="cursor_hand">
 							<!-- <input type="button" id="zoom_restaurar" name="zoom_restaurar" class="btn btn-primary" onclick="resetZoom();" value="1:1"/> -->
-							<span id="control_mover" class="fa fa-compress boton_hover boton_no_pulsado cursor_hand"></span>
+							<span id="control_reset" class="fa fa-compress boton_hover boton_no_pulsado cursor_hand"></span>
 						</div>
 						
 						<div id="mover-container" class="text-center">
@@ -190,8 +231,12 @@
 					</div>
 
 					<!-- TODO Incluir un video explicativo -->
+				<!-- Elementos ocultos -->
 				</aside>
-				
+				<div class="hidden">
+					<!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled -->
+					<input type="file" id="control_imagen" accept="image/jpeg" hidden> <!-- onchange="abrirImagen();"> -->
+				</div>
 				
 				
 				
@@ -230,13 +275,10 @@
 		<script type='text/javascript' src='js/jquery.mousewheel.min.js'></script>
 		
 		<!-- Bootstrap minified JavaScript -->
-	  	<script src="js/bootstrap.min.js"></script>
+	  	<script src="js/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
 		
 		<!-- Spectrum Color Picker  - http://bgrins.github.io/spectrum/-->
 		<script src="js/spectrum.js"></script>
-		
-		<!-- Slider for Bootstrap -->
-	  	<script src="js/bootstrap-slider.js"></script>
 		
 		<!-- Paper.js dibujo en Canvas -->
 		<script type="text/javascript" src="js/paper-full.min.js" canvas="canvas_croquis"></script>

@@ -13,6 +13,7 @@
 	  	var canvas; //Para getMousePos(); sino meterlo dentro de onload
 	  	var contexto;
 		var imagenRaster;
+		var nombreKrokis;
 		
 		//controles de ....
 		var controlPincel;
@@ -26,6 +27,7 @@
 		var vectorGrosor;
 		
 		var cursorTamanoPincel;
+		var etiquetaGrosor;
 		var posicionRaton;
 		
 		var upperZoomLimit;
@@ -36,6 +38,7 @@
 	    var originalMoveFactor;
 	    var ratioZoomFactor;
 	    var diferenciaZoom;
+	    var etiquetaZoom;
 	    
 	    var controlImagen; //input type=file
 	    var hayImagen = false; //Para poder pintar sobre la imagen
@@ -43,38 +46,44 @@
 	    var capaImagen;
 		var capaVectorial;
 		
-		//TODO No se si es paper.project. ....
-		
 	  	paper.install(window);
 	  	console.info('paper.js instalado');
-	  	
-		// With JQuery
-	    /*$("#ex17a").slider({min  : 0, max  : 10, value: 0, tooltip_position:'bottom'});
-	    $("#control_zoom").slider({min  : 0, max  : 10, value: 5, orientation: 'vertical', tooltip_position:'left'});
-	    */
-	  	
-		// Without JQuery
-	    //new Slider("#ex17a", {min  : 0, max  : 10, value: 0, tooltip_position:'bottom'});
-	    //new Slider("#ex17b", {min  : 0, max  : 10, value: 0, orientation: 'vertical', tooltip_position:'left'});
 	  	
 		//Only executed our code once the DOM is ready.
 		window.onload = function() {
 	
 			/**
-			 * input type=range
+			 * GROSOR: input type=range
 			 */
-			var elInput = document.querySelector('#control_grosor');
-			if (elInput) {
-			  var etiqueta = document.querySelector('#etiqueta');
-			  if (etiqueta) {
-			    etiqueta.innerHTML = "Tamaño pincel: " + elInput.value;
+			var sliderGrosor = document.querySelector('#control_grosor');
+			if (sliderGrosor) {
+			  etiquetaGrosor = document.querySelector('#etiqueta-grosor');
+			  if (etiquetaGrosor) {
+				  etiquetaGrosor.innerHTML = "Tamaño pincel: " + sliderGrosor.value;
 
-			    elInput.addEventListener('input', function() {
-			      etiqueta.innerHTML = "Tamaño pincel: " + elInput.value;
+			    sliderGrosor.addEventListener('input', function() {
+			    	etiquetaGrosor.innerHTML = "Tamaño pincel: " + sliderGrosor.value;
 			    }, false);
 			  }
 			}
 			
+			/**
+			 * zoom: input type=range
+			 */
+			/*sliderZoom = new Slider("#control_zoom", {
+				reversed : true,
+			});*/
+			var sliderZoom = document.querySelector('#control_zoom');
+			if (sliderZoom) {
+			  etiquetaZoom = document.querySelector('#etiqueta-zoom');
+			  if (etiquetaZoom) {
+				  etiquetaZoom.innerHTML = "Zoom: " + sliderZoom.value;
+
+			    sliderZoom.addEventListener('input', function() {
+			    	etiquetaZoom.innerHTML = "Zoom: " + sliderZoom.value;
+			    }, false);
+			  }
+			}
 			
 			/**
 			 * input type=color - Spectrum Color Picker
@@ -152,16 +161,16 @@
 		function inicializarEntorno(){
 			//document.body.style.cursor = 'none'; //el cursor desaparece
 			console.warn('inicializarEntorno: No hacemos nada');
+			
+			controlImagen = document.getElementById('control_imagen');
+			controlImagen.addEventListener('change', loadImagen, false);
+			document.getElementById("nombre-krokis").innerHTML = "[Sin im&aacutegen]";
 		}
 		
 		function inicializarCanvas(){
 			console.info('inicializarCanvas: entramos');
 			//Inicializar
 			canvas = document.getElementById('canvas_croquis');//$('#canvas_croquis')[0]; //Obtenemos el id de la etiqueta canvas
-			
-			controlImagen = document.getElementById('control_imagen');
-			controlImagen.addEventListener('change', loadImagen, false);
-		    
 			paper.setup('canvas_croquis'); //Crea una clase intermedia para poder utilizar el lenguaje javascript en vez de paperscript
 		    tool = new paper.Tool(); //Crea una herramienta para manejar los eventos del teclado y rat�n. Machaco la var tool ya existente
 		    
@@ -282,7 +291,7 @@
 			
 			//Tama�o pincel
 			document.getElementById("control_grosor").value = vectorGrosor;
-			document.getElementById("etiqueta").innerHTML = "Tamaño pincel: " + vectorGrosor;
+			document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + vectorGrosor;
 			
 			//Zoom
 			//document.getElementById("control_zoom").value = lowerZoomLimit;

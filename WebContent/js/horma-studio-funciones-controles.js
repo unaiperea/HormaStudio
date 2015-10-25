@@ -93,7 +93,7 @@
 				
 				document.getElementById("control_grosor").disabled = false;
 				document.getElementById("control_grosor").value = vectorGrosor;
-				document.getElementById("etiqueta").innerHTML = "Tamaño pincel: " + vectorGrosor;
+				document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + vectorGrosor;
 				document.getElementById("control_color").disabled = false;
 				document.getElementById("control_color").value = vectorColor;
 				controlPincel = true;
@@ -137,7 +137,7 @@
 				
 				document.getElementById("control_grosor").disabled = false;
 				document.getElementById("control_grosor").value = vectorGrosor;
-				document.getElementById("etiqueta").innerHTML = "Tamaño pincel: " + vectorGrosor;
+				document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + vectorGrosor;
 				document.getElementById("control_color").disabled = false;
 				document.getElementById("control_color").value = reunionColor;
 				controlPincel = false;
@@ -247,6 +247,30 @@
 			botonAuxMover = null;
 		}
 		
+		control_mover.onclick = function ( event ){
+			//TODO centrar todas las capas o el paper. bORRAR LAS VARIABLES GLOBALES QUE UTILIZO AQUÍ (loadImagen(e)) ***********************************
+			paper.view.zoom = originalZoom;
+			//paper.view.center = paper.view.viewToProject(originalCentro);
+			//paper.view.center = paper.view.projectToView(originalCentro);
+			paper.view.center = originalCentro;
+			tool.zoomFactor = originalMoveFactor;
+			//Fuerzo el update ya que no lo hace automaticamente en este caso
+			//paper.view.update();//Comprobar que sea imprescindible ********************************************
+			/*var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
+			var zoomCenter = point.subtract(paper.view.center); 
+			var moveFactor = tool.zoomFactor - 1.0;
+			paper.view.zoom /= ratioZoomFactor;
+            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
+			*/
+			
+			document.getElementById("control_zoom").value = 5;
+		}
+
+		/*Abre el cuadro de dialogo de cargar imágen*/
+		function abrirDialogo(){
+			document.getElementById('control_imagen').click();
+		}
+		
 		function loadImagen(e){
 			//Quito la propiedad
 			document.getElementById("btn_submit").disabled = false;
@@ -319,6 +343,8 @@
 					capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar //***************************************
 					controlPincel = true;
 					hayImagen = true;
+					nombreKrokis = controlImagen.files[0].name;
+					document.getElementById("nombre-krokis").innerHTML = "[" + nombreKrokis + "]";
 					//canvas.classList.remove("cursor_wait");
 					//canvas.classList.add("cursor_none");
 		    }
@@ -395,7 +421,7 @@
 		}
 		
 		function setGrosor(){
-			document.getElementById("etiqueta").innerHTML = "Tamaño pincel: " + document.getElementById("control_grosor").value;
+			document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + document.getElementById("control_grosor").value;
 
 			var anteriorRadioSinStroke;
 			var nuevoRadioSinStroke;
@@ -453,12 +479,10 @@
 			var controlZoom = document.getElementById("control_zoom");
 			if (direccion == "arriba"){
 				if (controlZoom.value < upperZoomLimit){
-					controlZoom.stepUp();
 					setMasZoom();
 				}
 			}else if (direccion == "abajo"){
 				if (controlZoom.value > lowerZoomLimit){
-					controlZoom.stepDown();
 					setMenosZoom();
 				}
 			}
@@ -484,8 +508,6 @@
 			return resul;
 		}
 		
-		
-		//TODO            QUITAR EL PARÁMETRO SI NO LO UTILIZA
 		function setMasZoom(){
 	       	//var children = project.activeLayer.children;
 	       	//Scroll up
@@ -503,7 +525,8 @@
 	            paper.view.zoom *= tool.zoomFactor;
 	            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
 	            tool.mode = '';
-	            
+
+	            //document.getElementById("control_zoom").slider('setValue', 9);
 		        //document.getElementById("control_zoom").value ++; //Cambiamos el slider del zoom
 	        }
 		}
@@ -523,28 +546,9 @@
 	            paper.view.zoom /= tool.zoomFactor;
 	            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor))
 	            
+	            //document.getElementById("control_zoom").setValue(9);
 	            //document.getElementById("control_zoom").value --; //Cambiamos el slider del zoom
 	        }
-		}
-	
-		function resetZoom(){
-			
-			//TODO centrar todas las capas o el paper. bORRAR LAS VARIABLES GLOBALES QUE UTILIZO AQUÍ (loadImagen(e)) ***********************************
-			paper.view.zoom = originalZoom;
-			//paper.view.center = paper.view.viewToProject(originalCentro);
-			//paper.view.center = paper.view.projectToView(originalCentro);
-			paper.view.center = originalCentro;
-			tool.zoomFactor = originalMoveFactor;
-			//Fuerzo el update ya que no lo hace automaticamente en este caso
-			//paper.view.update();//Comprobar que sea imprescindible ********************************************
-			/*var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
-			var zoomCenter = point.subtract(paper.view.center); 
-			var moveFactor = tool.zoomFactor - 1.0;
-			paper.view.zoom /= ratioZoomFactor;
-            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
-			*/
-			
-			document.getElementById("control_zoom").value = 5;
 		}
 		
 		$("#canvas_croquis").mousewheel(function(event, delta) {
@@ -586,9 +590,10 @@
 		            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
 		            //document.getElementById("zoom_texto").value = porcentajeZoom;
 		            
-		            
+		            document.getElementById("control_zoom").value++;
+		            etiquetaZoom.innerHTML = "Zoom: " + document.getElementById("control_zoom").value;
 		            //zTexto.value = parseInt(zTexto.value) + 1;
-		            zControl.value = parseInt(zControl.value) + 1;
+		            //zControl.value = parseInt(zControl.value) + 1;
 		            document.getElementById("zoom_texto").value = paper.view.zoom;
 		        }
 		        else if((delta < 0) && (document.getElementById("control_zoom").value > lowerZoomLimit)){ // (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de m�s por lo que lo evito poni�ndolo en las condici�n
@@ -612,9 +617,10 @@
 		            //document.getElementById("zoom_texto").value = porcentajeZoom;
 		            
 		            
-		            
+		            document.getElementById("control_zoom").value--;
+		            etiquetaZoom.innerHTML = "Zoom: " + document.getElementById("control_zoom").value;
 		            //zTexto.value = parseInt(zTexto.value) - 1; //Cambiamos el texto del zoom
-		            zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
+		            //zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
 		            document.getElementById("zoom_texto").value = paper.view.zoom;
 		        }
 	        }

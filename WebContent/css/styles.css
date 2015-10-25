@@ -49,24 +49,12 @@ s{
 	margin-top: 5px;
 }
 
-i{
-	color: #FFFFFF;
+#nombre-krokis{
+	color: white;
 }
 
-#control_select select{
-	background: transparent;
-	color: #fff;
-	border:solid 1px #888888;
-	cursor:pointer;
-	/*background: transparent;
-	width: 268px;
-	padding: 5px;
-	font-size: 16px;
-	line-height: 1;
-	border: 0;
-	border-radius: 0;
-	height: 34px;
-	-webkit-appearance: none;*/
+i{
+	color: #FFFFFF;
 }
 
 #barra-menus{
@@ -109,6 +97,10 @@ i{
 
 #zoom ul li{
 	list-style: none;
+}
+
+#zoom_mas{
+	padding-top: 6px;
 }
 
 .invisible{
@@ -202,7 +194,10 @@ i{
 	padding-top: 6px;
 }
 
-#control_reunion, #control_borrar, #control_mover{
+#control_reunion,
+#control_borrar,
+#control_mover,
+#control_reset{
 	font-size: 21px;
 	padding-top: 5px;
 }
@@ -251,3 +246,252 @@ i{
 	cursor: none;
 }
 
+/******************************
+** BOTONES DEL MENU VERTICAL **
+******************************/
+*{
+	/* A universal CSS reset */
+	margin:0;
+	padding:0;
+}
+
+body{
+	font-size:14px;
+	color:#666;
+	background:#111 no-repeat;
+
+	/* CSS3 Radial Gradients */
+	background-image:-moz-radial-gradient(center -100px 45deg, circle farthest-corner, #444 150px, #111 300px);
+	background-image:-webkit-gradient(radial, 50% 0, 150, 50% 0, 300, from(#444), to(#111));
+
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+#navigationMenu li{
+	list-style:none;
+	height:39px;
+	padding:2px;
+	width:40px;
+}
+
+#navigationMenu span{
+	/* Container properties */
+	width:0;
+	/*left:38px;*/
+	left: -100px;
+	padding:0;
+	position:absolute;
+	overflow:hidden;
+
+	/* Text properties */
+	font-family:'Myriad Pro',Arial, Helvetica, sans-serif;
+	font-size:18px;
+	font-weight:bold;
+	letter-spacing:0.6px;
+	white-space:nowrap;
+	line-height:39px;
+
+	/* CSS3 Transition: */
+	-webkit-transition: 0.25s;
+
+	/* Future proofing (these do not work yet): */
+	-moz-transition: 0.25s;
+	transition: 0.25s;
+}
+
+#navigationMenu a{
+	/* The background sprite: */
+	background:url('img/navigation.jpg') no-repeat;
+	height:39px;
+	width:38px;
+	display:block;
+	position:relative;
+}
+
+/* General hover styles */
+
+#navigationMenu a:hover span{
+	width:auto;
+	padding:0 20px;
+	overflow:visible;
+	z-index: 1;
+}
+
+#navigationMenu a:hover{
+	text-decoration:none;
+	/* CSS outer glow with the box-shadow property */
+	-moz-box-shadow:0 0 5px #9ddff5;
+	-webkit-box-shadow:0 0 5px #9ddff5;
+	box-shadow:0 0 5px #9ddff5;
+}
+
+/* Transiciones */
+/* Green Button */
+
+#navigationMenu .home {	background-position:0 0;}
+#navigationMenu .home:hover {	background-position:0 -39px;}
+#navigationMenu .home span{
+	background-color:#7da315;
+	color:#3d4f0c;
+	text-shadow:1px 1px 0 #99bf31;
+}
+
+/* Blue Button */
+
+#navigationMenu .about { background-position:-38px 0;}
+#navigationMenu .about:hover { background-position:-38px -39px;}
+#navigationMenu .about span{
+	background-color:#1e8bb4;
+	color:#223a44;
+	text-shadow:1px 1px 0 #44a8d0;
+}
+
+/* Orange Button */
+
+#navigationMenu .services { background-position:-76px 0;}
+#navigationMenu .services:hover { background-position:-76px -39px;}
+#navigationMenu .services span{
+	background-color:#c86c1f;
+	color:#5a3517;
+	text-shadow:1px 1px 0 #d28344;
+}
+
+/* Yellow Button */
+
+#navigationMenu .portfolio { background-position:-114px 0;}
+#navigationMenu .portfolio:hover{ background-position:-114px -39px;}
+#navigationMenu .portfolio span{
+	background-color:#d0a525;
+	color:#604e18;
+	text-shadow:1px 1px 0 #d8b54b;
+}
+
+/* Purple Button */
+
+#navigationMenu .contact { background-position:-152px 0;}
+#navigationMenu .contact:hover { background-position:-152px -39px;}
+#navigationMenu .contact span{
+	background-color:#af1e83;
+	color:#460f35;
+	text-shadow:1px 1px 0 #d244a6;
+}
+
+/*****************/
+* MENU DEL CANVAS *
+******************/
+#colorNav {
+	padding-left: 25px;
+}
+
+#colorNav > ul{
+	width: 450px;
+	margin-bottom: 0;
+}
+
+#colorNav > ul > li{ /* will style only the top level li */
+	list-style: none;
+	box-shadow: 0 0 10px rgba(100, 100, 100, 0.2) inset,1px 1px 1px #CCC;
+	display: inline-block;
+	line-height: 1;
+	margin: 1px;
+	border-radius: 3px;
+	position:relative;
+}
+
+#colorNav > ul > li > span{
+	color:inherit;
+	text-decoration:none !important;
+	font-size:17px;
+	padding: 5px;
+}
+
+#colorNav li ul{
+	position:absolute;
+	list-style:none;
+	text-align:center;
+	width:180px;
+	/*left:50%;
+	margin-left:-90px;*/
+	top: 0; /*modificado*/
+	margin-left: 30px; /*modificado*/
+	font:bold 12px 'Open Sans Condensed', sans-serif;
+
+	/* This is important for the show/hide CSS animation */
+	max-height:0px;
+	overflow:hidden;
+
+	-webkit-transition:max-height 0.4s linear;
+	-moz-transition:max-height 0.4s linear;
+	transition:max-height 0.4s linear;
+}
+
+/*Trigger de la animacion*/
+#colorNav li:hover ul{
+	max-height:200px;
+}
+
+/*DropDown*/
+#colorNav li ul li{
+	background-color:#313131;
+	margin-left:7px;
+	cursor: pointer 
+}
+
+#colorNav li ul li span{
+	padding:6px;
+	color:#fff !important;
+	text-decoration:none !important;
+	display:block;
+}
+
+#colorNav li ul li:nth-child(odd){ /* zebra stripes */
+	background-color:#363636;
+}
+
+#colorNav li ul li:hover{
+	background-color:#444;
+}
+
+#colorNav li ul li:first-child{
+	border-radius:3px 3px 0 0;
+	/*margin-top:7px;
+	position:relative;*/;
+}
+
+#colorNav li ul li:first-child:before{ /* the pointer tip */
+	content:'';
+	position:absolute;
+	width:1px;
+	height:1px;
+	border:5px solid transparent;
+	border-bottom-color:#313131;
+	/*left:50%;
+	top:-10px;
+	margin-left:-5px;*/
+	left: -2px;; /*modificado*/
+	top: 2px; /*modificado*/
+	-webkit-transform:rotate(270deg); /*modificado*/
+  	-moz-transform:rotate(270deg); /*modificado*/
+  	-o-transform:rotate(270deg); /*modificado*/
+  	-ms-transform:rotate(270deg); /*modificado*/
+  	transform:rotate(270deg); /*modificado*/
+}
+
+#colorNav li ul li:last-child{
+	border-bottom-left-radius:3px;
+	border-bottom-right-radius:3px;
+}
+
+/*Colorines*/
+#colorNav li.green{
+	/* This is the color of the menu item */
+	background-color:#00c08b;
+
+	/* This is the color of the icon */
+	color:#127a5d;
+}
+
+#colorNav li.red{		background-color:#ea5080;color:#aa2a52;}
+#colorNav li.blue{		background-color:#53bfe2;color:#2884a2;}
+#colorNav li.yellow{	background-color:#f8c54d;color:#ab8426;}
+#colorNav li.purple{	background-color:#df6dc2;color:#9f3c85;}
