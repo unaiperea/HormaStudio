@@ -194,7 +194,7 @@
 					botonAuxPincel.classList.remove("boton_pulsado");
 					botonAuxPincel.classList.add("boton_hover");
 					botonAuxPincel.classList.toggle("boton_no_pulsado"); 
-				}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si est� pulsado boton_borrar lo desclickamos
+				}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
 					botonAuxMover.classList.remove("boton_pulsado");
 					botonAuxMover.classList.add("boton_hover");
 					botonAuxMover.classList.toggle("boton_no_pulsado");
@@ -212,7 +212,7 @@
 			var botonAuxBorrar = document.getElementById("control_borrar");
 			var botonAuxMover = document.getElementById("control_mover");
 			
-			if ( botonAuxMover.classList.contains("boton_no_pulsado") ){ //Si NO est� pulsado boton_pincel lo clickamos
+			if ( botonAuxMover.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
 				botonAuxMover.classList.remove("boton_hover");
 				botonAuxMover.classList.toggle("boton_no_pulsado");
 				botonAuxMover.classList.add("boton_pulsado");
@@ -227,15 +227,15 @@
 				controlReunion = false;
 				controlBorrar = false;
 				controlMover = true;
-				if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si est� pulsado boton_borrar lo desclickamos
+				if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
 					botonAuxReunion.classList.remove("boton_pulsado");
 					botonAuxReunion.classList.add("boton_hover");
 					botonAuxReunion.classList.toggle("boton_no_pulsado");
-				}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si est� pulsado boton_reunion lo desclickamos
+				}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
 					botonAuxPincel.classList.remove("boton_pulsado");
 					botonAuxPincel.classList.add("boton_hover");
 					botonAuxPincel.classList.toggle("boton_no_pulsado"); 
-				}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si est� pulsado boton_borrar lo desclickamos
+				}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
 					botonAuxBorrar.classList.remove("boton_pulsado");
 					botonAuxBorrar.classList.add("boton_hover");
 					botonAuxBorrar.classList.toggle("boton_no_pulsado");
@@ -247,7 +247,7 @@
 			botonAuxMover = null;
 		}
 		
-		control_mover.onclick = function ( event ){
+		control_reset.onclick = function ( event ){
 			//TODO centrar todas las capas o el paper. bORRAR LAS VARIABLES GLOBALES QUE UTILIZO AQUÍ (loadImagen(e)) ***********************************
 			paper.view.zoom = originalZoom;
 			//paper.view.center = paper.view.viewToProject(originalCentro);

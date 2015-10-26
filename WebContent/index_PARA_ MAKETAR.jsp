@@ -73,8 +73,7 @@
 			
 			<section id="entorno" class="main row">
 			
-				<!-- PANEL DE CONTROLES -->
-				<aside id="herramientas-izda" class="col-xs-1 color-fondo-gris">
+				<aside id="herramientas-izda" class="col-xs-2">
 					<!-- SUBIR FICHEROS -->
 					<!-- Formulario -->
 					<!-- @see: http://www.tutorialspoint.com/servlets/servlets-file-uploading.htm -->
@@ -92,7 +91,7 @@
 							</ul>
 						</div>
 					</form>
-					<!-- Controles dibujo -->
+					<!-- CONTROLES -->
 					<div class="clearfix">
 						<div id="control-dibujo" class="pull-right">
 							<ul class="iconos-dibujo">
@@ -105,7 +104,7 @@
 							</ul>
 						</div>
 					</div>
-					<!-- Propiedades de controles dibujo -->
+					<!-- PROPIEDADES -->
 					<div class="clearfix">
 						<div id="control-propiedades" class="pull-right">
 							<ul class="iconos-propiedades">
@@ -127,6 +126,49 @@
 							</ul>
 						</div>
 					</div>
+					<div class="clearfix">
+						<div id="control-dibujo2" class="pull-right">
+							<ul id="navigationMenu">
+							    <li>
+								    <a class="home" href="#">
+							            <span>Home</span>
+							        </a>
+							    </li>
+							
+							    <li>
+							    	<a class="about" href="#">
+							            <span>About</span>
+							        </a>
+							    </li>
+							
+							    <li>
+								     <a class="services" href="#">
+							            <span>Services</span>
+							         </a>
+							    </li>
+							
+							    <li>
+							    	<a class="portfolio" href="#">
+							            <span>Portfolio</span>
+							        </a>
+							    </li>
+							
+							    <li>
+							    	<a class="contact" href="#">
+							            <span>Contact us</span>
+							        </a>
+							    </li>
+							</ul>
+							<ul class="iconos-dibujo2">
+								<li><span id="control_pincel2" class="glyphicon glyphicon-pencil boton_pulsado"></span></li>
+								<!-- <li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li> -->
+								<li><span id="control_reunion2" class="fa fa-dot-circle-o boton_hover boton_no_pulsado lista-margen-arriba"></span></li>
+								<li><span id="control_borrar2" class="fa fa-eraser boton_hover boton_no_pulsado lista-margen-arriba"></span></li>
+								<!-- <li><span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x lista-margen-arriba"></span></li> -->
+								<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
+							</ul>
+						</div>
+					</div>
 				</aside>
 				
 				<!-- 
@@ -136,64 +178,103 @@
 				-->
 				
 				<!-- <div class="clearfix visible-sm-block"></div> -->
-				<!-- PANEL CENTRAL SUPERIOR -->
-				<article class="col-xs-11">
-				
-					<div class="panel-central clearfix">
-						<!-- MENU CANVAS -->
-						<div id="barra-menus-container">
-							<nav id="colorNav">
-								<ul>
-									<li class="green">
-										<span class="fa fa-cogs"></span>
-										<ul>
-											<li><span onclick="abrirDialogo();">Cargar imagen</span></li>
-											<li><span>Guardar imagen</span></li>
-										</ul>
-									</li>
-								</ul>
-							</nav>
-							<div class="text-center">
-								<span id="nombre-krokis"></span>
+				<!-- CANVAS, MENU Y HERRAMIENTAS DCHA-->
+				<article id="centro" class="col-xs-10">
+					<div class="row">
+						<div class="col-xs-8">
+							<!-- MENU CANVAS -->
+							<div id="barra-menus">
+								<nav id="colorNav">
+									<ul>
+										<li class="green">
+											<span class="fa fa-cogs"></span>
+											<ul>
+												<li><span onclick="abrirDialogo();">Cargar imagen</span></li>
+												<li><span>Guardar imagen</span></li>
+											</ul>
+										</li>
+									</ul>
+								</nav>
+								<div class="text-center">
+									<span id="nombre-krokis"></span>
+								</div>
 							</div>
 						</div>
-						<div class="herramientas-dcha color-fondo-gris">
-
-						</div>
-					</div>
-					
-					<!-- PANEL CENTRAL INFERIOR -->
-					<div class="panel-central clearfix">
+						<aside class="col-xs-2 herramientas-dcha">
+							<div class="herramientas-dcha-container color-fondo-gris">
+							</div>
+						</aside>
+					<div class="row">
 						<!-- CANVAS -->
-						<div id="canvas-container">
+						<div id="canvas-container" class="col-xs-8">
 							<canvas id="canvas_croquis" class="cursor_none" name="imagen">Su navegador no soporta Canvas. Instale la ultima version de Chrome</canvas>
 						</div>
-						<!-- Utilidades -->
-						<div class="herramientas-dcha"> <!-- style="width: 47px;"> -->
+						<!-- UTILIDADES -->
+						<aside class="herramientas-dcha-container"> <!-- style="width: 47px;"> -->
 							<!-- <div style="width: 20px; margin:auto;">
 							<span id="zoom_menos" class="fa fa-minus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('arriba');"></span> -->
 							<div id="zoom_container" class="inputDiv">
 							  	<!-- <div id="control-div"> -->
 							  	<input id="control_zoom" type="range" value="5" min="0" max="10" autocomplete="off" class="vertical" onchange="setZoom();"/>
 							  	<!-- </div> -->
-								<div id="etiqueta-zoom"></div>
+								<div id="etiqueta-zoom" class="col-xs-8"></div>
 							</div>
 							<!-- <span id="zoom_mas" class="fa fa-plus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('abajo');"></span>
 							</div> -->
-							<div id="zoom-1-1">
+							<div id="zoom-1-1" class="anchura100">
 								<!-- <input type="button" id="zoom_restaurar" name="zoom_restaurar" class="btn btn-primary" onclick="resetZoom();" value="1:1"/> -->
 								<span id="control_reset" class="fa fa-compress boton_hover boton_no_pulsado cursor_hand"></span>
 							</div>
 							
-							<div id="mover-container">
+							<div id="mover-container" class="anchura100">
 								<span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado cursor_hand"></span>
 							</div>
+						</aside>
+					</div>
+				</article>
+
+				<!-- <article id="centro" class="col-xs-8 clearfix">
+					<div id="barra-menus">
+						<nav id="colorNav">
+							<ul>
+								<li class="green">
+									<span class="fa fa-cogs"></span>
+									<ul>
+										<li><span onclick="abrirDialogo();">Cargar imagen</span></li>
+										<li><span>Guardar imagen</span></li>
+									</ul>
+								</li>
+							</ul>
+						</nav>
+						<div class="text-center">
+							<span id="nombre-krokis"></span>
 						</div>
 					</div>
 					
-				</article>
+					<div id="canvas-container">
+						<canvas id="canvas_croquis" class="cursor_none" name="imagen">Su navegador no soporta Canvas. Instale la ultima version de Chrome</canvas>
+					</div>
+				</article>-->
 
-				
+
+				<!-- UTILIDADES -->
+				<!-- <aside id="herramientas-dcha" class="col-xs-2">
+					<div id="herramientas-dcha-container">
+						<div id="zoom_container" class="inputDiv">
+						  	<input id="control_zoom" type="range" value="5" min="0" max="10" autocomplete="off" class="vertical" onchange="setZoom();"/>
+							<div id="etiqueta-zoom" class="col-xs-8"></div>
+						</div>
+						</div>
+						<div id="zoom-1-1" class="anchura100">
+							<span id="control_reset" class="fa fa-compress boton_hover boton_no_pulsado cursor_hand"></span>
+						</div>
+						
+						<div id="mover-container" class="anchura100">
+							<span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado cursor_hand"></span>
+						</div>
+					</div> -->
+
+					<!-- TODO Incluir un video explicativo -->
 				<!-- Elementos ocultos -->
 				<div class="hidden">
 					<!-- images/* o image/jpeg, image/bmp, image/png, image/gif y atributo disabled -->
@@ -203,9 +284,9 @@
 				
 				
 				
-			</section>
+				
 				<!-- Colocar bien y mirar los estilos -->
-				<article id="controles" class="row">
+				<div id="controles" class="row">
 					<div id="zoom" class="col-xs-12">
 						<p>Zoom:
 							<input type="text" id="zoom_texto" size="2" readonly/>
@@ -218,8 +299,8 @@
 						<!-- <input type="range" id="control_zoom" name="control_zoom"  onchange="setZoom();"/> --> 
 						<!-- <i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px"> -->
 					</div>
-				</article>
-			
+				</div>
+			</section>
 			
 			<footer>
 				<div class="container">
