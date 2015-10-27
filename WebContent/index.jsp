@@ -74,19 +74,13 @@
 			<section id="entorno" class="main row">
 			
 				<!-- PANEL DE CONTROLES -->
-				<aside id="herramientas-izda" class="col-xs-1 color-fondo-gris">
+				<aside id="herramientas-izda" class="col-xs-2 color-fondo-gris">
 					<!-- SUBIR FICHEROS -->
 					<!-- Formulario -->
 					<!-- @see: http://www.tutorialspoint.com/servlets/servlets-file-uploading.htm -->
 					<form action="/HormaStudio/imagen" enctype="multipart/form-data" method="post" role="form">
 						<div id="control-archivo">
 							<ul>
-								<li>
-									<input type="text" id="accion" name="accion" value="1">
-									<input type="text" id="texto" name="t">
-									<!-- onclick="return escribirAccion(< %=Constantes.ACCION_SUBIR_IMAGEN%>);" -->
-									<input type="submit" id="btn_submit" class="btn btn-outline btn-primary disabled" disabled="" value="Subir">
-								</li>
 								<li><span id="control_guardar" class="btn btn-default">Guardar imágen</span></li>
 								<li><a id="descargar" href="#" target="_blank" class="invisible">Descargar imágen</a></li>
 							</ul>
@@ -109,7 +103,7 @@
 					<div class="clearfix">
 						<div id="control-propiedades" class="pull-right">
 							<ul class="iconos-propiedades">
-								<li><input type="color" id="control_color" name="control_color" class="pull_right" name="control_color" onchange="getColor();"></li>
+								<li><input type="color" id="control_color" name="control_color" class="pull_right" name="control_color" onchange="setColor();"></li>
 								<!-- 
 								<li><input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li>
 								-->
@@ -137,7 +131,7 @@
 				
 				<!-- <div class="clearfix visible-sm-block"></div> -->
 				<!-- PANEL CENTRAL SUPERIOR -->
-				<article class="col-xs-11">
+				<article class="col-xs-10 color-fondo-gris">
 				
 					<div class="panel-central clearfix">
 						<!-- MENU CANVAS -->
@@ -174,7 +168,7 @@
 							<span id="zoom_menos" class="fa fa-minus-circle cursor_hand" style="font-size: 20px; color: #FFFFFF; padding-left: 1px;" onclick="moverZoom('arriba');"></span> -->
 							<div id="zoom_container" class="inputDiv">
 							  	<!-- <div id="control-div"> -->
-							  	<input id="control_zoom" type="range" value="5" min="0" max="10" autocomplete="off" class="vertical" onchange="setZoom();"/>
+							  	<input id="control_zoom" type="range" value="5" min="0" max="10" autocomplete="off" class="vertical" disabled onchange="setZoom();"/>
 							  	<!-- </div> -->
 								<div id="etiqueta-zoom"></div>
 							</div>

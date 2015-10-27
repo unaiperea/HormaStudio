@@ -9,155 +9,159 @@
  * 
  */
 
-	  	//Variables para que se pueda interactuar entre los botones y el canvas
-	  	var canvas; //Para getMousePos(); sino meterlo dentro de onload
-	  	var contexto;
-		var imagenRaster;
-		var nombreKrokis;
-		
-		//controles de ....
-		var controlPincel;
-		var controlReunion;
-		var controlBorrar;
-		var controlMover;
-		
-		var reunionColor;
-		var reunionRadio;
-		var vectorColor;
-		var vectorGrosor;
-		
-		var cursorTamanoPincel;
-		var etiquetaGrosor;
-		var posicionRaton;
-		
-		var upperZoomLimit;
-	    var lowerZoomLimit;
-	    //var porcentajeZoom;
-	    var originalZoom;
-	    var originalCentro;
-	    var originalMoveFactor;
-	    var ratioZoomFactor;
-	    var diferenciaZoom;
-	    var etiquetaZoom;
-	    
-	    var controlImagen; //input type=file
-	    var hayImagen = false; //Para poder pintar sobre la imagen
-	    
-	    var capaImagen;
-		var capaVectorial;
-		
-	  	paper.install(window);
-	  	console.info('paper.js instalado');
-	  	
-		//Only executed our code once the DOM is ready.
-		window.onload = function() {
+  	//Variables para que se pueda interactuar entre los botones y el canvas
+  	var canvas; //Para getMousePos(); sino meterlo dentro de onload
+  	var contexto;
+	var imagenRaster;
+	var nombreKrokis;
 	
-			/**
-			 * GROSOR: input type=range
-			 */
-			var sliderGrosor = document.querySelector('#control_grosor');
-			if (sliderGrosor) {
-			  etiquetaGrosor = document.querySelector('#etiqueta-grosor');
-			  if (etiquetaGrosor) {
-				  etiquetaGrosor.innerHTML = "Tamaño pincel: " + sliderGrosor.value;
-
-			    sliderGrosor.addEventListener('input', function() {
-			    	etiquetaGrosor.innerHTML = "Tamaño pincel: " + sliderGrosor.value;
-			    }, false);
-			  }
-			}
-			
-			/**
-			 * zoom: input type=range
-			 */
-			/*sliderZoom = new Slider("#control_zoom", {
-				reversed : true,
-			});*/
-			var sliderZoom = document.querySelector('#control_zoom');
-			if (sliderZoom) {
-			  etiquetaZoom = document.querySelector('#etiqueta-zoom');
-			  if (etiquetaZoom) {
-				  etiquetaZoom.innerHTML = "Zoom: " + sliderZoom.value;
-
-			    sliderZoom.addEventListener('input', function() {
-			    	etiquetaZoom.innerHTML = "Zoom: " + sliderZoom.value;
-			    }, false);
-			  }
-			}
-			
-			/**
-			 * input type=color - Spectrum Color Picker
-			 */
-			$("#control_color").spectrum({
-			    showPaletteOnly: true,
-			    togglePaletteOnly: true,
-			    togglePaletteMoreText: 'más',
-			    togglePaletteLessText: 'menos',
-			    chooseText: "Ok",
-			    cancelText: "Cancelar",
-			    color: 'blue',
-			    palette: [
-			        ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
-			        ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
-			        ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
-			        ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
-			        ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
-			        ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
-			        ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
-			        ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
-			    ]
-			});
-			
-			     console.info('window loaded');	
-				//Atributos de hitTest (eventos provocados por el rat�n al clickar sobre un item/Path/Segmento/Stroke
-				var hitOptions = null;
-				
-				//Atributos de los vectores
-				var vectorRedondezPunta;
-				var cursorColor;					/*** CURSOR ***/
-				var hitTestTolerancia;
-				var nodoTamano;
-			
-				//Declaramos variables
-				//var capaImagen;
-				//var capaVectorial;
-				var capaGenerica; //Para cualquier otro objeto que afecte al dibujo
-				var capaCursor;					/*** CURSOR ***/
-				
-				//var contexto;
-				
-				var segment, path; //variables para saber qu� item y en qu� parte del item se ha clickado
-				var moverPath = false; //Controla el movimiento en bloque del item
-				var dibujar = false; //Controla si se va a dibujar o no
-				var rutaImagen = "http://localhost:8080/HormaStudio/img/krokis.png";
-				
-				var circuloReunion; //No s� si es imprescindible
-				//var rReunion; //Para si agrupamos el c�rculo con la letra R en el centro 
-				//var grupoReunion //circuloReunion y  rReunion agrupados
-				
-				var rectangulo;
-				var esquinaTamano;
-				var teclaContorno; 
-				var teclaPulsada;
-				var grupoTecla; //teclaPulsada y teclaContorno agrupados (Tool Tip Text)
-				
-				inicializarEntorno();
-				inicializarCanvas();
-				inicializarCapas(); //Creamos las capas (im�gen, l�neas)
-				inicializarDibujoVectorial();
-				cargarImagenInicial(rutaImagen);
-				inicializarControles();
-				inicializarToolTip();
-			
-				//crearPaths(); //Creamos Paths manualmente
-			
-				//Modificados desde un control exterior
-				//$(#controlvectorColor).onChange(function(){...vectorColor = $(#controlvectorColor).value;...});
-				//$(#controlvectorColor).onChange(function(){...vectorGrosor = $(#controlvectorGrosor).value;...});
+	//controles de ....
+	var controlPincel;
+	var controlReunion;
+	var controlBorrar;
+	var controlMover;
 	
-	/**
-	* Funciones propias del canvas utilizando la librería paper.js
-	*/
+	var reunionColor;
+	var reunionRadio;
+	var vectorColor;
+	var vectorGrosor;
+	
+	var cursorTamanoPincel;
+	var etiquetaGrosor;
+	var posicionRaton;
+	
+	var upperZoomLimit;
+    var lowerZoomLimit;
+    //var porcentajeZoom;
+    var originalZoom;
+    var originalCentro;
+    var originalMoveFactor;
+    var ratioZoomFactor;
+    var diferenciaZoom;
+    var etiquetaZoom;
+    
+    var controlImagen; //input type=file
+    var hayImagen = false; //Para poder pintar sobre la imagen
+    
+    var capaImagen;
+	var capaVectorial;
+	
+  	paper.install(window);
+  	console.info('paper.js instalado');
+  	
+	//Only executed our code once the DOM is ready.
+	window.onload = function() {
+
+		/* ININICIALIZARLOS EN UN METODO CADA UNO ???? ****************/
+		
+		/**
+		 * GROSOR: input type=range
+		 */
+		var sliderGrosor = document.querySelector('#control_grosor');
+		if (sliderGrosor) {
+		  etiquetaGrosor = document.querySelector('#etiqueta-grosor');
+		  if (etiquetaGrosor) {
+			  etiquetaGrosor.innerHTML = "Tamaño pincel: " + sliderGrosor.value;
+
+		    sliderGrosor.addEventListener('input', function() {
+		    	etiquetaGrosor.innerHTML = "Tamaño pincel: " + sliderGrosor.value;
+		    }, false);
+		  }
+		}
+		
+		/**
+		 * zoom: input type=range
+		 */
+		/*sliderZoom = new Slider("#control_zoom", {
+			reversed : true,
+		});*/
+		var sliderZoom = document.querySelector('#control_zoom');
+		if (sliderZoom) {
+		  etiquetaZoom = document.querySelector('#etiqueta-zoom');
+		  if (etiquetaZoom) {
+			  etiquetaZoom.innerHTML = "Zoom: " + sliderZoom.value;
+
+		    sliderZoom.addEventListener('input', function() {
+		    	if (hayImagen){
+		    		etiquetaZoom.innerHTML = "Zoom: " + sliderZoom.value;
+		    	}
+		    }, false);
+		  }
+		}
+		
+		/**
+		 * input type=color - Spectrum Color Picker
+		 */
+		$("#control_color").spectrum({
+		    showPaletteOnly: true,
+		    togglePaletteOnly: true,
+		    togglePaletteMoreText: 'más',
+		    togglePaletteLessText: 'menos',
+		    chooseText: "Ok",
+		    cancelText: "Cancelar",
+		    color: "#ff0000",
+		    palette: [
+		        ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+		        ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+		        ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+		        ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+		        ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+		        ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+		        ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+		        ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+		    ]
+		});
+		
+	    console.info('window loaded');	
+		//Atributos de hitTest (eventos provocados por el rat�n al clickar sobre un item/Path/Segmento/Stroke
+		var hitOptions = null;
+		
+		//Atributos de los vectores
+		var vectorRedondezPunta;
+		var cursorColor;					/*** CURSOR ***/
+		var hitTestTolerancia;
+		var nodoTamano;
+	
+		//Declaramos variables
+		//var capaImagen;
+		//var capaVectorial;
+		var capaGenerica; //Para cualquier otro objeto que afecte al dibujo
+		var capaCursor;					/*** CURSOR ***/
+		
+		//var contexto;
+		
+		var segment, path; //variables para saber qu� item y en qu� parte del item se ha clickado
+		var moverPath = false; //Controla el movimiento en bloque del item
+		var dibujar = false; //Controla si se va a dibujar o no
+		var rutaImagen = "http://localhost:8080/HormaStudio/img/krokis.png";
+		
+		var circuloReunion; //No s� si es imprescindible
+		//var rReunion; //Para si agrupamos el c�rculo con la letra R en el centro 
+		//var grupoReunion //circuloReunion y  rReunion agrupados
+		
+		var rectangulo;
+		var esquinaTamano;
+		var teclaContorno; 
+		var teclaPulsada;
+		var grupoTecla; //teclaPulsada y teclaContorno agrupados (Tool Tip Text)
+		
+		inicializarEntorno();
+		inicializarCanvas();
+		inicializarCapas(); //Creamos las capas (im�gen, l�neas)
+		inicializarDibujoVectorial();
+		cargarImagenInicial(rutaImagen);
+		inicializarControles();
+		inicializarToolTip();
+	
+		//crearPaths(); //Creamos Paths manualmente
+	
+		//Modificados desde un control exterior
+		//$(#controlvectorColor).onChange(function(){...vectorColor = $(#controlvectorColor).value;...});
+		//$(#controlvectorColor).onChange(function(){...vectorGrosor = $(#controlvectorGrosor).value;...});
+	
+		/**
+		* Funciones propias del canvas utilizando la librería paper.js
+		*/
 		function inicializarEntorno(){
 			//document.body.style.cursor = 'none'; //el cursor desaparece
 			console.warn('inicializarEntorno: No hacemos nada');
@@ -210,13 +214,17 @@
 		}
 
 		function inicializarDibujoVectorial(){
-			vectorColor         = '#0000FF';
-			vectorGrosor        = 6; // Comprobar 	QUE FUNCIONAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA*  **********   IMPORTANTEEEEEEEEEEE
+			vectorColor         = "#0000ff";
+			$("#control_color").spectrum("set", vectorColor);
+			//inicializarColorPicker(vectorColor);
+			//$("#control_color").spectrum({color: 'blue'});
+			vectorGrosor        = 6;
 			vectorRedondezPunta = 'round';
 			nodoTamano          = vectorGrosor*2;
 			
 			reunionRadio        = 8;
 			reunionColor        = '#ff0000';
+			document.getElementById("control_color").value = reunionColor;
 			
 			cursorColor         = 'black';					/*** CURSOR ***/
 			hitTestTolerancia   = 2;
