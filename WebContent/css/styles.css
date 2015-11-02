@@ -69,7 +69,9 @@ i{
 	/*box-shadow: inset -1px -1px 1px rgba(0,0,0,.3), inset 1px 1px 1px rgba(255,255,255,.2);*/
 }
 
-#control-dibujo{
+#controles-dibujo,
+#funciones-dibujo{
+	margin-top: 10px;
 	padding-left: 5px;
     padding-right: 5px;
     padding-top: 3px;
@@ -78,7 +80,7 @@ i{
 	box-shadow: inset -1px -1px 1px rgba(0,0,0,.3), inset 1px 1px 1px rgba(255,255,255,.2);
 }
 
-#control-propiedades{
+#propiedades-dibujo{
 	margin-top: 10px;
 	padding-left: 8px;
     padding-right: 8px;
@@ -144,7 +146,7 @@ i{
 	height: 30px;  /* Alto del botón */
 	border: 0; /* Borde */
 	padding-top: 2px;
-	padding-left: 2px;
+	padding-left: 1px;
 	background: #535353;  /* Fondo */
 	text-align: center;  /* Alineación del texto */
 	text-shadow: -1px -1px rgba(0,0,0,.2);  /* Sombra del texto */
@@ -198,7 +200,12 @@ i{
     left: 883px;*/
 }
 
-.iconos-dibujo{
+#control-color>div{        /* NO FUNCIONAAAAAAA, POR QUÉEEEEEE*/
+	border: 0 !important;
+	background: none !important;
+}
+.iconos-dibujo,
+.iconos-funciones{
 	/*margin-top: 5px;*/
 	margin-bottom: 5px;
 }
@@ -206,6 +213,12 @@ i{
 #control_pincel{
 	font-size: 17px;
 	padding-top: 6px;
+}
+
+#funcion-reunion,
+#funcion-reunion-auto{
+	font-size: 20px;
+	padding-top: 5px;
 }
 
 #control_reunion,
@@ -273,20 +286,26 @@ i{
 }
 
 #colorNav > ul > li{ /* will style only the top level li */
+	width: 40px;
+	height: 40px;
+	padding-top: 6px;
 	list-style: none;
 	box-shadow: 0 0 10px rgba(100, 100, 100, 0.2) inset,1px 1px 1px #CCC;
 	display: inline-block;
 	line-height: 1;
 	margin: 1px;
 	border-radius: 3px;
-	position:relative;
+	position: relative;
 }
 
 #colorNav > ul > li > span{
 	color:inherit;
 	text-decoration:none !important;
-	font-size:17px;
 	padding: 5px;
+}
+
+.icono-menu{
+    font-size: 1.3em !important;
 }
 
 #colorNav li ul{
@@ -297,7 +316,7 @@ i{
 	/*left:50%;
 	margin-left:-90px;*/
 	top: 0; /*modificado*/
-	margin-left: 30px; /*modificado*/
+	margin-left: 40px; /*modificado*/
 	font:bold 12px 'Open Sans Condensed', sans-serif;
 
 	/* This is important for the show/hide CSS animation */

@@ -92,7 +92,7 @@
 		/**
 		 * input type=color - Spectrum Color Picker
 		 */
-		$("#control_color").spectrum({
+		$("#control-color").spectrum({
 		    showPaletteOnly: true,
 		    togglePaletteOnly: true,
 		    togglePaletteMoreText: 'más',
@@ -135,9 +135,9 @@
 		var dibujar = false; //Controla si se va a dibujar o no
 		var rutaImagen = "http://localhost:8080/HormaStudio/img/krokis.png";
 		
-		var circuloReunion; //No s� si es imprescindible
+		//var circuloReunion; //No s� si es imprescindible
 		//var rReunion; //Para si agrupamos el c�rculo con la letra R en el centro 
-		//var grupoReunion //circuloReunion y  rReunion agrupados
+		var grupoReunion //circuloReunion y  numeroReunion agrupados
 		
 		var rectangulo;
 		var esquinaTamano;
@@ -147,7 +147,7 @@
 		
 		inicializarEntorno();
 		inicializarCanvas();
-		inicializarCapas(); //Creamos las capas (im�gen, l�neas)
+		inicializarCapas(); //Creamos las capas (imagen, lineas)
 		inicializarDibujoVectorial();
 		cargarImagenInicial(rutaImagen);
 		inicializarControles();
@@ -215,21 +215,21 @@
 
 		function inicializarDibujoVectorial(){
 			vectorColor         = "#0000ff";
-			$("#control_color").spectrum("set", vectorColor);
+			$("#control-color").spectrum("set", vectorColor);
 			//inicializarColorPicker(vectorColor);
-			//$("#control_color").spectrum({color: 'blue'});
+			//$("#control-color").spectrum({color: 'blue'});
 			vectorGrosor        = 6;
 			vectorRedondezPunta = 'round';
 			nodoTamano          = vectorGrosor*2;
 			
-			reunionRadio        = 8;
+			reunionRadio        = 20;//8;
 			reunionColor        = '#ff0000';
-			document.getElementById("control_color").value = reunionColor;
+			document.getElementById("control-color").value = reunionColor;
 			
 			cursorColor         = 'black';					/*** CURSOR ***/
 			hitTestTolerancia   = 2;
 			
-			//Tama�o de todos los nodos
+			//Tamaño de todos los nodos
 			paper.settings.handleSize = nodoTamano;
 			
 			//Creamos el objeto cursor
@@ -241,14 +241,6 @@
 				name: 'cursor'});
 			cursorTamanoPincel.visible = false;
 			capaVectorial.activate();
-			
-			//Opciones HitTest
-			hitOptions = {
-					segments: true, //para clickar en los nodos
-					stroke: true, //para clickar en las l�neas
-					fill: true, //para clickar en las reuniones
-					tolerance: hitTestTolerancia
-					};
 		}
 		
 		//Creamos Paths manualmente
@@ -295,19 +287,57 @@
 			controlBorrar = false;
 			
 			//ColorPicker
-			document.getElementById("control_color").value = "#0000FF";
+			document.getElementById("control-color").value = "#0000FF";
 			
-			//Tama�o pincel
+			//Tamaño pincel
 			document.getElementById("control_grosor").value = vectorGrosor;
 			document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + vectorGrosor;
 			
+			//Rellenamos la Select de las reuniones
+			var opcion;
+			for (i=1; i < 100; i++){
+				opcion = document.createElement("option");
+			    opcion.text = i;
+			    document.getElementById("funcion-numero-reunion").add(opcion);
+			}
+			document.getElementById("funcion-numero-reunion").selectedIndex = 0;
 			//Zoom
 			//document.getElementById("control_zoom").value = lowerZoomLimit;
 			//document.getElementById("zoom_texto").value = lowerZoomLimit;
 			//$("#control_zoom")[0].min = lowerZoomLimit;
 	        //$("#control_zoom")[0].max = upperZoomLimit;
+			//Opciones HitTest
+			hitOptions = {
+					segments: true, //para clickar en los nodos
+					stroke: true, //para clickar en las l�neas
+					fill: true, //para clickar en las reuniones
+					tolerance: hitTestTolerancia
+					};
+			circuloReunion = new paper.Path.Circle({
+				center: [80, 50],//event.point,
+				radius: reunionRadio,
+				strokeColor: reunionColor,
+				name: "circulo-reunion"
+				});
+			
+			numeroReunion = new paper.PointText({
+			    position: [circuloReunion.position.x - (reunionRadio/2), circuloReunion.position.y + (reunionRadio/2)],//circuloReunion.position,
+			    content: 99,//document.getElementById("funcion-numero-reunion").value,
+			    strokeColor: reunionColor,
+			    fillColor: reunionColor,
+			    fontFamily: 'Arial',
+			    fontWeight: 'bold',
+			    fontSize: 20,
+			    name: "numero-reunion"
+			});
+			
+			grupoReunion = new paper.Group({
+				children: [circuloReunion, numeroReunion],
+				name:"reunion",
+				visible: true
+			});
 		}
-
+		
 		function inicializarToolTip(){
 			//TODO letra R rReunion y name: erre
 			//this.position + new point ...
@@ -321,7 +351,7 @@
 			teclaContorno.strokeColor = 'black';
 			teclaContorno.name = "contornotooltip";
 			
-			teclaPulsada = new PointText({
+			teclaPulsada = new paper.PointText({
 			    position: [rectangulo.x + (rectangulo.width/7), rectangulo.y + (rectangulo.height/1.5)],
 			    content: 'null',
 			    fillColor: 'black',
@@ -331,11 +361,11 @@
 			    name: "textotooltip"
 			});
 			
-			grupoTecla = new Group({
-				children: [teclaContorno, teclaPulsada]
+			grupoTecla = new paper.Group({
+				children: [teclaContorno, teclaPulsada],
+				name: "tooltiptext",
+				visible: false
 			});
-			grupoTecla.name = "tooltiptext";
-			grupoTecla.visible = false;
 			capaVectorial.activate();
 			
 			//acceder a children reunion.children[0].point
@@ -412,7 +442,7 @@
 				
 				/*
 				//TODO letra R rReunion y name: erre
-				grupoReunion = new Group();
+				grupoReunion = new paper.Group();
 				reunion.addChild(circuloReunion);
 				reunion.addChild(rReunion);
 				
@@ -460,34 +490,66 @@
 				}
 			}else if (controlReunion && hayImagen){ //Si se ha pulsado el bot�n de Reuni�n que cree una nueva reuni�n al clickar sobre el canvas
 				console.info("controlReunion = true");
+				//Si donde hace click esta dentro de los limites de la imagen
+				if (imagenRaster.bounds.contains(event.point)){
 					if (project.activeLayer != capaVectorial){
 						capaVectorial.activate();
 					}
+					
+					//TODO 
+
+					//Grupo Reunion
 					circuloReunion = new paper.Path.Circle({
+						center: event.point,
+						radius: reunionRadio,
+						//fillColor: reunionColor,
+						name: "circulo-reunion"
+						});
+					
+					numeroReunion = new paper.PointText({
+					    position: [circuloReunion.position],
+					    content: document.getElementById("funcion-numero-reunion").value,
+					    fillColor: reunionColor,
+					    fontFamily: 'Arial',
+					    fontWeight: 'bold',
+					    fontSize: 10,
+					    name: "numero-reunion"
+					});
+					
+					grupoReunion = new paper.Group({
+						children: [circuloReunion, numeroReunion],
+						name:"reunion",
+						visible: true
+					});
+					
+					/*circuloReunion = new paper.Path.Circle({
 						center: event.point,
 						radius: reunionRadio,
 						fillColor: reunionColor,
 						name: "reunion"
-						});
+						});*/
+				}
 			}else if (controlPincel && hayImagen){ //si no se ha pulsado ning�n item o se ha clickado sobre el raster/im�gen que cree un nuevo path y en onMouseDrag se dibuja
 				 //|| hitNombreItem == "cursor"					/*** CURSOR ***/
-				if (!hitResult || hitClaseItem === "Raster" || hitResult.type == "fill" || hitNombreItem == "cursor"){ //si hitResult=null o se ha clickado sobre la im�gen o sobre un objeto con relleno/Reuni�n
-					if (project.activeLayer != capaVectorial){
-						capaVectorial.activate();
+				if (!hitResult || hitClaseItem === "Raster" || hitResult.type == "fill" || hitNombreItem == "cursor"){ //si hitResult=null o se ha clickado sobre la im�gen o sobre un objeto con relleno/Reunion
+					if (imagenRaster.bounds.contains(event.point)){//Si donde hace click esta dentro de los limites de la imagen
+						if (project.activeLayer != capaVectorial){
+							capaVectorial.activate();
+						}
+						path = new paper.Path({ //Crea un nuevo Path
+							strokeColor: vectorColor,
+							strokeWidth: vectorGrosor,
+							strokeCap: vectorRedondezPunta,
+							name: "vector"
+							});
+						//path.add(event.point);
+						//center: [0, 0],
+						//path.add(event.point);
+						console.info("controlPincel = true");
+						//path.strokeWidth = 8;
+						//path.strokeJoin = 'round'; //La redondez de la punta
+						dibujar = true;
 					}
-					path = new paper.Path({ //Crea un nuevo Path
-						strokeColor: vectorColor,
-						strokeWidth: vectorGrosor,
-						strokeCap: vectorRedondezPunta,
-						name: "vector"
-						});
-					//path.add(event.point);
-					//center: [0, 0],
-					//path.add(event.point);
-					console.info("controlPincel = true");
-					//path.strokeWidth = 8;
-					//path.strokeJoin = 'round'; //La redondez de la punta
-					dibujar = true;
 				} else if ( hitResult && hitClaseItem != "Raster") {
 					//si pulsa en cualquier lugar del path y que no sea sobre el raster/im�gen...
 					console.info("guardamos el path clickado");
@@ -516,39 +578,41 @@
 		}
 
 		/**
-		*  Mientras est� encima de un item se selecciona
+		*  Mientras esta encima de un item se selecciona
 		*/
-	 	//S�lo cuando pasamos por encima de un vector se selecciona (la im�gen no)
+	 	//S�lo cuando pasamos por encima de un vector se selecciona (la imagen no)
 		tool.onMouseMove = function(event){
 			console.info("Ha entrado en onMouseMove");
 			//paper.tool.mouseStartPos = new Point(event.point); //Para el zoom
 			//Obtengo la posici�n del cursor para hacer Zoom
 			//posicionRaton = getPosicionRaton(canvas, event);
-			posicionRaton = canvas.getBoundingClientRect(); //Recojo la posici�n del rat�n en la ��pantalla??. Para el Zoom
+			posicionRaton = canvas.getBoundingClientRect(); //Recojo la posicion del raton en la pantalla??. Para el Zoom
 
 		    //posx = posicionRaton.x;
 		    //posy = posicionRaton.y;
 
-			//movemos el el c�rculo del tama�o del pincel con el cursor.					/*** CURSOR ***/
+			//movemos el el circulo del tamanoo del pincel con el cursor.					/*** CURSOR ***/
 			if (!controlMover && !controlBorrar){
 				moverCursor(event.point);
 			}
 			
 			project.activeLayer.selected = false;
 			
-			//Que s�lo seleccione los vectores y las reuniones. Ni la im�gen ni ninguno de los elementos del tooltiptext 
-			if (controlReunion && event.item && event.item.name == "reunion"){
-				event.item.selected = true;
+			if (hayImagen){
+				//Que solo seleccione los vectores y las reuniones. Ni la imagen ni ninguno de los elementos del tooltiptext 
+				if (controlReunion && event.item && event.item.name == "reunion"){
+					event.item.selected = true;
+				}
+				if (controlPincel && event.item && event.item.name == "vector"){
+					event.item.selected = true;
+				}
+				if (controlBorrar && event.item && (event.item.name == "vector" || event.item.name == "reunion")){
+					event.item.selected = true;
+				}
+				/*if (event.item && event.item.className != "Raster" && event.item.name != "tooltiptext" && event.item.name != "reunion"){
+					event.item.selected = true;
+				}*/
 			}
-			if (controlPincel && event.item && event.item.name == "vector"){
-				event.item.selected = true;
-			}
-			if (controlBorrar && event.item && (event.item.name == "vector" || event.item.name == "reunion")){
-				event.item.selected = true;
-			}
-			/*if (event.item && event.item.className != "Raster" && event.item.name != "tooltiptext" && event.item.name != "reunion"){
-				event.item.selected = true;
-			}*/
 		}
 		
 		/**Cuando arrastremos el rat�n con el bot�n pulsado ...
@@ -560,32 +624,34 @@
 			console.info("Ha entrado en onMouseDrag");
 			
 			if (controlMover){
-				//TODO Faltar�a poner el viewToProject *****************************
+				//TODO Faltaria poner el viewToProject *****************************
 				for (i=0; i<project.layers.length;i++){
 					project.layers[i].position.x += event.delta.x;
 					project.layers[i].position.y += event.delta.y;
 				}
 			}
 			else if (dibujar){
-				//TODO controlar que no salga del l�mite de la im�gen y/o del canvas. Controlar cuando tiene zoom
 				console.info("dibujar");
-				path.add(event.point);
+				//Si donde hace click esta dentro de los limites de la imagen
+				if (imagenRaster.bounds.contains(event.point)){
+					path.add(event.point);
+				}
 				console.info("Pos. nuevo punto: " + event.point);
 			}else{
 				console.info("dibujar ELSE");
 				if (moverPath) { //pulsando CONTROL + CLICK mueve path entero
 					path.position.x += event.delta.x;
 		  			path.position.y += event.delta.y;
-					//path.position += event.delta; //No funciona as� cuando pongo tool. ...
+					//path.position += event.delta; //No funciona asi cuando pongo tool. ...
 				}else if (segment) {
 					segment.point.x += event.delta.x;
 					segment.point.y += event.delta.y;
-					//segment.point += event.delta; //No funciona as� cuando pongo tool. ...
+					//segment.point += event.delta; //No funciona asi cuando pongo tool. ...
 					path.smooth(); //Suaviza el nuevo v�rtice
 		  		}else if (path) {
 		  			path.position.x += event.delta.x;
 		  			path.position.y += event.delta.y;
-					//path.position += event.delta; //No funciona as� cuando pongo tool. ...
+					//path.position += event.delta; //No funciona asi cuando pongo tool. ...
 				}
 			}
 			//movemos el c�rculo del tama�o del pincel con el cursor.					/*** CURSOR ***/

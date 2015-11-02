@@ -94,8 +94,8 @@ control_pincel.onclick = function( event ){
 		document.getElementById("control_grosor").disabled = false;
 		document.getElementById("control_grosor").value = vectorGrosor;
 		document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + vectorGrosor;
-		$("#control_color").spectrum("enable");
-		$("#control_color").spectrum("set", vectorColor);
+		$("#control-color").spectrum("enable");
+		$("#control-color").spectrum("set", vectorColor);
 		
 		controlPincel = true;
 		controlReunion = false;
@@ -139,8 +139,8 @@ control_reunion.onclick = function( event ){
 		document.getElementById("control_grosor").disabled = false;
 		document.getElementById("control_grosor").value = reunionRadio;
 		document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + reunionRadio;
-		$("#control_color").spectrum("enable");
-		$("#control_color").spectrum("set", reunionColor);
+		$("#control-color").spectrum("enable");
+		$("#control-color").spectrum("set", reunionColor);
 
 		controlPincel = false;
 		controlReunion = true;
@@ -182,7 +182,7 @@ control_borrar.onclick = function( event ){
 		canvas.classList.add("cursor_borrar");
 
 		document.getElementById("control_grosor").disabled = true;
-		$("#control_color").spectrum("disable");
+		$("#control-color").spectrum("disable");
 		
 		controlPincel = false;
 		controlReunion = false;
@@ -224,7 +224,7 @@ control_mover.onclick = function ( event ){
 		canvas.classList.add("cursor_mover");
 		
 		document.getElementById("control_grosor").disabled = true;
-		$("#control_color").spectrum("disable");
+		$("#control-color").spectrum("disable");
 		
 		//TODO deshabilitar cursor
 		cursorTamanoPincel.visible = false;
@@ -278,13 +278,15 @@ function abrirDialogo(){
 
 function loadImagen(e){
 	var fichero = new FileReader();
-	//Activamos la capa de la im�gen y la cargamos
-	capaImagen.activate();
 
 	//Trigger del fichero cargado desde el cuadro de dialogo
 	fichero.onload = function(event){
 		//canvas.classList.remove("cursor_none");
 		//canvas.classList.add("cursor_wait");
+		
+		//Activamos la capa de la imagen y la cargamos
+		capaImagen.activate();
+		
 		if (imagenRaster != null){
 			console.info("va a borrar la imagen")
 			imagenRaster.remove();
@@ -340,16 +342,18 @@ function loadImagen(e){
 			//paper.view.draw;
 			
 			//document.getElementById("zoom_texto").value =  porcentajeZoom;
-			capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar //***************************************
-			controlPincel = true;
-			hayImagen = true;
 			document.getElementById("control_zoom").disabled = false;
 			nombreKrokis = controlImagen.files[0].name;
 			document.getElementById("nombre-krokis").innerHTML = "[" + nombreKrokis + "]";
 			//canvas.classList.remove("cursor_wait");
 			//canvas.classList.add("cursor_none");
+			capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar //***************************************
+			controlPincel = true;
+			hayImagen = true;
     }
-	fichero.readAsDataURL(e.target.files[0]); //imágen en formato base64
+	if (e.target.files.length != 0){
+		fichero.readAsDataURL(e.target.files[0]); //imágen en formato base64
+	}
 }
 	
 control_guardar.onclick = function( event ){
@@ -415,9 +419,9 @@ function img_and_link() {
 
 function setColor(){
 	if (controlPincel){
-		vectorColor = $("#control_color").val(); //document.getElementById("control_color").value;
+		vectorColor = $("#control-color").val(); //document.getElementById("control-color").value;
 	}else if (controlReunion){
-		reunionColor = $("#control_color").val(); //document.getElementById("control_color").value;
+		reunionColor = $("#control-color").val(); //document.getElementById("control-color").value;
 	}
 }
 
@@ -477,7 +481,7 @@ function setZoom(){
 }
 
 //Al pulsar - o + del Zoom
-function moverZoom(direccion){ 
+/*function moverZoom(direccion){ 
 	document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
 	document.getElementById("zoom_factor_texto").value = ratioZoomFactor;
 	
@@ -493,7 +497,7 @@ function moverZoom(direccion){
 	}
 	//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
 	diferenciaZoom = document.getElementById("control_zoom").value;
-}
+}*/
 
 /**
  * Si el canvas contiene algo dibujado o una imágen que haga Scroll

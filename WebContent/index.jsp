@@ -13,8 +13,8 @@
 		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		
-		<title>Canvas</title>
-		<meta name="description" content="Horma Studio, crea tus propias vï¿½as de escalada">
+		<title>Horma Studio</title>
+		<meta name="description" content="Horma Studio, crea tus propias vías de escalada">
 		<meta name="author" content="Unai Perea Cruz">
 		
 		<!-- Estilos CSS -->
@@ -88,7 +88,7 @@
 					</form>
 					<!-- Controles dibujo -->
 					<div class="clearfix">
-						<div id="control-dibujo" class="pull-right">
+						<div id="controles-dibujo" class="pull-right">
 							<ul class="iconos-dibujo">
 								<li><span id="control_pincel" class="glyphicon glyphicon-pencil boton_pulsado"></span></li>
 								<!-- <li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li> -->
@@ -101,9 +101,9 @@
 					</div>
 					<!-- Propiedades de controles dibujo -->
 					<div class="clearfix">
-						<div id="control-propiedades" class="pull-right">
+						<div id="propiedades-dibujo" class="pull-right">
 							<ul class="iconos-propiedades">
-								<li><input type="color" id="control_color" name="control_color" class="pull_right" name="control_color" onchange="setColor();"></li>
+								<li><input type="color" id="control-color" name="control-color" class="pull-right" name="control_color" onchange="setColor();"></li>
 								<!-- 
 								<li><input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li>
 								-->
@@ -118,6 +118,18 @@
 									</div>
 								</li>
 	
+							</ul>
+						</div>
+					</div>
+					<div class="clearfix">
+						<div id="funciones-dibujo" class="pull-right">
+							<ul class="iconos-funciones">
+								<li></li>
+								<li>
+									<select id="funcion-numero-reunion"></select>
+									<span id="funcion-reunion" class="fa fa-registered boton_hover boton_no_pulsado lista-margen-arriba"></span>
+								</li>
+								<li class="clearfix"><span id="funcion-reunion-auto" class="fa fa-sort-numeric-desc boton_hover boton_no_pulsado pull-right lista-margen-arriba"></span></li>
 							</ul>
 						</div>
 					</div>
@@ -138,11 +150,21 @@
 						<div id="barra-menus-container">
 							<nav id="colorNav">
 								<ul>
-									<li class="green">
+									<li class="green text-center">
 										<span class="fa fa-cogs"></span>
 										<ul>
-											<li><span onclick="abrirDialogo();">Cargar imagen</span></li>
-											<li><span>Guardar imagen</span></li>
+											<li>
+												<span class="fa fa-folder-open-o pull-left icono-menu"></span>
+												<div class="text-center">
+													<span onclick="abrirDialogo();">Cargar imagen</span>
+												</div>
+											</li>
+											<li>
+												<span class="fa fa-download pull-left icono-menu"></span>
+												<div class="text-center">
+													<span>Descargar imagen</span>
+												</div>
+											</li>
 										</ul>
 									</li>
 								</ul>
