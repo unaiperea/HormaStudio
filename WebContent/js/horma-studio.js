@@ -222,7 +222,7 @@
 			vectorRedondezPunta = 'round';
 			nodoTamano          = vectorGrosor*2;
 			
-			reunionRadio        = 20;//8;
+			reunionRadio        = 8;
 			reunionColor        = '#ff0000';
 			document.getElementById("control-color").value = reunionColor;
 			
@@ -313,29 +313,6 @@
 					fill: true, //para clickar en las reuniones
 					tolerance: hitTestTolerancia
 					};
-			circuloReunion = new paper.Path.Circle({
-				center: [80, 50],//event.point,
-				radius: reunionRadio,
-				strokeColor: reunionColor,
-				name: "circulo-reunion"
-				});
-			
-			numeroReunion = new paper.PointText({
-			    position: [circuloReunion.position.x - (reunionRadio/2), circuloReunion.position.y + (reunionRadio/2)],//circuloReunion.position,
-			    content: 99,//document.getElementById("funcion-numero-reunion").value,
-			    strokeColor: reunionColor,
-			    fillColor: reunionColor,
-			    fontFamily: 'Arial',
-			    fontWeight: 'bold',
-			    fontSize: 20,
-			    name: "numero-reunion"
-			});
-			
-			grupoReunion = new paper.Group({
-				children: [circuloReunion, numeroReunion],
-				name:"reunion",
-				visible: true
-			});
 		}
 		
 		function inicializarToolTip(){
@@ -476,7 +453,7 @@
 			}else if (event.modifiers.control && controlReunion && hitNombreItem != "cursor"){ // && hitNombreItem != "cursor"					/*** CURSOR ***/
 				//Si se ha pulsado CTRL + CLICK que lo prepare para moverse. Controla si clicka sobre alguno de los elementos del tooltiptext que no lo modifique  
 				//if ( hitResult && hitClaseItem != "Raster" && hitNombreItem != "tooltiptext" && hitNombreItem != "textotooltip" && hitNombreItem != "contornotooltip" && (controlReunion || controlPincel)) {
-				if (hitResult && hitNombreItem == "reunion"){
+				if (hitResult && (hitNombreItem == "circulo-reunion" || hitNombreItem == "numero-reunion")){
 					moverPath = true;
 					path = hitResult.item;
 					//project.activeLayer.addChild(hitResult.item); //no s� si hay que incluirlo luego
@@ -488,7 +465,7 @@
 						hitResult.segment.remove();
 					}
 				}
-			}else if (controlReunion && hayImagen){ //Si se ha pulsado el bot�n de Reuni�n que cree una nueva reuni�n al clickar sobre el canvas
+			}else if (controlReunion && hayImagen){ //Si se ha pulsado el boton de Reunion que cree una nueva reunion al clickar sobre el canvas
 				console.info("controlReunion = true");
 				//Si donde hace click esta dentro de los limites de la imagen
 				if (imagenRaster.bounds.contains(event.point)){
@@ -498,29 +475,7 @@
 					
 					//TODO 
 
-					//Grupo Reunion
-					circuloReunion = new paper.Path.Circle({
-						center: event.point,
-						radius: reunionRadio,
-						//fillColor: reunionColor,
-						name: "circulo-reunion"
-						});
-					
-					numeroReunion = new paper.PointText({
-					    position: [circuloReunion.position],
-					    content: document.getElementById("funcion-numero-reunion").value,
-					    fillColor: reunionColor,
-					    fontFamily: 'Arial',
-					    fontWeight: 'bold',
-					    fontSize: 10,
-					    name: "numero-reunion"
-					});
-					
-					grupoReunion = new paper.Group({
-						children: [circuloReunion, numeroReunion],
-						name:"reunion",
-						visible: true
-					});
+					setReunion(event.point);
 					
 					/*circuloReunion = new paper.Path.Circle({
 						center: event.point,
@@ -529,7 +484,7 @@
 						name: "reunion"
 						});*/
 				}
-			}else if (controlPincel && hayImagen){ //si no se ha pulsado ning�n item o se ha clickado sobre el raster/im�gen que cree un nuevo path y en onMouseDrag se dibuja
+			}else if (controlPincel && hayImagen){ //si no se ha pulsado ningun item o se ha clickado sobre el raster/imagen que cree un nuevo path y en onMouseDrag se dibuja
 				 //|| hitNombreItem == "cursor"					/*** CURSOR ***/
 				if (!hitResult || hitClaseItem === "Raster" || hitResult.type == "fill" || hitNombreItem == "cursor"){ //si hitResult=null o se ha clickado sobre la im�gen o sobre un objeto con relleno/Reunion
 					if (imagenRaster.bounds.contains(event.point)){//Si donde hace click esta dentro de los limites de la imagen
@@ -550,7 +505,7 @@
 						//path.strokeJoin = 'round'; //La redondez de la punta
 						dibujar = true;
 					}
-				} else if ( hitResult && hitClaseItem != "Raster") {
+				} else if ( hitResult && hitClaseItem != "Raster" && hitNombreItem != "circulo-reunion" && hitNombreItem != "numero-reunion") {
 					//si pulsa en cualquier lugar del path y que no sea sobre el raster/im�gen...
 					console.info("guardamos el path clickado");
 					path = hitResult.item; //guardamos el path sobre el que se ha pulsado
@@ -571,7 +526,12 @@
 			} else if (controlBorrar){
 				console.info("controlBorrar = true");
 				if (hitResult && hitClaseItem != "Raster") {
-					hitResult.item.remove(); //Elimina el path completo con sus hijos pero en realidad no lo destruye por completo, luego se puede recuperar. Devuelve un booleano
+					if (hitNombreItem == "circulo-reunion" || hitNombreItem == "numero-reunion"){
+						if (hitResult.item.parent.name == "reunion")
+							hitResult.item.parent.removeChildren();
+					}else{
+						hitResult.item.remove(); //Elimina el path completo con sus hijos pero en realidad no lo destruye por completo, luego se puede recuperar. Devuelve un booleano
+					}
 				}
 			}
 		console.info("a punto de salir del onMouseDown");
@@ -580,7 +540,7 @@
 		/**
 		*  Mientras esta encima de un item se selecciona
 		*/
-	 	//S�lo cuando pasamos por encima de un vector se selecciona (la imagen no)
+	 	//Solo cuando pasamos por encima de un vector se selecciona (la imagen no)
 		tool.onMouseMove = function(event){
 			console.info("Ha entrado en onMouseMove");
 			//paper.tool.mouseStartPos = new Point(event.point); //Para el zoom
@@ -615,10 +575,10 @@
 			}
 		}
 		
-		/**Cuando arrastremos el rat�n con el bot�n pulsado ...
-		*  1.- moveremos el Path completo si se hab�a pulsado CTRL
-		*  2.- arrastraremos el segmento/nodo si se ha�a pulsado sobre �l
-		*  3.- arrastraremos el el nuevo segmento/nodo que acabamos de crear si se ha�a pulsado sobre la l�nea/Path
+		/**Cuando arrastremos el raton con el boton pulsado ...
+		*  1.- moveremos el Path completo si se habia pulsado CTRL
+		*  2.- arrastraremos el segmento/nodo si se ha pulsado sobre el
+		*  3.- arrastraremos el el nuevo segmento/nodo que acabamos de crear si se ha�a pulsado sobre la linea/Path
 		*/
 		tool.onMouseDrag = function(event){
 			console.info("Ha entrado en onMouseDrag");
@@ -640,14 +600,22 @@
 			}else{
 				console.info("dibujar ELSE");
 				if (moverPath) { //pulsando CONTROL + CLICK mueve path entero
-					path.position.x += event.delta.x;
-		  			path.position.y += event.delta.y;
+					if (path.parent.name == "reunion"){
+						for (i=0; i<2; i++){
+							//Recorremos los dos hijos de reunion, el circulo y el numero
+							path.parent.children[i].position.x += event.delta.x;
+							path.parent.children[i].position.y += event.delta.y;
+						}
+					}else{
+						path.position.x += event.delta.x;
+			  			path.position.y += event.delta.y;
+					}
 					//path.position += event.delta; //No funciona asi cuando pongo tool. ...
 				}else if (segment) {
 					segment.point.x += event.delta.x;
 					segment.point.y += event.delta.y;
 					//segment.point += event.delta; //No funciona asi cuando pongo tool. ...
-					path.smooth(); //Suaviza el nuevo v�rtice
+					path.smooth(); //Suaviza el nuevo vertice
 		  		}else if (path) {
 		  			path.position.x += event.delta.x;
 		  			path.position.y += event.delta.y;

@@ -129,7 +129,11 @@
 									<select id="funcion-numero-reunion"></select>
 									<span id="funcion-reunion" class="fa fa-registered boton_hover boton_no_pulsado lista-margen-arriba"></span>
 								</li>
-								<li class="clearfix"><span id="funcion-reunion-auto" class="fa fa-sort-numeric-desc boton_hover boton_no_pulsado pull-right lista-margen-arriba"></span></li>
+								<li class="clearfix">
+									<span id="funcion-reunion-auto"
+										  class="fa fa-sort-numeric-desc boton_hover boton_no_pulsado pull-right lista-margen-arriba"
+										  onclick="setReunionAuto();")></span>
+								</li>
 							</ul>
 						</div>
 					</div>

@@ -271,6 +271,76 @@ control_reset.onclick = function ( event ){
 	document.getElementById("control_zoom").value = 5;
 }
 
+function setReunionAuto(){
+	//Recorro las capas en busca de la capa de lineas
+	for (i=0; i<paper.project.layers.length; i++){
+		if (paper.project.layers[i].name == "capa de lineas"){
+			//Recorro los hijos de la capa de lineas
+			for (j=0; j<paper.project.layers[i].children.length; j++){
+				if (paper.project.layers[i].children[j].name == "vector"){
+					var puntoMasBajo;
+					var puntoX;
+					//Controlar que no sea 0, en teoría no existiria
+					//Controlar que no sea 1, en teoría no existiria
+					//Controlar que no sea n
+					for (z=0; z<paper.project.layers[i].children[j].segments.length - 1; z++){
+						//if (paper.project.layers[i].children[j].segments.length > 1){//Seguro?
+							//for (x=0; x<paper.project.layers[i].children[j].segments.length; x++){ //x=1??
+								if (paper.project.layers[i].children[j].segments[z+1].point.y < paper.project.layers[i].children[j].segments[z].point.y){
+									puntoYmasBajo = paper.project.layers[i].children[j].segments[z+1].point.y;
+								}else{
+									puntoYmasBajo = paper.project.layers[i].children[j].segments[z].point.y;
+								}
+								setReunion([puntoYmasBajo, puntoX]);
+							//}
+						//}
+					}
+				}
+			}
+		}
+	}
+	//paper.project.layers[3].children[n].segments[n].
+	//console.debug(paper.project.layers[3]);
+}
+
+function setReunion(point){
+	//Grupo Reunion
+	circuloReunion = new paper.Path.Circle({
+		center: point,
+		radius: reunionRadio,
+		strokeColor: reunionColor,
+		name: "circulo-reunion"
+		});
+	
+	numeroReunion = new paper.PointText({
+	    position: circuloReunion.position,
+	    content: document.getElementById("funcion-numero-reunion").value,
+	    strokeColor: reunionColor,
+	    fillColor: reunionColor,
+	    fontFamily: 'Arial',
+	    fontWeight: 'normal',
+	    fontSize: 10,
+	    name: "numero-reunion"
+	});
+	
+	numeroReunion.position.x -= numeroReunion.bounds.width/2;
+	numeroReunion.position.y += numeroReunion.bounds.height/4;
+	
+	grupoReunion = new paper.Group({
+		children: [circuloReunion, numeroReunion],
+		name: "reunion",
+		visible: true
+	});
+	
+	var contReunion = document.getElementById("funcion-numero-reunion").value;
+	contReunion++;
+	if (contReunion > 99){
+		document.getElementById("funcion-numero-reunion").value = 1;
+	}else{
+		document.getElementById("funcion-numero-reunion").value = contReunion;
+	}
+}
+
 /*Abre el cuadro de dialogo de cargar imágen*/
 function abrirDialogo(){
 	document.getElementById('control_imagen').click();
