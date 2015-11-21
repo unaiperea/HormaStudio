@@ -420,7 +420,8 @@ function loadImagen(e){
 			capaVectorial.activate(); //Activa la capa de los vectores y lista para dibujar //***************************************
 			controlPincel = true;
 			hayImagen = true;
-    }
+    }//end: onload
+	
 	if (e.target.files.length != 0){
 		fichero.readAsDataURL(e.target.files[0]); //imágen en formato base64
 	}
