@@ -77,270 +77,6 @@ function redimensionarImagen(){
 	}
 }*/
 
-control_pincel.onclick = function( event ){
-	var botonAuxPincel = document.getElementById("control_pincel");
-	var botonAuxReunion = document.getElementById("control_reunion");
-	var botonAuxBorrar = document.getElementById("control_borrar");
-	var botonAuxMover = document.getElementById("control_mover");
-	
-	if ( botonAuxPincel.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
-		botonAuxPincel.classList.remove("boton_hover");
-		botonAuxPincel.classList.toggle("boton_no_pulsado");
-		botonAuxPincel.classList.add("boton_pulsado");
-		canvas.classList.remove("cursor_mover");
-		canvas.classList.remove("cursor_borrar");
-		canvas.classList.add("cursor_none");
-		
-		document.getElementById("control_grosor").disabled = false;
-		document.getElementById("control_grosor").value = vectorGrosor;
-		document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + vectorGrosor;
-		$("#control-color").spectrum("enable");
-		$("#control-color").spectrum("set", vectorColor);
-		
-		controlPincel = true;
-		controlReunion = false;
-		controlBorrar = false;
-		controlMover = false;
-		setGrosor(); //Restauramos el grosor del cursor para el grosor del vector
-		if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
-			botonAuxReunion.classList.remove("boton_pulsado");
-			botonAuxReunion.classList.add("boton_hover");
-			botonAuxReunion.classList.toggle("boton_no_pulsado");
-		}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
-			botonAuxBorrar.classList.remove("boton_pulsado");
-			botonAuxBorrar.classList.add("boton_hover");
-			botonAuxBorrar.classList.toggle("boton_no_pulsado");
-		}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
-			botonAuxMover.classList.remove("boton_pulsado");
-			botonAuxMover.classList.add("boton_hover");
-			botonAuxMover.classList.toggle("boton_no_pulsado");
-		}
-	}
-	botonAuxPincel = null;
-	botonAuxReunion = null;
-	botonAuxBorrar = null;
-	botonAuxMover = null;
-}
-
-control_reunion.onclick = function( event ){
-	var botonAuxPincel = document.getElementById("control_pincel");
-	var botonAuxReunion = document.getElementById("control_reunion");
-	var botonAuxBorrar = document.getElementById("control_borrar");
-	var botonAuxMover = document.getElementById("control_mover");
-	
-	if ( botonAuxReunion.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
-		botonAuxReunion.classList.remove("boton_hover");
-		botonAuxReunion.classList.toggle("boton_no_pulsado");
-		botonAuxReunion.classList.add("boton_pulsado");
-		canvas.classList.remove("cursor_mover");
-		canvas.classList.remove("cursor_borrar");
-		canvas.classList.add("cursor_none");
-		
-		document.getElementById("control_grosor").disabled = false;
-		document.getElementById("control_grosor").value = reunionRadio;
-		document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + reunionRadio;
-		$("#control-color").spectrum("enable");
-		$("#control-color").spectrum("set", reunionColor);
-
-		controlPincel = false;
-		controlReunion = true;
-		controlBorrar = false;
-		controlMover = false;
-		setGrosor(); //Restauramos el grosor del cursor para el grosor de la reunión
-		if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
-			botonAuxBorrar.classList.remove("boton_pulsado");
-			botonAuxBorrar.classList.add("boton_hover");
-			botonAuxBorrar.classList.toggle("boton_no_pulsado");
-		}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
-			botonAuxPincel.classList.remove("boton_pulsado");
-			botonAuxPincel.classList.add("boton_hover");
-			botonAuxPincel.classList.toggle("boton_no_pulsado");
-		}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
-			botonAuxMover.classList.remove("boton_pulsado");
-			botonAuxMover.classList.add("boton_hover");
-			botonAuxMover.classList.toggle("boton_no_pulsado");
-		}
-	}
-	botonAuxPincel = null;
-	botonAuxReunion = null;
-	botonAuxBorrar = null;
-	botonAuxMover = null;
-}
-
-control_borrar.onclick = function( event ){
-	var botonAuxPincel = document.getElementById("control_pincel");
-	var botonAuxReunion = document.getElementById("control_reunion");
-	var botonAuxBorrar = document.getElementById("control_borrar");
-	var botonAuxMover = document.getElementById("control_mover");
-	
-	if ( botonAuxBorrar.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
-		botonAuxBorrar.classList.remove("boton_hover");
-		botonAuxBorrar.classList.toggle("boton_no_pulsado");
-		botonAuxBorrar.classList.add("boton_pulsado");
-		canvas.classList.remove("cursor_none");
-		canvas.classList.remove("cursor_mover");
-		canvas.classList.add("cursor_borrar");
-
-		document.getElementById("control_grosor").disabled = true;
-		$("#control-color").spectrum("disable");
-		
-		controlPincel = false;
-		controlReunion = false;
-		controlBorrar = true;
-		controlMover = false;
-		cursorTamanoPincel.visible = false;
-		if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
-			botonAuxReunion.classList.remove("boton_pulsado");
-			botonAuxReunion.classList.add("boton_hover");
-			botonAuxReunion.classList.toggle("boton_no_pulsado");
-		}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
-			botonAuxPincel.classList.remove("boton_pulsado");
-			botonAuxPincel.classList.add("boton_hover");
-			botonAuxPincel.classList.toggle("boton_no_pulsado"); 
-		}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
-			botonAuxMover.classList.remove("boton_pulsado");
-			botonAuxMover.classList.add("boton_hover");
-			botonAuxMover.classList.toggle("boton_no_pulsado");
-		}
-	}
-	botonAuxPincel = null;
-	botonAuxReunion = null;
-	botonAuxBorrar = null;
-	botonAuxMover = null;
-}
-
-control_mover.onclick = function ( event ){
-	var botonAuxPincel = document.getElementById("control_pincel");
-	var botonAuxReunion = document.getElementById("control_reunion");
-	var botonAuxBorrar = document.getElementById("control_borrar");
-	var botonAuxMover = document.getElementById("control_mover");
-	
-	if ( botonAuxMover.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
-		botonAuxMover.classList.remove("boton_hover");
-		botonAuxMover.classList.toggle("boton_no_pulsado");
-		botonAuxMover.classList.add("boton_pulsado");
-		canvas.classList.remove("cursor_none");
-		canvas.classList.remove("cursor_borrar");
-		canvas.classList.add("cursor_mover");
-		
-		document.getElementById("control_grosor").disabled = true;
-		$("#control-color").spectrum("disable");
-		
-		//TODO deshabilitar cursor
-		cursorTamanoPincel.visible = false;
-		controlPincel = false;
-		controlReunion = false;
-		controlBorrar = false;
-		controlMover = true;
-		if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
-			botonAuxReunion.classList.remove("boton_pulsado");
-			botonAuxReunion.classList.add("boton_hover");
-			botonAuxReunion.classList.toggle("boton_no_pulsado");
-		}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
-			botonAuxPincel.classList.remove("boton_pulsado");
-			botonAuxPincel.classList.add("boton_hover");
-			botonAuxPincel.classList.toggle("boton_no_pulsado"); 
-		}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
-			botonAuxBorrar.classList.remove("boton_pulsado");
-			botonAuxBorrar.classList.add("boton_hover");
-			botonAuxBorrar.classList.toggle("boton_no_pulsado");
-		}
-	}
-	botonAuxPincel = null;
-	botonAuxReunion = null;
-	botonAuxBorrar = null;
-	botonAuxMover = null;
-}
-
-control_reset.onclick = function ( event ){
-	//TODO centrar todas las capas o el paper. bORRAR LAS VARIABLES GLOBALES QUE UTILIZO AQUÍ (loadImagen(e)) ***********************************
-	paper.view.zoom = originalZoom;
-	//paper.view.center = paper.view.viewToProject(originalCentro);
-	//paper.view.center = paper.view.projectToView(originalCentro);
-	paper.view.center = originalCentro;
-	tool.zoomFactor = originalMoveFactor;
-	//Fuerzo el update ya que no lo hace automaticamente en este caso
-	//paper.view.update();//Comprobar que sea imprescindible ********************************************
-	/*var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
-	var zoomCenter = point.subtract(paper.view.center); 
-	var moveFactor = tool.zoomFactor - 1.0;
-	paper.view.zoom /= ratioZoomFactor;
-    paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
-	*/
-	
-	document.getElementById("control_zoom").value = 5;
-}
-
-function setReunionAuto(){
-	//Recorro las capas en busca de la capa de lineas
-	for (i=0; i<paper.project.layers.length; i++){
-		if (paper.project.layers[i].name == "capa de lineas"){
-			//Recorro los hijos de la capa de lineas
-			for (j=0; j<paper.project.layers[i].children.length; j++){
-				if (paper.project.layers[i].children[j].name == "vector"){
-					var puntoMasBajo;
-					var puntoX;
-					//Controlar que no sea 0, en teoría no existiria
-					//Controlar que no sea 1, en teoría no existiria
-					//Controlar que no sea n
-					for (z=0; z<paper.project.layers[i].children[j].segments.length - 1; z++){
-						//if (paper.project.layers[i].children[j].segments.length > 1){//Seguro?
-							//for (x=0; x<paper.project.layers[i].children[j].segments.length; x++){ //x=1??
-								if (paper.project.layers[i].children[j].segments[z+1].point.y < paper.project.layers[i].children[j].segments[z].point.y){
-									puntoYmasBajo = paper.project.layers[i].children[j].segments[z+1].point.y;
-								}else{
-									puntoYmasBajo = paper.project.layers[i].children[j].segments[z].point.y;
-								}
-								setReunion([puntoYmasBajo, puntoX]);
-							//}
-						//}
-					}
-				}
-			}
-		}
-	}
-	//paper.project.layers[3].children[n].segments[n].
-	//console.debug(paper.project.layers[3]);
-}
-
-function setReunion(point){
-	//Grupo Reunion
-	circuloReunion = new paper.Path.Circle({
-		center: point,
-		radius: reunionRadio,
-		strokeColor: reunionColor,
-		name: "circulo-reunion"
-		});
-	
-	numeroReunion = new paper.PointText({
-	    position: circuloReunion.position,
-	    content: document.getElementById("funcion-numero-reunion").value,
-	    strokeColor: reunionColor,
-	    fillColor: reunionColor,
-	    fontFamily: 'Arial',
-	    fontWeight: 'normal',
-	    fontSize: 10,
-	    name: "numero-reunion"
-	});
-	
-	numeroReunion.position.x -= numeroReunion.bounds.width/2;
-	numeroReunion.position.y += numeroReunion.bounds.height/4;
-	
-	grupoReunion = new paper.Group({
-		children: [circuloReunion, numeroReunion],
-		name: "reunion",
-		visible: true
-	});
-	
-	var contReunion = document.getElementById("funcion-numero-reunion").value;
-	contReunion++;
-	if (contReunion > 99){
-		document.getElementById("funcion-numero-reunion").value = 1;
-	}else{
-		document.getElementById("funcion-numero-reunion").value = contReunion;
-	}
-}
-
 /*Abre el cuadro de dialogo de cargar imágen*/
 function abrirDialogo(){
 	document.getElementById('control_imagen').click();
@@ -426,7 +162,391 @@ function loadImagen(e){
 		fichero.readAsDataURL(e.target.files[0]); //imágen en formato base64
 	}
 }
+
+function setReunion(point){
+	//Grupo Reunion
+	circuloReunion = new paper.Path.Circle({
+		center: point,
+		radius: reunionRadio/2,
+		strokeColor: reunionColor,
+		name: "circulo-reunion"
+		});
 	
+	teclaPulsada = new paper.PointText({
+	    position: [circuloReunion.position.x, circuloReunion.position.y + (reunionRadio/25)],
+	    content: 'R',
+	    fillColor: reunionColor,
+	    fontFamily: 'Arial',
+	    fontWeight: 'bold',
+	    fontSize: reunionRadio/1.5, //10,
+	    name: "r"
+	});
+	
+	numeroReunion = new paper.PointText({
+	    position: [circuloReunion.position.x, circuloReunion.position.y + (reunionRadio/25)],
+	    content: document.getElementById("control-numero-via").value,
+	    strokeColor: reunionColor,
+	    fillColor: reunionColor,
+	    fontFamily: 'Arial',
+	    fontWeight: 'normal',
+	    fontSize: reunionRadio/1.5, //10,
+	    name: "numero-reunion"
+	});
+	
+	numeroReunion.position.x -= numeroReunion.bounds.width/2;
+	numeroReunion.position.y += numeroReunion.bounds.height/4;
+	
+	grupoReunion = new paper.Group({
+		children: [circuloReunion, numeroReunion],
+		name: "reunion",
+		visible: true
+	});
+	
+	var contReunion = document.getElementById("control-numero-via").value;
+	contReunion++;
+	if (contReunion > 99){
+		document.getElementById("control-numero-via").value = 1;
+	}else{
+		document.getElementById("control-numero-via").value = contReunion;
+	}
+}
+
+function setVia(point){
+	//Grupo Reunion
+	circuloVia = new paper.Path.Circle({
+		center: point,
+		radius: viaRadio/2,
+		strokeColor: viaColor,
+		name: "circulo-via"
+		});
+	
+	numeroVia = new paper.PointText({
+	    position: [circuloVia.position.x, circuloVia.position.y + (viaRadio/25)],
+	    content: document.getElementById("control-numero-via").value,
+	    strokeColor: viaColor,
+	    fillColor: viaColor,
+	    fontFamily: 'Arial',
+	    fontWeight: 'normal',
+	    fontSize: viaRadio/1.5, //10,
+	    name: "numero-via"
+	});
+	
+	numeroVia.position.x -= numeroVia.bounds.width/2;
+	numeroVia.position.y += numeroVia.bounds.height/4;
+	
+	grupoVia = new paper.Group({
+		children: [circuloVia, numeroVia],
+		name: "via",
+		visible: true
+	});
+	
+	var contVia = document.getElementById("control-numero-via").value;
+	contVia++;
+	if (contVia > 99){
+		document.getElementById("control-numero-via").value = 1;
+	}else{
+		document.getElementById("control-numero-via").value = contVia;
+	}
+}
+
+function setColor(){
+	if (controlPincel){
+		//vectorColor = $("#control-color").val(); //document.getElementById("control-color").value;
+		vectorColor = $("#control-color").spectrum('get').toHexString();
+	}else if (controlReunion){
+		reunionColor = $("#control-color").spectrum('get').toHexString(); //document.getElementById("control-color").value;
+	}
+}
+
+function setGrosor(){
+	document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + document.getElementById("control_grosor").value;
+
+	var anteriorRadioSinStroke;
+	var nuevoRadioSinStroke;
+	
+	anteriorRadioSinStroke = cursorTamanoPincel.bounds.width / 2;
+	if (controlPincel) {
+		nuevoRadioSinStroke = (document.getElementById("control_grosor").value - cursorTamanoPincel.strokeWidth) / 2; //Calculamos el nuevo radio sín la línea del círculo)
+		cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaño del círculo
+		vectorGrosor = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//Diámetro actual = Ancho círculo + ancho línea círculo. Así se consigue el diámetro del círculo
+	}else if (controlReunion){
+		nuevoRadioSinStroke = (document.getElementById("control_grosor").value - cursorTamanoPincel.strokeWidth) / 2;
+		cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaño del círculo
+		reunionRadio = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//Diámetro actual = Ancho círculo + ancho línea círculo. Así se consigue el diámetro del círculo
+	}
+}
+
+control_pincel.onclick = function( event ){
+	var botonAuxPincel = document.getElementById("control_pincel");
+	var botonAuxReunion = document.getElementById("control_via");
+	var botonAuxBorrar = document.getElementById("control_borrar");
+	var botonAuxMover = document.getElementById("control_mover");
+	
+	if ( botonAuxPincel.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
+		botonAuxPincel.classList.remove("boton_hover");
+		botonAuxPincel.classList.toggle("boton_no_pulsado");
+		botonAuxPincel.classList.add("boton_pulsado");
+		canvas.classList.remove("cursor_mover");
+		canvas.classList.remove("cursor_borrar");
+		canvas.classList.add("cursor_none");
+		
+		document.getElementById("control_grosor").disabled = false;
+		document.getElementById("control_grosor").value = vectorGrosor;
+		document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + vectorGrosor;
+		$("#control-color").spectrum("enable");
+		$("#control-color").spectrum("set", vectorColor);
+		
+		controlPincel = true;
+		controlReunion = false;
+		controlBorrar = false;
+		controlMover = false;
+		setGrosor(); //Restauramos el grosor del cursor para el grosor del vector
+		if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
+			botonAuxReunion.classList.remove("boton_pulsado");
+			botonAuxReunion.classList.add("boton_hover");
+			botonAuxReunion.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxBorrar.classList.remove("boton_pulsado");
+			botonAuxBorrar.classList.add("boton_hover");
+			botonAuxBorrar.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxMover.classList.remove("boton_pulsado");
+			botonAuxMover.classList.add("boton_hover");
+			botonAuxMover.classList.toggle("boton_no_pulsado");
+		}
+	}
+	botonAuxPincel = null;
+	botonAuxReunion = null;
+	botonAuxBorrar = null;
+	botonAuxMover = null;
+}
+
+control_via.onclick = function( event ){
+	var botonAuxPincel = document.getElementById("control_pincel");
+	var botonAuxReunion = document.getElementById("control_via");
+	var botonAuxBorrar = document.getElementById("control_borrar");
+	var botonAuxMover = document.getElementById("control_mover");
+	
+	if ( botonAuxReunion.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
+		botonAuxReunion.classList.remove("boton_hover");
+		botonAuxReunion.classList.toggle("boton_no_pulsado");
+		botonAuxReunion.classList.add("boton_pulsado");
+		canvas.classList.remove("cursor_mover");
+		canvas.classList.remove("cursor_borrar");
+		canvas.classList.add("cursor_none");
+		
+		document.getElementById("control_grosor").disabled = false;
+		document.getElementById("control_grosor").value = reunionRadio;
+		document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + reunionRadio;
+		$("#control-color").spectrum("enable");
+		$("#control-color").spectrum("set", reunionColor);
+
+		controlPincel = false;
+		controlReunion = true;
+		controlBorrar = false;
+		controlMover = false;
+		setGrosor(); //Restauramos el grosor del cursor para el grosor de la reunión
+		if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxBorrar.classList.remove("boton_pulsado");
+			botonAuxBorrar.classList.add("boton_hover");
+			botonAuxBorrar.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
+			botonAuxPincel.classList.remove("boton_pulsado");
+			botonAuxPincel.classList.add("boton_hover");
+			botonAuxPincel.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxMover.classList.remove("boton_pulsado");
+			botonAuxMover.classList.add("boton_hover");
+			botonAuxMover.classList.toggle("boton_no_pulsado");
+		}
+	}
+	botonAuxPincel = null;
+	botonAuxReunion = null;
+	botonAuxBorrar = null;
+	botonAuxMover = null;
+}
+
+control_reunion.onclick = function( event ){
+	var botonAuxPincel = document.getElementById("control_pincel");
+	var botonAuxReunion = document.getElementById("control_reunion");
+	var botonAuxVia = document.getElementById("control_via");
+	var botonAuxBorrar = document.getElementById("control_borrar");
+	var botonAuxMover = document.getElementById("control_mover");
+	
+	if ( botonAuxReunion.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
+		botonAuxReunion.classList.remove("boton_hover");
+		botonAuxReunion.classList.toggle("boton_no_pulsado");
+		botonAuxReunion.classList.add("boton_pulsado");
+		canvas.classList.remove("cursor_mover");
+		canvas.classList.remove("cursor_borrar");
+		canvas.classList.add("cursor_none");
+		
+		document.getElementById("control_grosor").disabled = false;
+		document.getElementById("control_grosor").value = reunionRadio;
+		document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + reunionRadio;
+		$("#control-color").spectrum("enable");
+		$("#control-color").spectrum("set", reunionColor);
+
+		controlPincel = false;
+		controlReunion = true;
+		controlBorrar = false;
+		controlMover = false;
+		setGrosor(); //Restauramos el grosor del cursor para el grosor de la reunión
+		if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxBorrar.classList.remove("boton_pulsado");
+			botonAuxBorrar.classList.add("boton_hover");
+			botonAuxBorrar.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
+			botonAuxPincel.classList.remove("boton_pulsado");
+			botonAuxPincel.classList.add("boton_hover");
+			botonAuxPincel.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxMover.classList.remove("boton_pulsado");
+			botonAuxMover.classList.add("boton_hover");
+			botonAuxMover.classList.toggle("boton_no_pulsado");
+		}
+	}
+	botonAuxPincel = null;
+	botonAuxReunion = null;
+	botonAuxBorrar = null;
+	botonAuxMover = null;
+}
+
+control_borrar.onclick = function( event ){
+	var botonAuxPincel = document.getElementById("control_pincel");
+	var botonAuxReunion = document.getElementById("control_via");
+	var botonAuxBorrar = document.getElementById("control_borrar");
+	var botonAuxMover = document.getElementById("control_mover");
+	
+	if ( botonAuxBorrar.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
+		botonAuxBorrar.classList.remove("boton_hover");
+		botonAuxBorrar.classList.toggle("boton_no_pulsado");
+		botonAuxBorrar.classList.add("boton_pulsado");
+		canvas.classList.remove("cursor_none");
+		canvas.classList.remove("cursor_mover");
+		canvas.classList.add("cursor_borrar");
+
+		document.getElementById("control_grosor").disabled = true;
+		$("#control-color").spectrum("disable");
+		
+		controlPincel = false;
+		controlReunion = false;
+		controlBorrar = true;
+		controlMover = false;
+		cursorTamanoPincel.visible = false;
+		if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxReunion.classList.remove("boton_pulsado");
+			botonAuxReunion.classList.add("boton_hover");
+			botonAuxReunion.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
+			botonAuxPincel.classList.remove("boton_pulsado");
+			botonAuxPincel.classList.add("boton_hover");
+			botonAuxPincel.classList.toggle("boton_no_pulsado"); 
+		}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxMover.classList.remove("boton_pulsado");
+			botonAuxMover.classList.add("boton_hover");
+			botonAuxMover.classList.toggle("boton_no_pulsado");
+		}
+	}
+	botonAuxPincel = null;
+	botonAuxReunion = null;
+	botonAuxBorrar = null;
+	botonAuxMover = null;
+}
+
+control_mover.onclick = function ( event ){
+	var botonAuxPincel = document.getElementById("control_pincel");
+	var botonAuxReunion = document.getElementById("control_via");
+	var botonAuxBorrar = document.getElementById("control_borrar");
+	var botonAuxMover = document.getElementById("control_mover");
+	
+	if ( botonAuxMover.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
+		botonAuxMover.classList.remove("boton_hover");
+		botonAuxMover.classList.toggle("boton_no_pulsado");
+		botonAuxMover.classList.add("boton_pulsado");
+		canvas.classList.remove("cursor_none");
+		canvas.classList.remove("cursor_borrar");
+		canvas.classList.add("cursor_mover");
+		
+		document.getElementById("control_grosor").disabled = true;
+		$("#control-color").spectrum("disable");
+		
+		//TODO deshabilitar cursor
+		cursorTamanoPincel.visible = false;
+		controlPincel = false;
+		controlReunion = false;
+		controlBorrar = false;
+		controlMover = true;
+		if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxReunion.classList.remove("boton_pulsado");
+			botonAuxReunion.classList.add("boton_hover");
+			botonAuxReunion.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
+			botonAuxPincel.classList.remove("boton_pulsado");
+			botonAuxPincel.classList.add("boton_hover");
+			botonAuxPincel.classList.toggle("boton_no_pulsado"); 
+		}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxBorrar.classList.remove("boton_pulsado");
+			botonAuxBorrar.classList.add("boton_hover");
+			botonAuxBorrar.classList.toggle("boton_no_pulsado");
+		}
+	}
+	botonAuxPincel = null;
+	botonAuxReunion = null;
+	botonAuxBorrar = null;
+	botonAuxMover = null;
+}
+
+control_reset.onclick = function ( event ){
+	//TODO centrar todas las capas o el paper. bORRAR LAS VARIABLES GLOBALES QUE UTILIZO AQUÍ (loadImagen(e)) ***********************************
+	paper.view.zoom = originalZoom;
+	//paper.view.center = paper.view.viewToProject(originalCentro);
+	//paper.view.center = paper.view.projectToView(originalCentro);
+	paper.view.center = originalCentro;
+	tool.zoomFactor = originalMoveFactor;
+	//Fuerzo el update ya que no lo hace automaticamente en este caso
+	//paper.view.update();//Comprobar que sea imprescindible ********************************************
+	/*var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
+	var zoomCenter = point.subtract(paper.view.center); 
+	var moveFactor = tool.zoomFactor - 1.0;
+	paper.view.zoom /= ratioZoomFactor;
+    paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
+	*/
+	
+	document.getElementById("control_zoom").value = 5;
+}
+
+function setViaAuto(){
+	//Recorro las capas en busca de la capa de lineas
+	for (i=0; i<paper.project.layers.length; i++){
+		if (paper.project.layers[i].name == "capa de lineas"){
+			//Recorro los hijos de la capa de lineas
+			for (j=0; j<paper.project.layers[i].children.length; j++){
+				if (paper.project.layers[i].children[j].name == "vector"){
+					var puntoYMasBajo;
+					var puntoXMasBajo;
+					//Si es una linea, usease, la formada por 2 o mas puntos
+					if (paper.project.layers[i].children[j].segments.length > 1){
+						primerSegmento = 0;
+						ultimoSegmento = paper.project.layers[i].children[j].segments.length - 1;
+						if (paper.project.layers[i].children[j].segments[ultimoSegmento].point.y > paper.project.layers[i].children[j].segments[primerSegmento].point.y){
+							puntoYMasBajo = paper.project.layers[i].children[j].segments[ultimoSegmento].point.y;
+							puntoXMasBajo = paper.project.layers[i].children[j].segments[ultimoSegmento].point.x;
+						}else if (paper.project.layers[i].children[j].segments[ultimoSegmento].point.y < paper.project.layers[i].children[j].segments[primerSegmento].point.y){
+							puntoYMasBajo = paper.project.layers[i].children[j].segments[primerSegmento].point.y;
+							puntoXMasBajo = paper.project.layers[i].children[j].segments[primerSegmento].point.x;
+						}
+						var p =  [puntoXMasBajo, puntoYMasBajo]; //Convertimos a coordenadas dentro del proyecto
+						setVia( p );
+					}else{
+						// Si tiene un único punto NO hacer nada
+					}
+				}
+			}
+		}
+	}
+}
+
 control_guardar.onclick = function( event ){
 	/*
 	//var capaActual = paper.project.activeLayer; //capa activa actual
@@ -448,7 +568,7 @@ control_guardar.onclick = function( event ){
 	//var dataString = tempImg.toDataURL(mimeType);
 	var dataString = document.getElementById("canvas_croquis").toDataURL(mimeType, calidad);
 	//tempImg.remove();
-	var bajar = document.getElementById("descargar")
+	var bajar = document.getElementById("descargar");
 	bajar.classList.remove("invisible");
 	bajar.href = dataString;
 	//downloadme.href = canvasImg.src;
@@ -486,32 +606,6 @@ function img_and_link() {
 	      .attr('href', 'data:image/svg+xml;utf8,' +  unescape($('svg')[0].outerHTML))
 	      .text('Download')
 	  );*/
-	}
-
-function setColor(){
-	if (controlPincel){
-		vectorColor = $("#control-color").val(); //document.getElementById("control-color").value;
-	}else if (controlReunion){
-		reunionColor = $("#control-color").val(); //document.getElementById("control-color").value;
-	}
-}
-
-function setGrosor(){
-	document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + document.getElementById("control_grosor").value;
-
-	var anteriorRadioSinStroke;
-	var nuevoRadioSinStroke;
-	
-	anteriorRadioSinStroke = cursorTamanoPincel.bounds.width / 2;
-	if (controlPincel) {
-		nuevoRadioSinStroke = (document.getElementById("control_grosor").value - cursorTamanoPincel.strokeWidth) / 2; //Calculamos el nuevo radio sín la línea del círculo)
-		cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaño del círculo
-		vectorGrosor = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//Diámetro actual = Ancho círculo + ancho línea círculo. Así se consigue el diámetro del círculo
-	}else if (controlReunion){
-		nuevoRadioSinStroke = (document.getElementById("control_grosor").value - cursorTamanoPincel.strokeWidth) / 2;
-		cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaño del círculo
-		reunionRadio = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//Diámetro actual = Ancho círculo + ancho línea círculo. Así se consigue el diámetro del círculo
-	}
 }
 
 /*function moverGrosor(direccion){
@@ -524,189 +618,6 @@ function setGrosor(){
 		setGrosor();
 	}
 }*/
-
-//Al mover el slider del Zoom
-function setZoom(){
-	if (hayImagen){
-		diferenciaZoom = document.getElementById("control_zoom").value - diferenciaZoom; // - document.getElementById("zoom_texto").value;
-		if (diferenciaZoom > 0){ //Si es positivo hago zoom
-			for (i=0 ; i < diferenciaZoom ; i++){
-				setMasZoom(); //setMasZoom(diferenciaZoom);
-			}
-		}else{ //Si es negativo quito zoom
-			diferenciaZoom = Math.abs(diferenciaZoom);
-			//z*=-1; //Lo convierto a positivo
-			for (i=0 ; i < diferenciaZoom ; i++){
-				setMenosZoom(); //setMenosZoom( Math.abs(diferenciaZoom) );//Lo convierto a positivo
-			}
-		}
-		//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
-		document.getElementById("zoom_factor_texto").value = diferenciaZoom;
-		
-		diferenciaZoom = document.getElementById("control_zoom").value;//Esta siiiiiii
-		
-		document.getElementById("zoom_texto").value = diferenciaZoom;
-	}else{
-		document.getElementById("control_zoom").value = 5;
-	}
-}
-
-//Al pulsar - o + del Zoom
-/*function moverZoom(direccion){ 
-	document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
-	document.getElementById("zoom_factor_texto").value = ratioZoomFactor;
-	
-	var controlZoom = document.getElementById("control_zoom");
-	if (direccion == "arriba"){
-		if (controlZoom.value < upperZoomLimit){
-			setMasZoom();
-		}
-	}else if (direccion == "abajo"){
-		if (controlZoom.value > lowerZoomLimit){
-			setMenosZoom();
-		}
-	}
-	//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
-	diferenciaZoom = document.getElementById("control_zoom").value;
-}*/
-
-/**
- * Si el canvas contiene algo dibujado o una imágen que haga Scroll
- */
-function comprobarContenidoCanvas(){
-	var resul = false;
-	//Recorre todas las capas
-	for (i=0; i<project.layers.length;i++){
-		//Si contiene hijos: líneas, puntos, imágenes
-		if (project.layers[i].name != "capa del cursor" && project.layers[i].name != "capa generica"){
-			if (project.layers[i].hasChildren()){
-				resul = true;
-				break;
-			}
-		}
-	}
-	return resul;
-}
-
-function setMasZoom(){
-   	//var children = project.activeLayer.children;
-   	//Scroll up
-
-	if (comprobarContenidoCanvas && document.getElementById("control_zoom").value <= upperZoomLimit) { //paper.view.zoom < upperZoomLimit 
-
-        //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
-           
-		//var point = $('#canvas_croquis').offset(); //var
-	    //var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
-		//var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
-		point = paper.view.viewToProject(imagenRaster.view.center); //point //Convertimos a coordenadas dentro del proyecto
-        var zoomCenter = point.subtract(paper.view.center);
-        var moveFactor = tool.zoomFactor - 1.0;
-        paper.view.zoom *= tool.zoomFactor;
-        paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
-        tool.mode = '';
-
-        //document.getElementById("control_zoom").slider('setValue', 9);
-        //document.getElementById("control_zoom").value ++; //Cambiamos el slider del zoom
-    }
-}
-
-function setMenosZoom(){
-	//scroll down
-	if (document.getElementById("control_zoom").value >= lowerZoomLimit){ //paper.view.zoom > lowerZoomLimit
-        //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
-
-		//var point = $('#canvas_croquis').offset();
-		
-		//var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
-		//var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
-		var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
-        var zoomCenter = point.subtract(paper.view.center);   
-        var moveFactor = tool.zoomFactor - 1.0;
-        paper.view.zoom /= tool.zoomFactor;
-        paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor))
-        
-        //document.getElementById("control_zoom").setValue(9);
-        //document.getElementById("control_zoom").value --; //Cambiamos el slider del zoom
-    }
-}
-
-$("#canvas_croquis").mousewheel(function(event, delta) {
-	if (hayImagen){
-		var delta = 0;
-	    //var children = project.activeLayer.children;
-		//var zTexto = document.getElementById("zoom_texto");
-	    
-		var zControl = document.getElementById("control_zoom");
-	        
-	    event.preventDefault();
-	    event = event || window.event;
-	    if (event.type == 'mousewheel') {       //this is for chrome/IE
-	        delta = event.originalEvent.wheelDelta;
-	    }
-	    else if (event.type == 'DOMMouseScroll') {  //this is for FireFox
-	        delta = event.originalEvent.detail*-1;  //FireFox reverses the scroll so we force to to re-reverse...
-	    }
-	
-	    //var v = comprobarContenidoCanvas();
-	    if (comprobarContenidoCanvas()){ // Comprobamos que exista algo dentro del canvas
-	        if((delta > 0) && (document.getElementById("control_zoom").value < upperZoomLimit)) { //scroll up. paper.view.zoom
-	            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
-				//point = $('#canvas_croquis').offset(); //var
-			    
-				//Mas
-				//Zoom(1);
-				var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
-				var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
-				var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
-	            var zoomCenter = point.subtract(paper.view.center);
-	            var moveFactor = tool.zoomFactor - 1.0;
-	            paper.view.zoom *= tool.zoomFactor;
-	            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
-	            tool.mode = '';
-	            
-	            /*porcentajeZoom = ((ratioZoomFactor + tool.zoomFactor) * porcentajeZoom) / ratioZoomFactor;
-	            document.getElementById("zoom_texto").value = porcentajeZoom;*/
-	            //porcentajeZoom = Math.abs(1 - ratioZoomFactor);
-	            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
-	            //document.getElementById("zoom_texto").value = porcentajeZoom;
-	            
-	            document.getElementById("control_zoom").value++;
-	            etiquetaZoom.innerHTML = "Zoom: " + document.getElementById("control_zoom").value;
-	            //zTexto.value = parseInt(zTexto.value) + 1;
-	            //zControl.value = parseInt(zControl.value) + 1;
-	            document.getElementById("zoom_texto").value = paper.view.zoom;
-	        }
-	        else if((delta < 0) && (document.getElementById("control_zoom").value > lowerZoomLimit)){ // (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de m�s por lo que lo evito poni�ndolo en las condici�n
-				//TODO cuando llegue al nivel m�ximo de zoom se quede en el medio del canvas 
-				
-	        	//var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
-				//var point = $('#canvas_croquis').offset();
-				
-				//Menos
-				//Zoom(2);
-				var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
-				var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
-				var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
-	            var zoomCenter = point.subtract(paper.view.center);   
-	            var moveFactor = tool.zoomFactor - 1.0;
-	            paper.view.zoom /= tool.zoomFactor;
-	            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
-	            
-	            //redimensionarImagen();
-	            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
-	            //document.getElementById("zoom_texto").value = porcentajeZoom;
-	            
-	            
-	            document.getElementById("control_zoom").value--;
-	            etiquetaZoom.innerHTML = "Zoom: " + document.getElementById("control_zoom").value;
-	            //zTexto.value = parseInt(zTexto.value) - 1; //Cambiamos el texto del zoom
-	            //zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
-	            document.getElementById("zoom_texto").value = paper.view.zoom;
-	        }
-	    }
-	}
-});
 
 /*function Zoom(tipo){
 	var MAX_WIDTH = $('#canvas_croquis').width();//$('#entorno').width(); //Anchura del div
@@ -777,7 +688,6 @@ $("#canvas_croquis").mousewheel(function(event, delta) {
       y: event.clientY - rect.top
     };
 }*/
-
 
 
 

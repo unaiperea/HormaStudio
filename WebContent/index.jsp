@@ -34,7 +34,7 @@
 		<!-- TODO crear style.css -->
 		<style>
 			body{background-color: purple;}
-	  		#control_pincel, #control_reunion, #control_borrar{ cursor: pointer;} /*QuÃ© pasa aquÃ­iii? ***********************/
+	  		#control_pincel, #control_via, #control_reunion, #control_borrar{ cursor: pointer;} /*QuÃ© pasa aquÃ­iii? ***********************/
 	  		header{background-color: lime;}
 	  		#cabecera{background-color: yellow;}
 	  		.container{background-color: grey;}
@@ -90,10 +90,26 @@
 					<div class="clearfix">
 						<div id="controles-dibujo" class="pull-right">
 							<ul class="iconos-dibujo">
-								<li><span id="control_pincel" class="glyphicon glyphicon-pencil boton_pulsado"></span></li>
+								<li class="row">
+									<span id="control_pincel" class="glyphicon glyphicon-pencil boton_pulsado"></span>
+								</li>
 								<!-- <li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li> -->
-								<li><span id="control_reunion" class="fa fa-dot-circle-o boton_hover boton_no_pulsado lista-margen-arriba"></span></li>
-								<li><span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado lista-margen-arriba"></span></li>
+								<li class="row">
+									<select id="control-numero-reunion"></select>
+									<span id="control_reunion" class="fa fa-registered boton_hover boton_no_pulsado pull-right lista-margen-arriba"></span>
+								</li>
+								<li class="row flotar_dcha">
+									<select id="control-numero-via"></select>
+									<span id="control_via" class="fa fa-chevron-down boton_hover boton_no_pulsado pull-right lista-margen-arriba"></span>
+								</li>
+								<li class="row">
+									<span id="funcion-via-auto"
+										  class="fa fa-sort-numeric-desc boton_hover boton_no_pulsado lista-margen-arriba"
+										  onclick="setViaAuto();")></span>
+								</li>
+								<li class="row">
+									<span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado lista-margen-arriba"></span>
+								</li>
 								<!-- <li><span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x lista-margen-arriba"></span></li> -->
 								<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
 							</ul>
@@ -155,7 +171,7 @@
 							<nav id="colorNav">
 								<ul>
 									<li class="green text-center">
-										<span class="fa fa-cogs"></span>
+										<span class="fa fa-cogs fa-lg"></span>
 										<ul>
 											<li>
 												<span class="fa fa-folder-open-o pull-left icono-menu"></span>
@@ -220,9 +236,6 @@
 					<input type="file" id="control_imagen" accept="image/jpeg" hidden> <!-- onchange="abrirImagen();"> -->
 				</div>
 				
-				
-				
-				
 			</section>
 				<!-- Colocar bien y mirar los estilos -->
 				<article id="controles" class="row">
@@ -249,7 +262,96 @@
 		
 		</div>
 				
-		
+				
+				<script type='text/javascript'>
+					/**
+					 * Si el canvas contiene algo dibujado o una imágen que haga Scroll
+					 */
+					function comprobarContenidoCanvas(){
+						var resul = false;
+						//Recorre todas las capas
+						for (i=0; i<project.layers.length;i++){
+							//Si contiene hijos: líneas, puntos, imágenes
+							if (project.layers[i].name != "capa del cursor" && project.layers[i].name != "capa generica"){
+								if (project.layers[i].hasChildren()){
+									resul = true;
+									break;
+								}
+							}
+						}
+						return resul;
+					}
+					
+					//Al mover el slider del Zoom
+					function setZoom(){
+						if (hayImagen){
+							diferenciaZoom = document.getElementById("control_zoom").value - diferenciaZoom; // - document.getElementById("zoom_texto").value;
+							if (diferenciaZoom > 0){ //Si es positivo hago zoom
+								for (i=0 ; i < diferenciaZoom ; i++){
+									setMasZoom(); //setMasZoom(diferenciaZoom);
+								}
+							}else{ //Si es negativo quito zoom
+								diferenciaZoom = Math.abs(diferenciaZoom);
+								//z*=-1; //Lo convierto a positivo
+								for (i=0 ; i < diferenciaZoom ; i++){
+									setMenosZoom(); //setMenosZoom( Math.abs(diferenciaZoom) );//Lo convierto a positivo
+								}
+							}
+							//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+							document.getElementById("zoom_factor_texto").value = diferenciaZoom;
+							
+							diferenciaZoom = document.getElementById("control_zoom").value;//Esta siiiiiii
+							
+							document.getElementById("zoom_texto").value = diferenciaZoom;
+						}else{
+							document.getElementById("control_zoom").value = 5;
+						}
+					}
+					
+					function setMasZoom(){
+					   	//var children = project.activeLayer.children;
+					   	//Scroll up
+	
+						if (comprobarContenidoCanvas && document.getElementById("control_zoom").value <= upperZoomLimit) { //paper.view.zoom < upperZoomLimit 
+	
+					        //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+					           
+							//var point = $('#canvas_croquis').offset(); //var
+						    //var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
+							//var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
+							point = paper.view.viewToProject(imagenRaster.view.center); //point //Convertimos a coordenadas dentro del proyecto
+					        var zoomCenter = point.subtract(paper.view.center);
+					        var moveFactor = tool.zoomFactor - 1.0;
+					        paper.view.zoom *= tool.zoomFactor;
+					        paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
+					        tool.mode = '';
+	
+					        //document.getElementById("control_zoom").slider('setValue', 9);
+					        //document.getElementById("control_zoom").value ++; //Cambiamos el slider del zoom
+					    }
+					}
+	
+					function setMenosZoom(){
+						//scroll down
+						if (document.getElementById("control_zoom").value >= lowerZoomLimit){ //paper.view.zoom > lowerZoomLimit
+					        //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+	
+							//var point = $('#canvas_croquis').offset();
+							
+							//var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
+							//var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
+							var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
+					        var zoomCenter = point.subtract(paper.view.center);   
+					        var moveFactor = tool.zoomFactor - 1.0;
+					        paper.view.zoom /= tool.zoomFactor;
+					        paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor))
+					        
+					        //document.getElementById("control_zoom").setValue(9);
+					        //document.getElementById("control_zoom").value --; //Cambiamos el slider del zoom
+					    }
+					}
+				</script>
+
 		<!--  jQuery -->
 		<script src="js/jquery-2.1.4.min.js"></script>
 		

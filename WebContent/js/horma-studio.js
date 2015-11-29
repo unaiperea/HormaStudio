@@ -18,11 +18,14 @@
 	//controles de ....
 	var controlPincel;
 	var controlReunion;
+	var controlVia;
 	var controlBorrar;
 	var controlMover;
 	
 	var reunionColor;
 	var reunionRadio;
+	var viaRadio;
+	var viaColor;
 	var vectorColor;
 	var vectorGrosor;
 	
@@ -52,7 +55,7 @@
 	//Only executed our code once the DOM is ready.
 	window.onload = function() {
 
-		/* ININICIALIZARLOS EN UN METODO CADA UNO ???? ****************/
+		/* INICIALIZARLOS EN UN METODO CADA UNO ???? ****************/
 		
 		/**
 		 * GROSOR: input type=range
@@ -162,6 +165,7 @@
 		/**
 		* Funciones propias del canvas utilizando la librería paper.js
 		*/
+		
 		function inicializarEntorno(){
 			//document.body.style.cursor = 'none'; //el cursor desaparece
 			console.warn('inicializarEntorno: No hacemos nada');
@@ -225,6 +229,10 @@
 			reunionRadio        = 8;
 			reunionColor        = '#ff0000';
 			document.getElementById("control-color").value = reunionColor;
+			
+			viaRadio        	= 8;
+			viaColor        	= '#ff0000';
+			document.getElementById("control-color").value = viaColor;
 			
 			cursorColor         = 'black';					/*** CURSOR ***/
 			hitTestTolerancia   = 2;
@@ -293,14 +301,20 @@
 			document.getElementById("control_grosor").value = vectorGrosor;
 			document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + vectorGrosor;
 			
-			//Rellenamos la Select de las reuniones
+			//Rellenamos la Select de las reuniones y vias
 			var opcion;
 			for (i=1; i < 100; i++){
 				opcion = document.createElement("option");
 			    opcion.text = i;
-			    document.getElementById("funcion-numero-reunion").add(opcion);
+			    document.getElementById("control-numero-via").add(opcion);
 			}
-			document.getElementById("funcion-numero-reunion").selectedIndex = 0;
+			for (i=1; i < 100; i++){
+				opcion = document.createElement("option");
+			    opcion.text = i;
+			    document.getElementById("control-numero-reunion").add(opcion);
+			}
+			document.getElementById("control-numero-reunion").selectedIndex = 0;
+			document.getElementById("control-numero-via").selectedIndex = 0;
 			//Zoom
 			//document.getElementById("control_zoom").value = lowerZoomLimit;
 			//document.getElementById("zoom_texto").value = lowerZoomLimit;
@@ -472,17 +486,16 @@
 					if (project.activeLayer != capaVectorial){
 						capaVectorial.activate();
 					}
-					
-					//TODO 
-
 					setReunion(event.point);
-					
-					/*circuloReunion = new paper.Path.Circle({
-						center: event.point,
-						radius: reunionRadio,
-						fillColor: reunionColor,
-						name: "reunion"
-						});*/
+				}
+			}else if (controlVia && hayImagen){ //Si se ha pulsado el boton de Via que cree una nueva Via al clickar sobre el canvas
+				console.info("controlVia = true");
+				//Si donde hace click esta dentro de los limites de la imagen
+				if (imagenRaster.bounds.contains(event.point)){
+					if (project.activeLayer != capaVectorial){
+						capaVectorial.activate();
+					}
+					setVia(event.point);
 				}
 			}else if (controlPincel && hayImagen){ //si no se ha pulsado ningun item o se ha clickado sobre el raster/imagen que cree un nuevo path y en onMouseDrag se dibuja
 				 //|| hitNombreItem == "cursor"					/*** CURSOR ***/
@@ -542,7 +555,7 @@
 		*/
 	 	//Solo cuando pasamos por encima de un vector se selecciona (la imagen no)
 		tool.onMouseMove = function(event){
-			console.info("Ha entrado en onMouseMove");
+			console.debug("Ha entrado en onMouseMove");
 			//paper.tool.mouseStartPos = new Point(event.point); //Para el zoom
 			//Obtengo la posici�n del cursor para hacer Zoom
 			//posicionRaton = getPosicionRaton(canvas, event);
@@ -652,9 +665,111 @@
 			cursorTamanoPincel.position.x = punto.x;//event.point.x;
 			cursorTamanoPincel.position.y = punto.y;//event.point.y;
 			if (project.activeLayer != capaVectorial){capaVectorial.activate();}
-			console.info("cursor: " & cursorTamanoPincel.position.x & ", " & cursorTamanoPincel.position.y);
+			console.debug("cursor: " & cursorTamanoPincel.position.x & ", " & cursorTamanoPincel.position.y);
 		}
+
 		
+		
+		
+		
+		//Al pulsar - o + del Zoom
+		/*function moverZoom(direccion){ 
+			document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+			document.getElementById("zoom_factor_texto").value = ratioZoomFactor;
+			
+			var controlZoom = document.getElementById("control_zoom");
+			if (direccion == "arriba"){
+				if (controlZoom.value < upperZoomLimit){
+					setMasZoom();
+				}
+			}else if (direccion == "abajo"){
+				if (controlZoom.value > lowerZoomLimit){
+					setMenosZoom();
+				}
+			}
+			//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+			diferenciaZoom = document.getElementById("control_zoom").value;
+		}*/
+		
+		/**
+		 * Zoom
+		 */
+		$("#canvas_croquis").mousewheel(function(event, delta) {
+			if (hayImagen){
+				var delta = 0;
+			    //var children = project.activeLayer.children;
+				//var zTexto = document.getElementById("zoom_texto");
+			    
+				var zControl = document.getElementById("control_zoom");
+			        
+			    event.preventDefault();
+			    event = event || window.event;
+			    if (event.type == 'mousewheel') {       //this is for chrome/IE
+			        delta = event.originalEvent.wheelDelta;
+			    }
+			    else if (event.type == 'DOMMouseScroll') {  //this is for FireFox
+			        delta = event.originalEvent.detail*-1;  //FireFox reverses the scroll so we force to to re-reverse...
+			    }
+			
+			    //var v = comprobarContenidoCanvas();
+			    if (comprobarContenidoCanvas()){ // Comprobamos que exista algo dentro del canvas
+			        if((delta > 0) && (document.getElementById("control_zoom").value < upperZoomLimit)) { //scroll up. paper.view.zoom
+			            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+						//point = $('#canvas_croquis').offset(); //var
+					    
+						//Mas
+						//Zoom(1);
+						var x = event.clientX - posicionRaton.left; //De la posicion del raton dentro de la pantalla calculamos la posicion X dentro del canvas
+						var y =  event.clientY - posicionRaton.top; //De la posicion del raton dentro de la pantalla calculamos la posicion Y dentro del canvas
+						var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
+			            var zoomCenter = point.subtract(paper.view.center);
+			            var moveFactor = tool.zoomFactor - 1.0;
+			            paper.view.zoom *= tool.zoomFactor;
+			            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
+			            tool.mode = '';
+			            
+			            /*porcentajeZoom = ((ratioZoomFactor + tool.zoomFactor) * porcentajeZoom) / ratioZoomFactor;
+			            document.getElementById("zoom_texto").value = porcentajeZoom;*/
+			            //porcentajeZoom = Math.abs(1 - ratioZoomFactor);
+			            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
+			            //document.getElementById("zoom_texto").value = porcentajeZoom;
+			            
+			            document.getElementById("control_zoom").value++;
+			            etiquetaZoom.innerHTML = "Zoom: " + document.getElementById("control_zoom").value;
+			            //zTexto.value = parseInt(zTexto.value) + 1;
+			            //zControl.value = parseInt(zControl.value) + 1;
+			            document.getElementById("zoom_texto").value = paper.view.zoom;
+			        }
+			        else if((delta < 0) && (document.getElementById("control_zoom").value > lowerZoomLimit)){ // (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de m�s por lo que lo evito poni�ndolo en las condici�n
+						//TODO cuando llegue al nivel m�ximo de zoom se quede en el medio del canvas 
+						
+			        	//var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+						//var point = $('#canvas_croquis').offset();
+						
+						//Menos
+						//Zoom(2);
+						var x = event.clientX - posicionRaton.left; //De la posicion del raton dentro de la pantalla calculamos la posicion X dentro del canvas
+						var y =  event.clientY - posicionRaton.top; //De la posicion del raton dentro de la pantalla calculamos la posicion Y dentro del canvas
+						var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
+			            var zoomCenter = point.subtract(paper.view.center);   
+			            var moveFactor = tool.zoomFactor - 1.0;
+			            paper.view.zoom /= tool.zoomFactor;
+			            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
+			            
+			            //redimensionarImagen();
+			            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
+			            //document.getElementById("zoom_texto").value = porcentajeZoom;
+			            
+			            
+			            document.getElementById("control_zoom").value--;
+			            etiquetaZoom.innerHTML = "Zoom: " + document.getElementById("control_zoom").value;
+			            //zTexto.value = parseInt(zTexto.value) - 1; //Cambiamos el texto del zoom
+			            //zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
+			            document.getElementById("zoom_texto").value = paper.view.zoom;
+			        }
+			    }
+			}
+		});
 		
 	} // End window.onload()
 		
