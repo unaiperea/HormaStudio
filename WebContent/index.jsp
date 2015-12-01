@@ -33,11 +33,11 @@
 		
 		<!-- TODO crear style.css -->
 		<style>
-			body{background-color: purple;}
+			body{background-color: #424242;}
 	  		#control_pincel, #control_via, #control_reunion, #control_borrar{ cursor: pointer;} /*QuÃ© pasa aquÃ­iii? ***********************/
 	  		header{background-color: lime;}
-	  		#cabecera{background-color: yellow;}
-	  		.container{background-color: grey;}
+	  		#cabecera{background-color: #424242;}
+	  		/*.container{background-color: grey;}*/
 	  		.menu{background-color: brown;}
 	  		/*#barra-menus{background-color: olive;}*/
 	  		#controles{background-color: orange;}
@@ -57,17 +57,17 @@
 				<span id="titulo" class="">
 					<h1>Horma Studio</h1>
 				</span>
-				<span id="subtitulo" class="">
+				<!-- <span id="subtitulo" class="">
 					<h4>Climbing Tools</h4>
-				</span>
+				</span> -->
 			</div>
 		</header>
 		
-		<nav class="menu-wrapper">
+		<!-- <nav class="menu-wrapper">
 			<div class="menu">
 				<h2>menu</h2>
 			</div>
-		</nav>
+		</nav> -->
 		
 		<div class="container-fluid">
 			
@@ -75,40 +75,33 @@
 			
 				<!-- PANEL DE CONTROLES -->
 				<aside id="herramientas-izda" class="col-xs-2 color-fondo-gris">
-					<!-- SUBIR FICHEROS -->
-					<!-- Formulario -->
-					<!-- @see: http://www.tutorialspoint.com/servlets/servlets-file-uploading.htm -->
-					<form action="/HormaStudio/imagen" enctype="multipart/form-data" method="post" role="form">
-						<div id="control-archivo">
-							<ul>
-								<li><span id="control_guardar" class="btn btn-default">Guardar imágen</span></li>
-								<li><a id="descargar" href="#" target="_blank" class="invisible">Descargar imágen</a></li>
-							</ul>
-						</div>
-					</form>
 					<!-- Controles dibujo -->
-					<div class="clearfix">
+					<div id="panelDibujo" class="clearfix">
 						<div id="controles-dibujo" class="pull-right">
 							<ul class="iconos-dibujo">
-								<li class="row">
-									<span id="control_pincel" class="glyphicon glyphicon-pencil boton_pulsado"></span>
+								<li class="" style="width: 100%; float: left;">
+									<span id="control_pincel" class="glyphicon glyphicon-pencil boton_pulsado pull-right"></span>
 								</li>
 								<!-- <li><span id="control_pincel" class="fa fa-paint-brush boton_pulsado fa-2x"></span></li> -->
-								<li class="row">
-									<select id="control-numero-reunion"></select>
-									<span id="control_reunion" class="fa fa-registered boton_hover boton_no_pulsado pull-right lista-margen-arriba"></span>
+								<li class="" style="width: 100%; float: left;">
+									<div class="pull-right">
+										<select id="control-numero-reunion"></select>
+										<span id="control_reunion" class="fa fa-registered boton_hover boton_no_pulsado lista-margen-arriba"></span>
+									</div>
 								</li>
-								<li class="row flotar_dcha">
-									<select id="control-numero-via"></select>
-									<span id="control_via" class="fa fa-chevron-down boton_hover boton_no_pulsado pull-right lista-margen-arriba"></span>
+								<li class="" style="width: 100%; float: left;">
+									<div class="pull-right">
+										<select id="control-numero-via"></select>
+										<span id="control_via" class="fa fa-chevron-down boton_hover boton_no_pulsado lista-margen-arriba"></span>
+									</div>
 								</li>
-								<li class="row">
+								<li class="" style="width: 100%; float: left;">
 									<span id="funcion-via-auto"
-										  class="fa fa-sort-numeric-desc boton_hover boton_no_pulsado lista-margen-arriba"
+										  class="fa fa-sort-numeric-desc boton_hover boton_no_pulsado pull-right lista-margen-arriba"
 										  onclick="setViaAuto();")></span>
 								</li>
-								<li class="row">
-									<span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado lista-margen-arriba"></span>
+								<li class="" style="width: 100%; float: left;">
+									<span id="control_borrar" class="fa fa-eraser boton_hover boton_no_pulsado pull-right lista-margen-arriba"></span>
 								</li>
 								<!-- <li><span id="control_mover" class="fa fa-arrows boton_hover boton_no_pulsado fa-2x lista-margen-arriba"></span></li> -->
 								<!-- <li><span class="icon-image" style="font-size: 30px"></span></li> -->
@@ -119,7 +112,9 @@
 					<div class="clearfix">
 						<div id="propiedades-dibujo" class="pull-right">
 							<ul class="iconos-propiedades">
-								<li><input type="color" id="control-color" name="control-color" class="pull-right" name="control_color" onchange="setColor();"></li>
+								<li>
+									<input type="color" id="control-color" name="control-color" class="pull-right" name="control_color" onchange="setColor();">
+								</li>
 								<!-- 
 								<li><input type="range" id="control_grosor" name="control_grosor" class="range vertical-lowest-first round zoom-range" min="2" max="50" onchange="setGrosor();" style="margin-top: 1px"></li>
 								-->
@@ -137,7 +132,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="clearfix">
+					<!-- <div class="clearfix">
 						<div id="funciones-dibujo" class="pull-right">
 							<ul class="iconos-funciones">
 								<li></li>
@@ -152,7 +147,7 @@
 								</li>
 							</ul>
 						</div>
-					</div>
+					</div> -->
 				</aside>
 				
 				<!-- 
@@ -173,20 +168,26 @@
 									<li class="green text-center">
 										<span class="fa fa-cogs fa-lg"></span>
 										<ul>
-											<li>
+											<li onclick="abrirDialogo();">
 												<span class="fa fa-folder-open-o pull-left icono-menu"></span>
 												<div class="text-center">
-													<span onclick="abrirDialogo();">Cargar imagen</span>
+													<span>Cargar imagen</span>
 												</div>
 											</li>
-											<li>
-												<span class="fa fa-download pull-left icono-menu"></span>
-												<div class="text-center">
-													<span>Descargar imagen</span>
-												</div>
+											<li onclick="descargarImagen();">
+												<!-- SUBIR FICHEROS -->
+												<!-- Formulario -->
+												<!-- @see: http://www.tutorialspoint.com/servlets/servlets-file-uploading.htm -->
+												<form action="/HormaStudio/imagen" enctype="multipart/form-data" method="post" role="form">
+													<span class="fa fa-download pull-left icono-menu"></span>
+													<div class="text-center">
+														<span>Descargar imagen</span>
+													</div>
+												</form>
 											</li>
 										</ul>
 									</li>
+									<a id="descargar" href="#" target="_blank" class="invisible">Descargar imágen</a>
 								</ul>
 							</nav>
 							<div class="text-center">
@@ -237,21 +238,22 @@
 				</div>
 				
 			</section>
-				<!-- Colocar bien y mirar los estilos -->
-				<article id="controles" class="row">
-					<div id="zoom" class="col-xs-12">
-						<p>Zoom:
-							<input type="text" id="zoom_texto" size="2" readonly/>
-						</p>
-						<p>ratioZoomFactor:
-							<input type="text" id="zoom_factor_texto" size="20" readonly/>
-						</p>
-					
-						<!-- <i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px"> -->
-						<!-- <input type="range" id="control_zoom" name="control_zoom"  onchange="setZoom();"/> --> 
-						<!-- <i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px"> -->
-					</div>
-				</article>
+			
+			<!-- Colocar bien y mirar los estilos -->
+			<!-- <article id="controles" class="row">
+				<div id="zoom" class="col-xs-12">
+					<p>Zoom:
+						<input type="text" id="zoom_texto" size="2" readonly/>
+					</p>
+					<p>ratioZoomFactor:
+						<input type="text" id="zoom_factor_texto" size="20" readonly/>
+					</p>
+				 -->
+					<!-- <i class="col-xs-1 fa fa-minus-square-o" style="font-size: 15px"> -->
+					<!-- <input type="range" id="control_zoom" name="control_zoom"  onchange="setZoom();"/> --> 
+					<!-- <i class="col-xs-1 fa fa-plus-square-o" style="font-size: 15px"> -->
+				<!-- </div>
+			</article>
 			
 			
 			<footer>
@@ -259,99 +261,9 @@
 					<h3>pie de pagina</h3>
 				</div>
 			</footer>
-		
+			 -->
 		</div>
 				
-				
-				<script type='text/javascript'>
-					/**
-					 * Si el canvas contiene algo dibujado o una imágen que haga Scroll
-					 */
-					function comprobarContenidoCanvas(){
-						var resul = false;
-						//Recorre todas las capas
-						for (i=0; i<project.layers.length;i++){
-							//Si contiene hijos: líneas, puntos, imágenes
-							if (project.layers[i].name != "capa del cursor" && project.layers[i].name != "capa generica"){
-								if (project.layers[i].hasChildren()){
-									resul = true;
-									break;
-								}
-							}
-						}
-						return resul;
-					}
-					
-					//Al mover el slider del Zoom
-					function setZoom(){
-						if (hayImagen){
-							diferenciaZoom = document.getElementById("control_zoom").value - diferenciaZoom; // - document.getElementById("zoom_texto").value;
-							if (diferenciaZoom > 0){ //Si es positivo hago zoom
-								for (i=0 ; i < diferenciaZoom ; i++){
-									setMasZoom(); //setMasZoom(diferenciaZoom);
-								}
-							}else{ //Si es negativo quito zoom
-								diferenciaZoom = Math.abs(diferenciaZoom);
-								//z*=-1; //Lo convierto a positivo
-								for (i=0 ; i < diferenciaZoom ; i++){
-									setMenosZoom(); //setMenosZoom( Math.abs(diferenciaZoom) );//Lo convierto a positivo
-								}
-							}
-							//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
-							document.getElementById("zoom_factor_texto").value = diferenciaZoom;
-							
-							diferenciaZoom = document.getElementById("control_zoom").value;//Esta siiiiiii
-							
-							document.getElementById("zoom_texto").value = diferenciaZoom;
-						}else{
-							document.getElementById("control_zoom").value = 5;
-						}
-					}
-					
-					function setMasZoom(){
-					   	//var children = project.activeLayer.children;
-					   	//Scroll up
-	
-						if (comprobarContenidoCanvas && document.getElementById("control_zoom").value <= upperZoomLimit) { //paper.view.zoom < upperZoomLimit 
-	
-					        //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
-					           
-							//var point = $('#canvas_croquis').offset(); //var
-						    //var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
-							//var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
-							point = paper.view.viewToProject(imagenRaster.view.center); //point //Convertimos a coordenadas dentro del proyecto
-					        var zoomCenter = point.subtract(paper.view.center);
-					        var moveFactor = tool.zoomFactor - 1.0;
-					        paper.view.zoom *= tool.zoomFactor;
-					        paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
-					        tool.mode = '';
-	
-					        //document.getElementById("control_zoom").slider('setValue', 9);
-					        //document.getElementById("control_zoom").value ++; //Cambiamos el slider del zoom
-					    }
-					}
-	
-					function setMenosZoom(){
-						//scroll down
-						if (document.getElementById("control_zoom").value >= lowerZoomLimit){ //paper.view.zoom > lowerZoomLimit
-					        //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
-	
-							//var point = $('#canvas_croquis').offset();
-							
-							//var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
-							//var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
-							var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
-					        var zoomCenter = point.subtract(paper.view.center);   
-					        var moveFactor = tool.zoomFactor - 1.0;
-					        paper.view.zoom /= tool.zoomFactor;
-					        paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor))
-					        
-					        //document.getElementById("control_zoom").setValue(9);
-					        //document.getElementById("control_zoom").value --; //Cambiamos el slider del zoom
-					    }
-					}
-				</script>
-
 		<!--  jQuery -->
 		<script src="js/jquery-2.1.4.min.js"></script>
 		

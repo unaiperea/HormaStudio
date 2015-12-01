@@ -226,13 +226,13 @@
 			vectorRedondezPunta = 'round';
 			nodoTamano          = vectorGrosor*2;
 			
-			reunionRadio        = 8;
-			reunionColor        = '#ff0000';
-			document.getElementById("control-color").value = reunionColor;
+			reunionRadio        = 18;
+			reunionColor        = '#800080';
+			//document.getElementById("control-color").value = reunionColor;
 			
-			viaRadio        	= 8;
+			viaRadio        	= 18;
 			viaColor        	= '#ff0000';
-			document.getElementById("control-color").value = viaColor;
+			//document.getElementById("control-color").value = viaColor;
 			
 			cursorColor         = 'black';					/*** CURSOR ***/
 			hitTestTolerancia   = 2;
@@ -308,7 +308,7 @@
 			    opcion.text = i;
 			    document.getElementById("control-numero-via").add(opcion);
 			}
-			for (i=1; i < 100; i++){
+			for (i=1; i < 26; i++){
 				opcion = document.createElement("option");
 			    opcion.text = i;
 			    document.getElementById("control-numero-reunion").add(opcion);
@@ -397,7 +397,7 @@
 						grupoTecla.visible = true;
 					}
 					if (project.activeLayer != capaVectorial){capaVectorial.activate();}
-				}else if (e.key == 'shift' && !controlBorrar && !controlReunion){
+				}else if (e.key == 'shift' && !controlBorrar && !controlReunion  && !controlVia){
 					 //Colocamos el tooltiptext al lado del cursor
 					if (project.activeLayer != capaGenerica){capaGenerica.activate();}
 					grupoTecla.position.x = event.point.x + 18;
@@ -472,6 +472,14 @@
 					path = hitResult.item;
 					//project.activeLayer.addChild(hitResult.item); //no s� si hay que incluirlo luego
 				}
+			}else if (event.modifiers.control && controlVia && hitNombreItem != "cursor"){ // && hitNombreItem != "cursor"					/*** CURSOR ***/
+				//Si se ha pulsado CTRL + CLICK que lo prepare para moverse. Controla si clicka sobre alguno de los elementos del tooltiptext que no lo modifique  
+				//if ( hitResult && hitClaseItem != "Raster" && hitNombreItem != "tooltiptext" && hitNombreItem != "textotooltip" && hitNombreItem != "contornotooltip" && (controlReunion || controlPincel)) {
+				if (hitResult && (hitNombreItem == "circulo-via" || hitNombreItem == "numero-via")){
+					moverPath = true;
+					path = hitResult.item;
+					//project.activeLayer.addChild(hitResult.item); //no s� si hay que incluirlo luego
+				}
 			}else if (event.modifiers.shift && controlPincel) {
 				//pulsando SHIFT + CLICK en el segmento/nodo borra el nodo     			// && hitNombreItem != "cursor"					/*** CURSOR ***/
 				if ( hitResult && hitClaseItem != "Raster" && !hitResult.item.hasFill() && hitNombreItem != "cursor" && !controlReunion && !controlBorrar) { //Si hemos hecho click sobre algo y que no sea la im�gen y si ha sido en una reunion que no la modifique
@@ -542,6 +550,9 @@
 					if (hitNombreItem == "circulo-reunion" || hitNombreItem == "numero-reunion"){
 						if (hitResult.item.parent.name == "reunion")
 							hitResult.item.parent.removeChildren();
+					}if (hitNombreItem == "circulo-via" || hitNombreItem == "numero-via"){
+						if (hitResult.item.parent.name == "via")
+							hitResult.item.parent.removeChildren();
 					}else{
 						hitResult.item.remove(); //Elimina el path completo con sus hijos pero en realidad no lo destruye por completo, luego se puede recuperar. Devuelve un booleano
 					}
@@ -573,13 +584,10 @@
 			
 			if (hayImagen){
 				//Que solo seleccione los vectores y las reuniones. Ni la imagen ni ninguno de los elementos del tooltiptext 
-				if (controlReunion && event.item && event.item.name == "reunion"){
-					event.item.selected = true;
-				}
 				if (controlPincel && event.item && event.item.name == "vector"){
 					event.item.selected = true;
 				}
-				if (controlBorrar && event.item && (event.item.name == "vector" || event.item.name == "reunion")){
+				if (controlBorrar && event.item && (event.item.name == "vector" || event.item.name == "reunion" || event.item.name == "via")){
 					event.item.selected = true;
 				}
 				/*if (event.item && event.item.className != "Raster" && event.item.name != "tooltiptext" && event.item.name != "reunion"){
@@ -613,7 +621,7 @@
 			}else{
 				console.info("dibujar ELSE");
 				if (moverPath) { //pulsando CONTROL + CLICK mueve path entero
-					if (path.parent.name == "reunion"){
+					if (path.parent.name == "reunion" || path.parent.name == "via"){
 						for (i=0; i<2; i++){
 							//Recorremos los dos hijos de reunion, el circulo y el numero
 							path.parent.children[i].position.x += event.delta.x;
@@ -690,86 +698,6 @@
 			//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
 			diferenciaZoom = document.getElementById("control_zoom").value;
 		}*/
-		
-		/**
-		 * Zoom
-		 */
-		$("#canvas_croquis").mousewheel(function(event, delta) {
-			if (hayImagen){
-				var delta = 0;
-			    //var children = project.activeLayer.children;
-				//var zTexto = document.getElementById("zoom_texto");
-			    
-				var zControl = document.getElementById("control_zoom");
-			        
-			    event.preventDefault();
-			    event = event || window.event;
-			    if (event.type == 'mousewheel') {       //this is for chrome/IE
-			        delta = event.originalEvent.wheelDelta;
-			    }
-			    else if (event.type == 'DOMMouseScroll') {  //this is for FireFox
-			        delta = event.originalEvent.detail*-1;  //FireFox reverses the scroll so we force to to re-reverse...
-			    }
-			
-			    //var v = comprobarContenidoCanvas();
-			    if (comprobarContenidoCanvas()){ // Comprobamos que exista algo dentro del canvas
-			        if((delta > 0) && (document.getElementById("control_zoom").value < upperZoomLimit)) { //scroll up. paper.view.zoom
-			            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
-						//point = $('#canvas_croquis').offset(); //var
-					    
-						//Mas
-						//Zoom(1);
-						var x = event.clientX - posicionRaton.left; //De la posicion del raton dentro de la pantalla calculamos la posicion X dentro del canvas
-						var y =  event.clientY - posicionRaton.top; //De la posicion del raton dentro de la pantalla calculamos la posicion Y dentro del canvas
-						var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
-			            var zoomCenter = point.subtract(paper.view.center);
-			            var moveFactor = tool.zoomFactor - 1.0;
-			            paper.view.zoom *= tool.zoomFactor;
-			            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
-			            tool.mode = '';
-			            
-			            /*porcentajeZoom = ((ratioZoomFactor + tool.zoomFactor) * porcentajeZoom) / ratioZoomFactor;
-			            document.getElementById("zoom_texto").value = porcentajeZoom;*/
-			            //porcentajeZoom = Math.abs(1 - ratioZoomFactor);
-			            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
-			            //document.getElementById("zoom_texto").value = porcentajeZoom;
-			            
-			            document.getElementById("control_zoom").value++;
-			            etiquetaZoom.innerHTML = "Zoom: " + document.getElementById("control_zoom").value;
-			            //zTexto.value = parseInt(zTexto.value) + 1;
-			            //zControl.value = parseInt(zControl.value) + 1;
-			            document.getElementById("zoom_texto").value = paper.view.zoom;
-			        }
-			        else if((delta < 0) && (document.getElementById("control_zoom").value > lowerZoomLimit)){ // (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de m�s por lo que lo evito poni�ndolo en las condici�n
-						//TODO cuando llegue al nivel m�ximo de zoom se quede en el medio del canvas 
-						
-			        	//var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
-						//var point = $('#canvas_croquis').offset();
-						
-						//Menos
-						//Zoom(2);
-						var x = event.clientX - posicionRaton.left; //De la posicion del raton dentro de la pantalla calculamos la posicion X dentro del canvas
-						var y =  event.clientY - posicionRaton.top; //De la posicion del raton dentro de la pantalla calculamos la posicion Y dentro del canvas
-						var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
-			            var zoomCenter = point.subtract(paper.view.center);   
-			            var moveFactor = tool.zoomFactor - 1.0;
-			            paper.view.zoom /= tool.zoomFactor;
-			            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
-			            
-			            //redimensionarImagen();
-			            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
-			            //document.getElementById("zoom_texto").value = porcentajeZoom;
-			            
-			            
-			            document.getElementById("control_zoom").value--;
-			            etiquetaZoom.innerHTML = "Zoom: " + document.getElementById("control_zoom").value;
-			            //zTexto.value = parseInt(zTexto.value) - 1; //Cambiamos el texto del zoom
-			            //zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
-			            document.getElementById("zoom_texto").value = paper.view.zoom;
-			        }
-			    }
-			}
-		});
 		
 	} // End window.onload()
 		

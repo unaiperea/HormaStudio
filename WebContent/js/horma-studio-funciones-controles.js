@@ -172,24 +172,14 @@ function setReunion(point){
 		name: "circulo-reunion"
 		});
 	
-	teclaPulsada = new paper.PointText({
-	    position: [circuloReunion.position.x, circuloReunion.position.y + (reunionRadio/25)],
-	    content: 'R',
-	    fillColor: reunionColor,
-	    fontFamily: 'Arial',
-	    fontWeight: 'bold',
-	    fontSize: reunionRadio/1.5, //10,
-	    name: "r"
-	});
-	
 	numeroReunion = new paper.PointText({
 	    position: [circuloReunion.position.x, circuloReunion.position.y + (reunionRadio/25)],
-	    content: document.getElementById("control-numero-via").value,
+	    content: "R" + document.getElementById("control-numero-reunion").value,
 	    strokeColor: reunionColor,
 	    fillColor: reunionColor,
 	    fontFamily: 'Arial',
 	    fontWeight: 'normal',
-	    fontSize: reunionRadio/1.5, //10,
+	    fontSize: reunionRadio/2, //1.5, //10,
 	    name: "numero-reunion"
 	});
 	
@@ -202,12 +192,12 @@ function setReunion(point){
 		visible: true
 	});
 	
-	var contReunion = document.getElementById("control-numero-via").value;
+	var contReunion = document.getElementById("control-numero-reunion").value;
 	contReunion++;
-	if (contReunion > 99){
-		document.getElementById("control-numero-via").value = 1;
+	if (contReunion > 25){
+		document.getElementById("control-numero-reunion").value = 1;
 	}else{
-		document.getElementById("control-numero-via").value = contReunion;
+		document.getElementById("control-numero-reunion").value = contReunion;
 	}
 }
 
@@ -247,6 +237,7 @@ function setVia(point){
 	}else{
 		document.getElementById("control-numero-via").value = contVia;
 	}
+	paper.view.update(); //Si hay algun cambio lo redibuja y si no lo hay para obligarlo -> paper.view.update(true) 
 }
 
 function setColor(){
@@ -255,6 +246,8 @@ function setColor(){
 		vectorColor = $("#control-color").spectrum('get').toHexString();
 	}else if (controlReunion){
 		reunionColor = $("#control-color").spectrum('get').toHexString(); //document.getElementById("control-color").value;
+	}else if (controlVia){
+		viaColor = $("#control-color").spectrum('get').toHexString(); //document.getElementById("control-color").value;
 	}
 }
 
@@ -273,12 +266,17 @@ function setGrosor(){
 		nuevoRadioSinStroke = (document.getElementById("control_grosor").value - cursorTamanoPincel.strokeWidth) / 2;
 		cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaño del círculo
 		reunionRadio = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//Diámetro actual = Ancho círculo + ancho línea círculo. Así se consigue el diámetro del círculo
+	}else if (controlVia){
+		nuevoRadioSinStroke = (document.getElementById("control_grosor").value - cursorTamanoPincel.strokeWidth) / 2;
+		cursorTamanoPincel.scale(nuevoRadioSinStroke / anteriorRadioSinStroke); //Modificamos el tamaño del círculo
+		viaRadio = cursorTamanoPincel.bounds.width + cursorTamanoPincel.strokeWidth;//Diámetro actual = Ancho círculo + ancho línea círculo. Así se consigue el diámetro del círculo
 	}
 }
 
 control_pincel.onclick = function( event ){
 	var botonAuxPincel = document.getElementById("control_pincel");
-	var botonAuxReunion = document.getElementById("control_via");
+	var botonAuxReunion = document.getElementById("control_reunion");
+	var botonAuxVia = document.getElementById("control_via");
 	var botonAuxBorrar = document.getElementById("control_borrar");
 	var botonAuxMover = document.getElementById("control_mover");
 	
@@ -298,6 +296,7 @@ control_pincel.onclick = function( event ){
 		
 		controlPincel = true;
 		controlReunion = false;
+		controlVia = false;
 		controlBorrar = false;
 		controlMover = false;
 		setGrosor(); //Restauramos el grosor del cursor para el grosor del vector
@@ -305,6 +304,10 @@ control_pincel.onclick = function( event ){
 			botonAuxReunion.classList.remove("boton_pulsado");
 			botonAuxReunion.classList.add("boton_hover");
 			botonAuxReunion.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxVia.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxVia.classList.remove("boton_pulsado");
+			botonAuxVia.classList.add("boton_hover");
+			botonAuxVia.classList.toggle("boton_no_pulsado");
 		}else if ( botonAuxBorrar.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
 			botonAuxBorrar.classList.remove("boton_pulsado");
 			botonAuxBorrar.classList.add("boton_hover");
@@ -317,32 +320,35 @@ control_pincel.onclick = function( event ){
 	}
 	botonAuxPincel = null;
 	botonAuxReunion = null;
+	botonAuxVia = null;
 	botonAuxBorrar = null;
 	botonAuxMover = null;
 }
 
 control_via.onclick = function( event ){
 	var botonAuxPincel = document.getElementById("control_pincel");
-	var botonAuxReunion = document.getElementById("control_via");
+	var botonAuxReunion = document.getElementById("control_reunion");
+	var botonAuxVia = document.getElementById("control_via");
 	var botonAuxBorrar = document.getElementById("control_borrar");
 	var botonAuxMover = document.getElementById("control_mover");
 	
-	if ( botonAuxReunion.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
-		botonAuxReunion.classList.remove("boton_hover");
-		botonAuxReunion.classList.toggle("boton_no_pulsado");
-		botonAuxReunion.classList.add("boton_pulsado");
+	if ( botonAuxVia.classList.contains("boton_no_pulsado") ){ //Si NO esta pulsado boton_pincel lo clickamos
+		botonAuxVia.classList.remove("boton_hover");
+		botonAuxVia.classList.toggle("boton_no_pulsado");
+		botonAuxVia.classList.add("boton_pulsado");
 		canvas.classList.remove("cursor_mover");
 		canvas.classList.remove("cursor_borrar");
 		canvas.classList.add("cursor_none");
 		
 		document.getElementById("control_grosor").disabled = false;
-		document.getElementById("control_grosor").value = reunionRadio;
-		document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + reunionRadio;
+		document.getElementById("control_grosor").value = viaRadio;
+		document.getElementById("etiqueta-grosor").innerHTML = "Tamaño pincel: " + viaRadio;
 		$("#control-color").spectrum("enable");
-		$("#control-color").spectrum("set", reunionColor);
+		$("#control-color").spectrum("set", viaColor);
 
 		controlPincel = false;
-		controlReunion = true;
+		controlReunion = false;
+		controlVia = true;
 		controlBorrar = false;
 		controlMover = false;
 		setGrosor(); //Restauramos el grosor del cursor para el grosor de la reunión
@@ -350,6 +356,10 @@ control_via.onclick = function( event ){
 			botonAuxBorrar.classList.remove("boton_pulsado");
 			botonAuxBorrar.classList.add("boton_hover");
 			botonAuxBorrar.classList.toggle("boton_no_pulsado");
+		}if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
+			botonAuxReunion.classList.remove("boton_pulsado");
+			botonAuxReunion.classList.add("boton_hover");
+			botonAuxReunion.classList.toggle("boton_no_pulsado");
 		}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
 			botonAuxPincel.classList.remove("boton_pulsado");
 			botonAuxPincel.classList.add("boton_hover");
@@ -362,6 +372,7 @@ control_via.onclick = function( event ){
 	}
 	botonAuxPincel = null;
 	botonAuxReunion = null;
+	botonAuxVia = null;
 	botonAuxBorrar = null;
 	botonAuxMover = null;
 }
@@ -389,6 +400,7 @@ control_reunion.onclick = function( event ){
 
 		controlPincel = false;
 		controlReunion = true;
+		controlVia = false;
 		controlBorrar = false;
 		controlMover = false;
 		setGrosor(); //Restauramos el grosor del cursor para el grosor de la reunión
@@ -400,6 +412,10 @@ control_reunion.onclick = function( event ){
 			botonAuxPincel.classList.remove("boton_pulsado");
 			botonAuxPincel.classList.add("boton_hover");
 			botonAuxPincel.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxVia.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxVia.classList.remove("boton_pulsado");
+			botonAuxVia.classList.add("boton_hover");
+			botonAuxVia.classList.toggle("boton_no_pulsado");
 		}else if ( botonAuxMover.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
 			botonAuxMover.classList.remove("boton_pulsado");
 			botonAuxMover.classList.add("boton_hover");
@@ -408,13 +424,15 @@ control_reunion.onclick = function( event ){
 	}
 	botonAuxPincel = null;
 	botonAuxReunion = null;
+	botonAuxVia = null;
 	botonAuxBorrar = null;
 	botonAuxMover = null;
 }
 
 control_borrar.onclick = function( event ){
 	var botonAuxPincel = document.getElementById("control_pincel");
-	var botonAuxReunion = document.getElementById("control_via");
+	var botonAuxReunion = document.getElementById("control_reunion");
+	var botonAuxVia = document.getElementById("control_via");
 	var botonAuxBorrar = document.getElementById("control_borrar");
 	var botonAuxMover = document.getElementById("control_mover");
 	
@@ -431,6 +449,7 @@ control_borrar.onclick = function( event ){
 		
 		controlPincel = false;
 		controlReunion = false;
+		controlVia = false;
 		controlBorrar = true;
 		controlMover = false;
 		cursorTamanoPincel.visible = false;
@@ -438,6 +457,10 @@ control_borrar.onclick = function( event ){
 			botonAuxReunion.classList.remove("boton_pulsado");
 			botonAuxReunion.classList.add("boton_hover");
 			botonAuxReunion.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxVia.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxVia.classList.remove("boton_pulsado");
+			botonAuxVia.classList.add("boton_hover");
+			botonAuxVia.classList.toggle("boton_no_pulsado");
 		}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
 			botonAuxPincel.classList.remove("boton_pulsado");
 			botonAuxPincel.classList.add("boton_hover");
@@ -450,13 +473,15 @@ control_borrar.onclick = function( event ){
 	}
 	botonAuxPincel = null;
 	botonAuxReunion = null;
+	botonAuxVia = null;
 	botonAuxBorrar = null;
 	botonAuxMover = null;
 }
 
 control_mover.onclick = function ( event ){
 	var botonAuxPincel = document.getElementById("control_pincel");
-	var botonAuxReunion = document.getElementById("control_via");
+	var botonAuxReunion = document.getElementById("control_reunion");
+	var botonAuxVia = document.getElementById("control_via");
 	var botonAuxBorrar = document.getElementById("control_borrar");
 	var botonAuxMover = document.getElementById("control_mover");
 	
@@ -475,12 +500,17 @@ control_mover.onclick = function ( event ){
 		cursorTamanoPincel.visible = false;
 		controlPincel = false;
 		controlReunion = false;
+		controlVia = false;
 		controlBorrar = false;
 		controlMover = true;
 		if ( botonAuxReunion.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
 			botonAuxReunion.classList.remove("boton_pulsado");
 			botonAuxReunion.classList.add("boton_hover");
 			botonAuxReunion.classList.toggle("boton_no_pulsado");
+		}else if ( botonAuxVia.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_borrar lo desclickamos
+			botonAuxVia.classList.remove("boton_pulsado");
+			botonAuxVia.classList.add("boton_hover");
+			botonAuxVia.classList.toggle("boton_no_pulsado");
 		}else if ( botonAuxPincel.classList.contains("boton_pulsado") ){ //Si esta pulsado boton_reunion lo desclickamos
 			botonAuxPincel.classList.remove("boton_pulsado");
 			botonAuxPincel.classList.add("boton_hover");
@@ -493,6 +523,7 @@ control_mover.onclick = function ( event ){
 	}
 	botonAuxPincel = null;
 	botonAuxReunion = null;
+	botonAuxVia = null;
 	botonAuxBorrar = null;
 	botonAuxMover = null;
 }
@@ -502,7 +533,7 @@ control_reset.onclick = function ( event ){
 	paper.view.zoom = originalZoom;
 	//paper.view.center = paper.view.viewToProject(originalCentro);
 	//paper.view.center = paper.view.projectToView(originalCentro);
-	paper.view.center = originalCentro;
+	paper.view.center = canvas.center; //originalCentro;
 	tool.zoomFactor = originalMoveFactor;
 	//Fuerzo el update ya que no lo hace automaticamente en este caso
 	//paper.view.update();//Comprobar que sea imprescindible ********************************************
@@ -547,7 +578,8 @@ function setViaAuto(){
 	}
 }
 
-control_guardar.onclick = function( event ){
+function descargarImagen() {
+    
 	/*
 	//var capaActual = paper.project.activeLayer; //capa activa actual
 	var capaGuardar = new paper.Layer();
@@ -575,10 +607,8 @@ control_guardar.onclick = function( event ){
 	//window.open(dataString, "toDataURL() image", "width=800, height=200");//Abre en una nueva ventana la im�gen
 	
 	
-}
-
-function descargarImagen() {
-    // feel free to choose your event ;) 
+	/* PROBAAAR A VER QUÉ HACE
+	// feel free to choose your event ;) 
 
     // just for example
     // var OFFSET = $(this).offset();
@@ -591,6 +621,7 @@ function descargarImagen() {
     var newdata = imgdata.replace(/^data:image\/png/,'data:application/octet-stream');
     // give the link the values it needs
        $('a.linkwithnewattr').attr('download','your_pic_name.png').attr('href',newdata);
+    */
 }
 
 function img_and_link() {
@@ -607,6 +638,173 @@ function img_and_link() {
 	      .text('Download')
 	  );*/
 }
+
+/**
+ * Si el canvas contiene algo dibujado o una imágen que haga Scroll
+ */
+function comprobarContenidoCanvas(){
+	var resul = false;
+	//Recorre todas las capas
+	for (i=0; i<project.layers.length;i++){
+		//Si contiene hijos: líneas, puntos, imágenes
+		if (project.layers[i].name != "capa del cursor" && project.layers[i].name != "capa generica"){
+			if (project.layers[i].hasChildren()){
+				resul = true;
+				break;
+			}
+		}
+	}
+	return resul;
+}
+
+//Al mover el slider del Zoom
+function setZoom(){
+	if (hayImagen){
+		diferenciaZoom = document.getElementById("control_zoom").value - diferenciaZoom; // - document.getElementById("zoom_texto").value;
+		if (diferenciaZoom > 0){ //Si es positivo hago zoom
+			for (i=0 ; i < diferenciaZoom ; i++){
+				setMasZoom(); //setMasZoom(diferenciaZoom);
+			}
+		}else{ //Si es negativo quito zoom
+			diferenciaZoom = Math.abs(diferenciaZoom);
+			//z*=-1; //Lo convierto a positivo
+			for (i=0 ; i < diferenciaZoom ; i++){
+				setMenosZoom(); //setMenosZoom( Math.abs(diferenciaZoom) );//Lo convierto a positivo
+			}
+		}
+		//document.getElementById("zoom_texto").value = document.getElementById("control_zoom").value;
+		//document.getElementById("zoom_factor_texto").value = diferenciaZoom;
+		
+		diferenciaZoom = document.getElementById("control_zoom").value;//Esta siiiiiii
+		
+		//document.getElementById("zoom_texto").value = diferenciaZoom;
+	}else{
+		document.getElementById("control_zoom").value = 5;
+	}
+}
+
+function setMasZoom(){
+   	//var children = project.activeLayer.children;
+   	//Scroll up
+
+	if (comprobarContenidoCanvas && document.getElementById("control_zoom").value <= upperZoomLimit) { //paper.view.zoom < upperZoomLimit 
+
+        //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+           
+		//var point = $('#canvas_croquis').offset(); //var
+	    //var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
+		//var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
+		point = paper.view.viewToProject(imagenRaster.view.center); //point //Convertimos a coordenadas dentro del proyecto
+        var zoomCenter = point.subtract(paper.view.center);
+        var moveFactor = tool.zoomFactor - 1.0;
+        paper.view.zoom *= tool.zoomFactor;
+        paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
+        tool.mode = '';
+
+        //document.getElementById("control_zoom").slider('setValue', 9);
+        //document.getElementById("control_zoom").value ++; //Cambiamos el slider del zoom
+    }
+}
+
+function setMenosZoom(){
+	//scroll down
+	if (document.getElementById("control_zoom").value >= lowerZoomLimit){ //paper.view.zoom > lowerZoomLimit
+        //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+
+		//var point = $('#canvas_croquis').offset();
+		
+		//var x = event.clientX - posicionRaton.left; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n X dentro del canvas
+		//var y =  event.clientY - posicionRaton.top; //De la posici�n del rat�n dentro de la pantalla calculamos la posici�n Y dentro del canvas
+		var point = paper.view.viewToProject(paper.view.center); //point //Convertimos a coordenadas dentro del proyecto
+        var zoomCenter = point.subtract(paper.view.center);   
+        var moveFactor = tool.zoomFactor - 1.0;
+        paper.view.zoom /= tool.zoomFactor;
+        paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor))
+        
+        //document.getElementById("control_zoom").setValue(9);
+        //document.getElementById("control_zoom").value --; //Cambiamos el slider del zoom
+    }
+}
+
+/**
+ * Zoom
+ */
+$("#canvas_croquis").mousewheel(function(event, delta) {
+	if (hayImagen){
+		var delta = 0;
+	    //var children = project.activeLayer.children;
+		//var zTexto = document.getElementById("zoom_texto");
+	    
+		var zControl = document.getElementById("control_zoom");
+	        
+	    event.preventDefault();
+	    event = event || window.event;
+	    if (event.type == 'mousewheel') {       //this is for chrome/IE
+	        delta = event.originalEvent.wheelDelta;
+	    }
+	    else if (event.type == 'DOMMouseScroll') {  //this is for FireFox
+	        delta = event.originalEvent.detail*-1;  //FireFox reverses the scroll so we force to to re-reverse...
+	    }
+	
+	    //var v = comprobarContenidoCanvas();
+	    if (comprobarContenidoCanvas()){ // Comprobamos que exista algo dentro del canvas
+	        if((delta > 0) && (document.getElementById("control_zoom").value < upperZoomLimit)) { //scroll up. paper.view.zoom
+	            //var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+				//point = $('#canvas_croquis').offset(); //var
+			    
+				//Mas
+				//Zoom(1);
+				var x = event.clientX - posicionRaton.left; //De la posicion del raton dentro de la pantalla calculamos la posicion X dentro del canvas
+				var y =  event.clientY - posicionRaton.top; //De la posicion del raton dentro de la pantalla calculamos la posicion Y dentro del canvas
+				var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
+	            var zoomCenter = point.subtract(paper.view.center);
+	            var moveFactor = tool.zoomFactor - 1.0;
+	            paper.view.zoom *= tool.zoomFactor;
+	            paper.view.center = paper.view.center.add(zoomCenter.multiply(moveFactor / tool.zoomFactor));
+	            tool.mode = '';
+	            
+	            /*porcentajeZoom = ((ratioZoomFactor + tool.zoomFactor) * porcentajeZoom) / ratioZoomFactor;
+	            document.getElementById("zoom_texto").value = porcentajeZoom;*/
+	            //porcentajeZoom = Math.abs(1 - ratioZoomFactor);
+	            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
+	            //document.getElementById("zoom_texto").value = porcentajeZoom;
+	            
+	            document.getElementById("control_zoom").value++;
+	            etiquetaZoom.innerHTML = "Zoom: " + document.getElementById("control_zoom").value;
+	            //zTexto.value = parseInt(zTexto.value) + 1;
+	            //zControl.value = parseInt(zControl.value) + 1;
+	            //document.getElementById("zoom_texto").value = paper.view.zoom;
+	        }
+	        else if((delta < 0) && (document.getElementById("control_zoom").value > lowerZoomLimit)){ // (paper.view.zoom > lowerZoomLimit) && (paper.view.zoom != 1.0000000000000002)){ //scroll down //Como paper.view.zoom se queda en 1.0000000000002 hace un zoom de m�s por lo que lo evito poni�ndolo en las condici�n
+				//TODO cuando llegue al nivel m�ximo de zoom se quede en el medio del canvas 
+				
+	        	//var point = paper.DomEvent.getOffset(e.originalEvent, $('#canvas_croquis')[0]);
+				//var point = $('#canvas_croquis').offset();
+				
+				//Menos
+				//Zoom(2);
+				var x = event.clientX - posicionRaton.left; //De la posicion del raton dentro de la pantalla calculamos la posicion X dentro del canvas
+				var y =  event.clientY - posicionRaton.top; //De la posicion del raton dentro de la pantalla calculamos la posicion Y dentro del canvas
+				var point = paper.view.viewToProject(x,y); //Convertimos a coordenadas dentro del proyecto
+	            var zoomCenter = point.subtract(paper.view.center);   
+	            var moveFactor = tool.zoomFactor - 1.0;
+	            paper.view.zoom /= tool.zoomFactor;
+	            paper.view.center = paper.view.center.subtract(zoomCenter.multiply(moveFactor));
+	            
+	            //redimensionarImagen();
+	            //document.getElementById("zoom_texto").value = (paper.view.zoom * porcentajeZoom) / ratioZoomFactor;
+	            //document.getElementById("zoom_texto").value = porcentajeZoom;
+	            
+	            
+	            document.getElementById("control_zoom").value--;
+	            etiquetaZoom.innerHTML = "Zoom: " + document.getElementById("control_zoom").value;
+	            //zTexto.value = parseInt(zTexto.value) - 1; //Cambiamos el texto del zoom
+	            //zControl.value = parseInt(zControl.value) - 1; //Cambiamos el slider del zoom
+	            //document.getElementById("zoom_texto").value = paper.view.zoom;
+	        }
+	    }
+	}
+});
 
 /*function moverGrosor(direccion){
 	if (controlPincel || controlReunion){

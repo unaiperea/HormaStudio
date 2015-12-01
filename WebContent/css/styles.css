@@ -26,6 +26,7 @@ s{
 }
 
 #titulo{
+	color: white;
 	float: left !important;
 }
 
@@ -71,6 +72,7 @@ i{
 
 #controles-dibujo,
 #funciones-dibujo{
+	width: 116px;
 	margin-top: 10px;
 	padding-left: 5px;
     padding-right: 5px;
@@ -102,8 +104,7 @@ i{
 	float: left;
 }
 
-.herramientas-izda,
-#control-archivo{
+.herramientas-izda{
 	padding-bottom: 10px;
 	margin-top: 10px;
 	margin-bottom: 10px;
@@ -112,6 +113,9 @@ i{
 	box-shadow:inset 4px 4px 4px rgba(0,0,0,.3), inset -3px -3px 3px rgba(255,255,255,.2);
 }
 
+#panelDibujo{
+	margin-top: 68px;
+}
 #zoom ul li{
 	list-style: none;
 }
@@ -189,8 +193,8 @@ i{
 
 #canvas_croquis{ /* crosshair ----- cursor: url(img/dot.png), pointer; }*/
 	width: 100%;
-	border: 0px solid white;/*#d3d3d3;*/
-	background-color: white;
+	border: 0px #D6D6D6;/*#d3d3d3;*/
+	background-color: #D6D6D6;
 }
 
 #control_mover{
@@ -227,6 +231,7 @@ i{
 #control_reset{
 	font-size: 21px;
 	padding-top: 5px;
+	margin-left: 15px;
 }
 
 /*#ruta{
