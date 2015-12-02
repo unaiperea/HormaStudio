@@ -3,11 +3,6 @@
 App de dibujo vectorial para realizar, con detalle, croquis de escalada a partir de una fotografía
 
 <h4>Tecnología:</h4>
-HTML5 y CSS3JavaScript, PaperScript (librería paper.js), JQuery
+HTML5 y CSS3, JavaScript, PaperScript (librería paper.js), JQuery
 
 <a href="http://studio-horma.rhcloud.com/">LIVE DEMO</a>
-
-<h4>Entorno:</h4>
-Proyecto Web JavaScript y JQuery
-Mavenizado
-Preparado para subir en OpenShift
